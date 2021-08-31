@@ -1,2 +1,15 @@
-**/*.qpf
-**/*.v
+*.qsf
+*.qws
+*.bak
+*.rpt
+*.docx
+*.pdf
+/incremental_db
+/db
+/output_files
+/simulation
+
+
+#**/*.qpf
+#**/*.v
+#**/*.git
