@@ -223,7 +223,7 @@ endmodule
 module shift(inValue, outValue, shiftDir);
 	
 	input [15:0] inValue;
-	input shiftDir;
+	input wire shiftDir;
 	
 	output [15:0] outValue;
 	
@@ -316,6 +316,41 @@ module compare(A,B,S,L,Z) begin
 		end
 			
 	end
+	
 
 endmodule 
+
+
+//Sign Extension
+//A is the 8 bit immediate
+//S is signed
+//out is the signed extended immediate
+	
+module signExtend(A,S, Out) begin
+	input [7:0] A;
+	input wire S;
+	output[15:0] Out;
+
+	if(S) begin
+		if(A[7]) begin
+			Out[15:8] = 8'b11111111;
+			Out[7:0] = A;
+		end
+		
+		else
+			Out[15:8] = 8'b00000000;
+			out[7:0] = A;
+		end
+	
+	end
+		
+	end
+	else
+		Out[15:8] = 8'b00000000;
+		out[7:0] = A;
+	
+	end
+endmodule
+
+
 
