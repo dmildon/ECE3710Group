@@ -179,16 +179,24 @@ module add_sub (rdest, rsrc, Cin, C, L, F, Z, N, out)
 			
 		if(out == 0)
 			Z = 1;
+		else
+			Z = 0;
 			
 		if(rdest < rsrc)
 			L = 1;
+		else
+			L = 0;
 		
-		if(rdest < rsrc)
+		if($signed(rdest) < $signed(rsrc))
 			N = 1;
+		else
+			N = 0;
 		
 		if((rsrc[15] == 1 & rdest[15] == 1 & out[15] == 0) || 
 		(rsrc[15] == 0 & rdest[15] == 0 & out[15] == 1))
 			F = 1;
+		else
+			F = 0;
 	end
 	
 endmodule
@@ -256,69 +264,69 @@ endmodule
 //s is signed bit 0 = unsigned
 //L is output, 1 when a < b
 //Z is 1 if a = b
-module compare(A,B,S,L,Z) begin
-	
-	input [15:0] A, B;
-	input wire S;
-	
-	output reg L,Z;
-	
-	//unsigned
-	if (S==0) begin
-		if(A > B) begin
-			L = 0;
-			Z = 0;
-		end
-			
-		else if(A == B) begin
-			L = 0;
-			Z = 1;
-		end
-			
-		else begin
-			L = 1;
-			z = 0;
-	end
-		
-	//sined //(c==1)
-	else begin	
-		//same sign
-		if(A[15] == B[15]) begin
-			//check if A is greater
-			if(A[14:0] > B[14:0]) begin
-				L = 0;
-				Z = 0;
-			end
-				
-			else if(A[14:0] < B[14:0]) begin
-				L = 1;
-				Z = 0;
-			end
-				
-				//otherwise B and A are equal
-			else begin
-				L = 0;
-				Z = 1
-			end
-				
-		end
-			
-			// B is negative therfore less than A 
-		else if(A[15] < B[15]) begin
-			L = 1;
-			Z = 0;
-		end
-			
-		// A is negative therfore less than B
-		else begin
-			L = 0;
-			Z = 0;
-		end
-			
-	end
-	
-
-endmodule 
+//module compare(A,B,S,L,Z) begin
+//	
+//	input [15:0] A, B;
+//	input wire S;
+//	
+//	output reg L,Z;
+//	
+//	//unsigned
+//	if (S==0) begin
+//		if(A > B) begin
+//			L = 0;
+//			Z = 0;
+//		end
+//			
+//		else if(A == B) begin
+//			L = 0;
+//			Z = 1;
+//		end
+//			
+//		else begin
+//			L = 1;
+//			z = 0;
+//	end
+//		
+//	//sined //(c==1)
+//	else begin	
+//		//same sign
+//		if(A[15] == B[15]) begin
+//			//check if A is greater
+//			if(A[14:0] > B[14:0]) begin
+//				L = 0;
+//				Z = 0;
+//			end
+//				
+//			else if(A[14:0] < B[14:0]) begin
+//				L = 1;
+//				Z = 0;
+//			end
+//				
+//				//otherwise B and A are equal
+//			else begin
+//				L = 0;
+//				Z = 1
+//			end
+//				
+//		end
+//			
+//			// B is negative therfore less than A 
+//		else if(A[15] < B[15]) begin
+//			L = 1;
+//			Z = 0;
+//		end
+//			
+//		// A is negative therfore less than B
+//		else begin
+//			L = 0;
+//			Z = 0;
+//		end
+//			
+//	end
+//	
+//
+//endmodule 
 
 
 //Sign Extension
