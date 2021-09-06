@@ -270,10 +270,21 @@ module RightShift(inValue, outValue);
 	always@(inValue)
 		begin
 			//shift Right
-			outValue = inValue >>> 1;
+			outValue = inValue >> 1;
 		end
 endmodule
 
+module RightShiftA(inValue, outValue);
+	input [15:0] inValue;
+	
+	output reg [15:0] outValue;
+	
+	always@(inValue)
+		begin
+			//shift Right
+			outValue = inValue >>> 1;
+		end
+endmodule
 
 //a is src input
 //b is dest input
