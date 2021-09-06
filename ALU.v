@@ -3,6 +3,13 @@ module ALU (Rsrc, Rdest, OpCode, Out, Flags);
 	input [4:0] OpCode;
 	output reg [15:0] Out;
 	output reg [4:0] Flags;
+		/*
+			Flags[0] = C
+			Flags[1] = L
+			Flags[2] = F
+			Flags[3] = Z
+			Flags[4] = N
+		*/
 
 	parameter ADD 		= 5'b00000;
 	parameter ADDI 	= 5'b00001;
@@ -27,130 +34,105 @@ module ALU (Rsrc, Rdest, OpCode, Out, Flags);
 	parameter RSHI 	= 5'b10100;
 	parameter ALSH 	= 5'b10101;
 	parameter ARSH 	= 5'b10110;
-	parameter NOP 		= 5'b10111;
 
 	always@(OpCode)
-		case(OpCode)
-			ADD:
-				begin
+		begin
+			case(OpCode)
+				ADD:
+					begin
+						add_sub myAdd (
+							.rdest(Rdest),
+							.rsrc(Rsrc),
+							.Cin(0),
+							.flags(Flags),
+							.out(Out)
+						);
+					end
 				
-				end
-			
-			ADDI:
-				begin
+				SUB:
+					begin
+						add_sub mySub (
+							.rdest(Rdest),
+							.rsrc(Rsrc),
+							.Cin(1),
+							.flags(Flags),
+							.out(Out)
+						);
+					end
 				
-				end
-			
-			ADDU:
-				begin
+				CMP:
+					begin
+						add_sub myCmp (
+							.rdest(Rdest),
+							.rsrc(Rsrc),
+							.Cin(0),
+							.flags(Flags),
+							.out(Out)
+						);
+					end
 				
-				end
-		
-			ADDUI: 
-				begin
+				AND:
+					begin
+						AND myAnd (
+							.A(Rsrc),
+							.B(Rdest),
+							.Out(Out)
+						);
+					end
 				
-				end
-		
-			ADDC:
-				begin
+				OR:
+					begin
+						OR myOr (
+							.A(Rsrc),
+							.B(Rdest),
+							.Out(Out)
+						);
+					end
 				
-				end
-		
-			ADDCU:
-				begin
+				XOR:
+					begin
+						XOR myXor (
+							.A(Rsrc),
+							.B(Rdest),
+							.Out(Out)
+						);
+					end
 				
-				end
-		
-			ADDCUI:
-				begin
+				NOT:
+					begin
+						NOT myNot (
+							.A(Rsrc),
+							.Out(Out)
+						);
+					end
 				
-				end
-		
-			ADDCI:
-				begin
+				LSH:
+					begin
+						LeftShift myLeftShift (
+							.inValue(Rsrc),
+							.outValue(Out)
+						);
+					end
 				
-				end
-		
-			SUB:
-				begin
+				RSH:
+					begin
+						RightShift myRightShift (
+							.inValue(Rsrc),
+							.outValue(Out)
+						);
+					end
 				
-				end
-		
-			SUBI:
-				begin
+				ARSH:
+					begin
+					
+					end
 				
-				end
-		
-			CMP:
-				begin
-				
-				end
-		
-			CMPI:
-				begin
-				
-				end
-		
-			CMPUI:
-				begin
-				
-				end
-		
-			AND:
-				begin
-				
-				end
-		
-			OR:
-				begin
-				
-				end
-		
-			XOR:
-				begin
-				
-				end
-		
-			NOT:
-				begin
-				
-				end
-		
-			LSH:
-				begin
-				
-				end
-		
-			LSHI:
-				begin
-				
-				end
-		
-			RSH:
-				begin
-				
-				end
-		
-			RSHI:
-				begin
-				
-				end
-		
-			ALSH:
-				begin
-				
-				end
-		
-			ARSH:
-				begin
-				
-				end
-		
-			NOP:
-				begin
-				
-				end
-		endcase 
+				default:
+					begin
+						
+					end
+			endcase 
+		end
 endmodule 
 
 //-------------------------------------------------------
@@ -164,41 +146,66 @@ endmodule
 // Z - Z bit: set to 1 if operands are equal.
 // N - Neg bit: set to 1 if rdest < rsrc operand --> programmer check: when both signed.
 //-------------------------------------------------------
-module add_sub (rdest, rsrc, Cin, C, L, F, Z, N, out);
+module add_sub (rdest, rsrc, Cin, flags, out);
 	input  [15:0] rdest, rsrc;
 	input  Cin;
 	output reg [15:0] out;
-	output reg C, L, F, Z, N;
+	output reg [4:0] flags;
 	
 	always@(rsrc, rdest, Cin) begin
 	
 		// Subtraction 
 		if(Cin)
-			{C, out} = rdest + ~rsrc + Cin;
+			{flags[0], out} = rdest + ~rsrc + Cin;
 		// Addition
 		else
-			{C, out} = rsrc + rdest;
+			{flags[0], out} = rsrc + rdest;
 			
 		if(out == 0)
-			Z = 1;
+			flags[3] = 1;
 		else
-			Z = 0;
+			flags[3] = 0;
 			
 		if(rdest < rsrc)
-			L = 1;
+			flags[1] = 1;
 		else
-			L = 0;
+			flags[1] = 0;
 		
 		if($signed(rdest) < $signed(rsrc))
-			N = 1;
+			flags[4] = 1;
 		else
-			N = 0;
+			flags[4] = 0;
 		
 		if((rsrc[15] == 1 & rdest[15] == 1 & out[15] == 0) || 
 		(rsrc[15] == 0 & rdest[15] == 0 & out[15] == 1))
-			F = 1;
+			flags[2] = 1;
 		else
-			F = 0;
+			flags[2] = 0;
+	end
+	
+endmodule
+
+module CMP (rdest, rsrc, flags, out);
+	input  [15:0] rdest, rsrc;
+	input  Cin = 1;
+	output reg [15:0] out;
+	output reg [4:0] flags;
+	
+	always@(rsrc, rdest, Cin) begin
+		// Addition
+		{flags[0], out} = rsrc + rdest;
+			
+		if(rdest < rsrc)
+			flags[1] = 1;
+		else
+			flags[1] = 0;
+		
+		if($signed(rdest) < $signed(rsrc))
+			flags[4] = 1;
+		else
+			flags[4] = 0;
+		
+		out = 16'bz;
 	end
 	
 endmodule
@@ -228,33 +235,44 @@ module XOR (A, B, Out);
 	assign Out = A ^ B;
 endmodule
 
+module NOT (A, Out);
+	input [15:0] A;
+	output[15:0] Out;
+
+	assign Out = !A;
+endmodule
+
 
 //Arithmetic shift
 //input 16-bit inValue, 1 bit shift Dir
 //shiftDir = 0 is left, shiftDir = 1 is right
 //it would probably be easier to just do this opperation in the main module
-module shift(inValue, outValue, shiftDir);
+module LeftShift(inValue, outValue);
 	
 	input [15:0] inValue;
-	input wire shiftDir;
 	
 	output reg [15:0] outValue;
 	
-	always@(inValue, shiftDir)begin
-		//shift Left
-		if(shiftDir == 0) begin
+	always@(inValue)
+		begin
+			//shift Left
 			outValue = inValue <<< 1;
 		end
-	
-		//shirft R
-		else begin
-			outValue = inValue >>> 1;
-		end
-	end
 
 endmodule
 
 
+module RightShift(inValue, outValue);
+	input [15:0] inValue;
+	
+	output reg [15:0] outValue;
+	
+	always@(inValue)
+		begin
+			//shift Right
+			outValue = inValue >>> 1;
+		end
+endmodule
 
 
 //a is src input
