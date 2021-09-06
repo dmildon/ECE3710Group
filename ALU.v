@@ -1,155 +1,156 @@
-module ALU (Rsrc, Rdest, OpCode, Out, Flags)
+module ALU (Rsrc, Rdest, OpCode, Out, Flags); 
 	input [15:0] Rsrc, Rdest;
-	input [4:0];
+	input [4:0] OpCode;
 	output reg [15:0] Out;
 	output reg [4:0] Flags;
 
-	parameter ADD 		= 5'b00000
-	parameter ADDI 	= 5'b00001
-	parameter ADDU 	= 5'b00010
-	parameter ADDUI 	= 5'b00011
-	parameter ADDC 	= 5'b00100
-	parameter ADDCU 	= 5'b00101
-	parameter ADDCUI 	= 5'b00110
-	parameter ADDCI 	= 5'b00111
-	parameter SUB 		= 5'b01000
-	parameter SUBI 	= 5'b01001
-	parameter CMP 		= 5'b01010
-	parameter CMPI 	= 5'b01011
-	parameter CMPUI 	= 5'b01100
-	parameter AND 		= 5'b01101
-	parameter OR 		= 5'b01110
-	parameter XOR 		= 5'b01111
-	parameter NOT 		= 5'b10000
-	parameter LSH 		= 5'b10001
-	parameter LSHI 	= 5'b10010
-	parameter RSH 		= 5'b10011
-	parameter RSHI 	= 5'b10100
-	parameter ALSH 	= 5'b10101
-	parameter ARSH 	= 5'b10110
-	parameter NOP 		= 5'b10111
+	parameter ADD 		= 5'b00000;
+	parameter ADDI 	= 5'b00001;
+	parameter ADDU 	= 5'b00010;
+	parameter ADDUI 	= 5'b00011;
+	parameter ADDC 	= 5'b00100;
+	parameter ADDCU 	= 5'b00101;
+	parameter ADDCUI 	= 5'b00110;
+	parameter ADDCI 	= 5'b00111;
+	parameter SUB 		= 5'b01000;
+	parameter SUBI 	= 5'b01001;
+	parameter CMP 		= 5'b01010;
+	parameter CMPI 	= 5'b01011;
+	parameter CMPUI 	= 5'b01100;
+	parameter AND 		= 5'b01101;
+	parameter OR 		= 5'b01110;
+	parameter XOR 		= 5'b01111;
+	parameter NOT 		= 5'b10000;
+	parameter LSH 		= 5'b10001;
+	parameter LSHI 	= 5'b10010;
+	parameter RSH 		= 5'b10011;
+	parameter RSHI 	= 5'b10100;
+	parameter ALSH 	= 5'b10101;
+	parameter ARSH 	= 5'b10110;
+	parameter NOP 		= 5'b10111;
 
-	case (OpCode)
-		ADD:
-			begin
+	always@(OpCode)
+		case(OpCode)
+			ADD:
+				begin
 				
-			end
+				end
 			
-		ADDI:
-			begin
+			ADDI:
+				begin
 				
-			end
+				end
 			
-		ADDU:
-			begin
+			ADDU:
+				begin
 				
-			end
+				end
 		
-		ADDUI: 
-			begin
+			ADDUI: 
+				begin
 				
-			end
+				end
 		
-		ADDC:
-			begin
+			ADDC:
+				begin
 				
-			end
+				end
 		
-		ADDCU:
-			begin
+			ADDCU:
+				begin
 				
-			end
+				end
 		
-		ADDCUI:
-			begin
+			ADDCUI:
+				begin
 				
-			end
+				end
 		
-		ADDCI:
-			begin
+			ADDCI:
+				begin
 				
-			end
+				end
 		
-		SUB:
-			begin
+			SUB:
+				begin
 				
-			end
+				end
 		
-		SUBI:
-			begin
+			SUBI:
+				begin
 				
-			end
+				end
 		
-		CMP:
-			begin
+			CMP:
+				begin
 				
-			end
+				end
 		
-		CMPI:
-			begin
+			CMPI:
+				begin
 				
-			end
+				end
 		
-		CMPUI:
-			begin
+			CMPUI:
+				begin
 				
-			end
+				end
 		
-		AND:
-			begin
+			AND:
+				begin
 				
-			end
+				end
 		
-		OR:
-			begin
+			OR:
+				begin
 				
-			end
+				end
 		
-		XOR:
-			begin
+			XOR:
+				begin
 				
-			end
+				end
 		
-		NOT:
-			begin
+			NOT:
+				begin
 				
-			end
+				end
 		
-		LSH:
-			begin
+			LSH:
+				begin
 				
-			end
+				end
 		
-		LSHI:
-			begin
+			LSHI:
+				begin
 				
-			end
+				end
 		
-		RSH:
-			begin
+			RSH:
+				begin
 				
-			end
+				end
 		
-		RSHI:
-			begin
+			RSHI:
+				begin
 				
-			end
+				end
 		
-		ALSH:
-			begin
+			ALSH:
+				begin
 				
-			end
+				end
 		
-		ARSH:
-			begin
+			ARSH:
+				begin
 				
-			end
+				end
 		
-		NOP:
-			begin
+			NOP:
+				begin
 				
-			end
-	endcase 
+				end
+		endcase 
 endmodule 
 
 //-------------------------------------------------------
@@ -163,13 +164,14 @@ endmodule
 // Z - Z bit: set to 1 if operands are equal.
 // N - Neg bit: set to 1 if rdest < rsrc operand --> programmer check: when both signed.
 //-------------------------------------------------------
-module add_sub (rdest, rsrc, Cin, C, L, F, Z, N, out)
-	input wire [15:0] rdest, rsc;
-	input wire Cin;
-	output wire [15:0] out;
-	output wire C, L, F, Z, N;
+module add_sub (rdest, rsrc, Cin, C, L, F, Z, N, out);
+	input  [15:0] rdest, rsrc;
+	input  Cin;
+	output reg [15:0] out;
+	output reg C, L, F, Z, N;
 	
-	always@(rsrc, rdest, Cin)begin
+	always@(rsrc, rdest, Cin) begin
+	
 		// Subtraction 
 		if(Cin)
 			{C, out} = rdest + ~rsrc + Cin;
@@ -201,25 +203,27 @@ module add_sub (rdest, rsrc, Cin, C, L, F, Z, N, out)
 	
 endmodule
 
-module AND (A, B, Out)
+module AND (A, B, Out); 
 	input [15:0] A, B;
-	output reg [15:0] Out;
-
-	assign Out = A & B;
+	output[15:0] Out;
+	
+	assign Out = (A & B);
+	
 endmodule
 
 
-module OR (A, B, Out)
+module OR (A, B, Out);
 	input [15:0] A, B;
-	output reg [15:0] Out;
+	output [15:0] Out;
 
 	assign Out = A | B;
-endmodule 
+
+	endmodule 
 
 
-module XOR (A, B, Out)
+module XOR (A, B, Out);
 	input [15:0] A, B;
-	output reg [15:0] Out;
+	output[15:0] Out;
 
 	assign Out = A ^ B;
 endmodule
@@ -234,7 +238,7 @@ module shift(inValue, outValue, shiftDir);
 	input [15:0] inValue;
 	input wire shiftDir;
 	
-	output [15:0] outValue;
+	output reg [15:0] outValue;
 	
 	always@(inValue, shiftDir)begin
 		//shift Left
@@ -244,7 +248,7 @@ module shift(inValue, outValue, shiftDir);
 	
 		//shirft R
 		else begin
-			outVAlue = inValue >>> 1;
+			outValue = inValue >>> 1;
 		end
 	end
 
@@ -328,32 +332,35 @@ endmodule
 //S is signed
 //out is the signed extended immediate
 	
-module signExtend(A,S, Out) begin
+module signExtend(A,S, Out);
+	
 	input [7:0] A;
 	input wire S;
-	output[15:0] Out;
+	output reg [15:0] Out;
 	
-	always@(A, S)begin
+	always@(A, S) begin
+		
 		if(S) begin
+			
 			if(A[7]) begin
 				Out[15:8] = 8'b11111111;
 				Out[7:0] = A;
 			end
 		
-			else
+			else begin 
 				Out[15:8] = 8'b00000000;
-				out[7:0] = A;
-			end
-	
-		end
+				Out[7:0] = A;
+			end 
 		
 		end
-		else
-			Out[15:8] = 8'b00000000;
-			out[7:0] = A;
 	
+		else begin 
+			Out[15:8] = 8'b00000000;
+			Out[7:0] = A;
 		end
+	
 	end
+		
 endmodule
 
 
