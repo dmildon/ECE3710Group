@@ -228,6 +228,7 @@ endmodule
 //Arithmetic shift
 //input 16-bit inValue, 1 bit shift Dir
 //shiftDir = 0 is left, shiftDir = 1 is right
+//it would probably be easier to just do this opperation in the main module
 module shift(inValue, outValue, shiftDir);
 	
 	input [15:0] inValue;
@@ -235,16 +236,17 @@ module shift(inValue, outValue, shiftDir);
 	
 	output [15:0] outValue;
 	
-	//shift Left
-	if(shiftDir == 0) begin
-		outValue = inValue <<< 1;
-	end
+	always@(inValue, shiftDir)begin
+		//shift Left
+		if(shiftDir == 0) begin
+			outValue = inValue <<< 1;
+		end
 	
-	//shirft R
-	else begin
-		outVAlue = inValue >>> 1;
+		//shirft R
+		else begin
+			outVAlue = inValue >>> 1;
+		end
 	end
-	
 
 endmodule
 
@@ -330,25 +332,27 @@ module signExtend(A,S, Out) begin
 	input [7:0] A;
 	input wire S;
 	output[15:0] Out;
-
-	if(S) begin
-		if(A[7]) begin
-			Out[15:8] = 8'b11111111;
-			Out[7:0] = A;
+	
+	always@(A, S)begin
+		if(S) begin
+			if(A[7]) begin
+				Out[15:8] = 8'b11111111;
+				Out[7:0] = A;
+			end
+		
+			else
+				Out[15:8] = 8'b00000000;
+				out[7:0] = A;
+			end
+	
 		end
 		
+		end
 		else
 			Out[15:8] = 8'b00000000;
 			out[7:0] = A;
+	
 		end
-	
-	end
-		
-	end
-	else
-		Out[15:8] = 8'b00000000;
-		out[7:0] = A;
-	
 	end
 endmodule
 
