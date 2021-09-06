@@ -124,7 +124,10 @@ module ALU (Rsrc, Rdest, OpCode, Out, Flags);
 				
 				ARSH:
 					begin
-					
+							RightShiftA myRightShiftA (
+							.inValue(Rsrc),
+							.outValue(Out)
+						);
 					end
 				
 				default:
