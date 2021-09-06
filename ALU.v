@@ -237,20 +237,12 @@ module shift(inValue, outValue, shiftDir);
 	
 	//shift Left
 	if(shiftDir == 0) begin
-		outValue[15:1] = inValue[14:0];
-		outValue[0] = 1;
+		outValue = inValue <<< 1;
 	end
 	
 	//shirft R
 	else begin
-		outValue[14:0] = inValue [15:1];
-		if (inValue[15] == 1) begin
-			outValue[15] = 1;
-		end
-		
-		else begin
-			outValue[15] = 0;
-		end
+		outVAlue = inValue >>> 1;
 	end
 	
 
