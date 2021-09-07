@@ -56,12 +56,12 @@ initial begin
 	
 	//Self checking ADD
 	
-	for (i = 0; i < 2**16; i = i + 1)
+	for (i = 0; i < 2**4; i = i + 1)
 		begin
 			testWire = i;
 			$display("testWire = ");
 			$display("%b", testWire);
-			for (j = 0; j < 2**16; j = j + 1)
+			for (j = 0; j < 2**4; j = j + 1)
 				begin
 					OpCode = 4'b1111;
 					
@@ -81,6 +81,45 @@ initial begin
 					if (Out == testWire)
 						begin
 							$display("In the if");
+							testWire = testWire + 1;
+						end
+					else 
+						begin
+							$display("ADD failed");
+							$stop;
+						end
+				end
+		end
+		
+		
+		for (i = 2**16 - 2**4; i < 2**16; i = i + 1)
+		begin
+			testWire = i + 2**16 - 2**4;
+			$display("testWire = ");
+			$display("%b", testWire);
+			for (j = 2**16 - 2**4; j < 2**16; j = j + 1)
+				begin
+					OpCode = 4'b1111;
+					
+					#100;
+					Rsrc = i;
+					Rdest = j;
+					$display("Rsrc = ");
+					$display("%b", Rsrc);
+					$display("");
+					$display("Rdest = ");
+					$display("%b", Rdest);
+					OpCode = ADD;
+					#100;
+					$display ("Out = ");
+					$display ("%b", Out);
+					
+					$display ("testWire = %b", testWire);
+					
+					if (Out == testWire)
+						begin
+							$display("In the if");
+							
 							testWire = testWire + 1;
 						end
 					else 
