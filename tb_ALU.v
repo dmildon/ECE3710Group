@@ -38,13 +38,13 @@ ALU uut(
 initial begin
 
 	$display("Starting Testbench");
-//	OpCode = SUB;
-//	#1;
-//	
-//	// ADD TEST 
-//	Rsrc = 1; 
-//	Rdest = 1; 
-//	OpCode = ADD;
+	OpCode = SUB;
+	#1;
+	
+	// ADD TEST 
+	Rsrc = 1; 
+	Rdest = 1; 
+	OpCode = ADD;
 //	
 //	#10000; 
 //	
@@ -58,21 +58,25 @@ initial begin
 	
 	for (i = 0; i < 2**16; i = i + 1)
 		begin
-			$display("Entering the for loop");
 			testWire = i;
-			$display("just initialized testWire");
+			$display("testWire = ");
+			$display("%b", testWire);
 			for (j = 0; j < 2**16; j = j + 1)
 				begin
-					$display("Inside second loop");
 					OpCode = 4'b1111;
 					
 					#100;
-					$display("Initializing values");
 					Rsrc = i;
 					Rdest = j;
+					$display("Rsrc = ");
+					$display("%b", Rsrc);
+					$display("");
+					$display("Rdest = ");
+					$display("%b", Rdest);
 					OpCode = ADD;
-					$display ("Adding");
 					#100;
+					$display ("Out = ");
+					$display ("%b", Out);
 					
 					if (Out == testWire)
 						begin

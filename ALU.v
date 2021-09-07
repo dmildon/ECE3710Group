@@ -96,7 +96,7 @@ module ALU (Rsrc, Rdest, OpCode, Out, Flags);
 		.outValue(out_arsh)
 	);
 	
-	always@(OpCode)
+	always@(*)
 		begin
 			case(OpCode)
 				ADD: begin Out = out_add; Flags = flags_add; end 
@@ -131,7 +131,7 @@ module add_sub (rdest, rsrc, Cin, flags, out);
 	output reg [15:0] out;
 	output reg [4:0] flags;
 	
-	always@(rsrc, rdest, Cin) begin
+	always@(*) begin
 	
 		// Subtraction 
 		if(Cin)
