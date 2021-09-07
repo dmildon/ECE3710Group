@@ -169,7 +169,7 @@ module CMP (rdest, rsrc, flags, out);
 	output reg [15:0] out;
 	output reg [4:0] flags;
 	
-	always@(rsrc, rdest, Cin) begin
+	always@(rsrc, rdest) begin
 		// Addition
 		{flags[0], out} = rsrc + rdest;
 			

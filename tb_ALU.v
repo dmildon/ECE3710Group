@@ -19,6 +19,10 @@ module tb_ALU(); //must match name of file and don't forget endmodule
 	parameter RSH 		= 5'b1000;
 	parameter ARSH 	= 5'b1001;
 
+
+	integer i, j;
+	reg [15:0] testWire;
+	
 //declare test module
 //module name, variable name, portmapping
 //original or verilog file name of variable(test bench variable)
@@ -34,19 +38,56 @@ ALU uut(
 initial begin
 
 	$display("Starting Testbench");
-	OpCode = SUB;
-	#1;
+//	OpCode = SUB;
+//	#1;
+//	
+//	// ADD TEST 
+//	Rsrc = 1; 
+//	Rdest = 1; 
+//	OpCode = ADD;
+//	
+//	#10000; 
+//	
+//	OpCode = AND; 
+//	Rsrc = 4; 
+//	Rdest = -1;	
 	
-	// ADD TEST 
-	Rsrc = 1; 
-	Rdest = 1; 
-	OpCode = ADD;
 	
-	#10000; 
 	
-	OpCode = AND; 
-	Rsrc = -1; 
-	Rdest = -1;	
+	//Self checking ADD
+	
+	for (i = 0; i < 2**16; i = i + 1)
+		begin
+			$display("Entering the for loop");
+			testWire = i;
+			$display("just initialized testWire");
+			for (j = 0; j < 2**16; j = j + 1)
+				begin
+					$display("Inside second loop");
+					OpCode = 4'b1111;
+					
+					#100;
+					$display("Initializing values");
+					Rsrc = i;
+					Rdest = j;
+					OpCode = ADD;
+					$display ("Adding");
+					#100;
+					
+					if (Out == testWire)
+						begin
+							$display("In the if");
+							testWire = testWire + 1;
+						end
+					else 
+						begin
+							$display("ADD failed");
+							$stop;
+						end
+				end
+		end
+	
+	
 	
 end
 
