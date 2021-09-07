@@ -11,29 +11,16 @@ module ALU (Rsrc, Rdest, OpCode, Out, Flags);
 			Flags[4] = N
 		*/
 
-	parameter ADD 		= 5'b00000;
-	parameter ADDI 	= 5'b00001;
-	parameter ADDU 	= 5'b00010;
-	parameter ADDUI 	= 5'b00011;
-	parameter ADDC 	= 5'b00100;
-	parameter ADDCU 	= 5'b00101;
-	parameter ADDCUI 	= 5'b00110;
-	parameter ADDCI 	= 5'b00111;
-	parameter SUB 		= 5'b01000;
-	parameter SUBI 	= 5'b01001;
-	parameter CMP 		= 5'b01010;
-	parameter CMPI 	= 5'b01011;
-	parameter CMPUI 	= 5'b01100;
-	parameter AND 		= 5'b01101;
-	parameter OR 		= 5'b01110;
-	parameter XOR 		= 5'b01111;
-	parameter NOT 		= 5'b10000;
-	parameter LSH 		= 5'b10001;
-	parameter LSHI 	= 5'b10010;
-	parameter RSH 		= 5'b10011;
-	parameter RSHI 	= 5'b10100;
-	parameter ALSH 	= 5'b10101;
-	parameter ARSH 	= 5'b10110;
+	parameter ADD 		= 5'b0000;
+	parameter SUB 		= 5'b0001;
+	parameter CMP 		= 5'b0010;
+	parameter AND 		= 5'b0011;
+	parameter OR 		= 5'b0100;
+	parameter XOR 		= 5'b0101;
+	parameter NOT 		= 5'b0110;
+	parameter LSH 		= 5'b0111;
+	parameter RSH 		= 5'b1000;
+	parameter ARSH 	= 5'b1001;
 
 	wire [15:0] out_add, out_sub, out_cmp, out_and, out_or, out_xor, out_not, out_lsh, out_rsh, out_arsh; 
 	wire [4:0] flags_add, flags_sub, flags_cmp; 
