@@ -23,19 +23,78 @@ module ALU (Rsrc, Rdest, OpCode, Out, Flags);
 	parameter ARSH 	= 5'b1001;
 
 	wire [15:0] out_add, out_sub, out_cmp, out_and, out_or, out_xor, out_not, out_lsh, out_rsh, out_arsh; 
-	wire [4:0] flags_add, flags_sub, flags_cmp; 
+	wire [4:0] flags_add, flags_sub, flags_cmp;
 	
 
-	add_sub myAdd (.rdest(Rdest),.rsrc(Rsrc), .Cin(0), .flags(flags_add),.out(out_add));
-	add_sub mySub (.rdest(Rdest),.rsrc(Rsrc),.Cin(1),.flags(flags_sub),.out(out_sub));
-	add_sub myCmp (.rdest(Rdest),.rsrc(Rsrc),.Cin(0),.flags(flags_cmp),.out(out_cmp));
-	AND_ALU myAnd (.A(Rsrc),.B(Rdest),.Out(out_and));
-	OR_ALU myOr (.A(Rsrc),.B(Rdest),.Out(out_or));
-	XOR_ALU myXor (.A(Rsrc),.B(Rdest),.Out(out_xor));
-	NOT_ALU myNot (.A(Rsrc),.Out(out_not));
-	LeftShift myLeftShift (.inValue(Rsrc),.outValue(out_lsh));
-	RightShift myRightShift (.inValue(Rsrc),.outValue(out_rsh));
-	RightShiftA myRightShiftA (.inValue(Rsrc),.outValue(out_arsh));
+	add_sub myAdd (
+		.rdest(Rdest),
+		.rsrc(Rsrc),
+		.Cin(0),
+		.flags(flags_add),
+		.out(out_add)
+	);
+	
+	
+	add_sub mySub (
+		.rdest(Rdest),
+		.rsrc(Rsrc),
+		.Cin(1),
+		.flags(flags_sub),
+		.out(out_sub)
+	);
+	
+	
+	add_sub myCmp (
+		.rdest(Rdest),
+		.rsrc(Rsrc),
+		.flags(flags_cmp),
+		.out(out_cmp)
+	);
+	
+	
+	AND_ALU myAnd (
+		.A(Rsrc),
+		.B(Rdest),
+		.Out(out_and)
+	);
+	
+	
+	OR_ALU myOr (
+		.A(Rsrc),
+		.B(Rdest),
+		.Out(out_or)
+	);
+	
+	
+	XOR_ALU myXor (
+		.A(Rsrc),
+		.B(Rdest),
+		.Out(out_xor)
+	);
+	
+	
+	NOT_ALU myNot (
+		.A(Rsrc),
+		.Out(out_not)
+	);
+	
+	
+	LeftShift myLeftShift (
+		.inValue(Rsrc),
+		.outValue(out_lsh)
+	);
+	
+	
+	RightShift myRightShift (
+		.inValue(Rsrc),
+		.outValue(out_rsh)
+	);
+	
+	
+	RightShiftA myRightShiftA (
+		.inValue(Rsrc),
+		.outValue(out_arsh)
+	);
 	
 	always@(OpCode)
 		begin
@@ -105,9 +164,8 @@ module add_sub (rdest, rsrc, Cin, flags, out);
 	
 endmodule
 
-module CMP (rdest, rsrc, flags, out, Cin);
+module CMP (rdest, rsrc, flags, out);
 	input  [15:0] rdest, rsrc;
-	input  Cin;
 	output reg [15:0] out;
 	output reg [4:0] flags;
 	
