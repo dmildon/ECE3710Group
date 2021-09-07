@@ -35,105 +35,35 @@ module ALU (Rsrc, Rdest, OpCode, Out, Flags);
 	parameter ALSH 	= 5'b10101;
 	parameter ARSH 	= 5'b10110;
 
+	wire [15:0] out_add, out_sub, out_cmp, out_and, out_or, out_xor, out_not, out_lsh, out_rsh, out_arsh; 
+	wire [4:0] flags_add, flags_sub, flags_cmp; 
+	
+
+	add_sub myAdd (.rdest(Rdest),.rsrc(Rsrc), .Cin(0), .flags(flags_add),.out(out_add));
+	add_sub mySub (.rdest(Rdest),.rsrc(Rsrc),.Cin(1),.flags(flags_sub),.out(out_sub));
+	add_sub myCmp (.rdest(Rdest),.rsrc(Rsrc),.Cin(0),.flags(flags_cmp),.out(out_cmp));
+	AND_ALU myAnd (.A(Rsrc),.B(Rdest),.Out(out_and));
+	OR_ALU myOr (.A(Rsrc),.B(Rdest),.Out(out_or));
+	XOR_ALU myXor (.A(Rsrc),.B(Rdest),.Out(out_xor));
+	NOT_ALU myNot (.A(Rsrc),.Out(out_not));
+	LeftShift myLeftShift (.inValue(Rsrc),.outValue(out_lsh));
+	RightShift myRightShift (.inValue(Rsrc),.outValue(out_rsh));
+	RightShiftA myRightShiftA (.inValue(Rsrc),.outValue(out_arsh));
+	
 	always@(OpCode)
 		begin
 			case(OpCode)
-				ADD:
-					begin
-						add_sub myAdd (
-							.rdest(Rdest),
-							.rsrc(Rsrc),
-							.Cin(0),
-							.flags(Flags),
-							.out(Out)
-						);
-					end
-				
-				SUB:
-					begin
-						add_sub mySub (
-							.rdest(Rdest),
-							.rsrc(Rsrc),
-							.Cin(1),
-							.flags(Flags),
-							.out(Out)
-						);
-					end
-				
-				CMP:
-					begin
-						add_sub myCmp (
-							.rdest(Rdest),
-							.rsrc(Rsrc),
-							.Cin(0),
-							.flags(Flags),
-							.out(Out)
-						);
-					end
-				
-				AND:
-					begin
-						AND myAnd (
-							.A(Rsrc),
-							.B(Rdest),
-							.Out(Out)
-						);
-					end
-				
-				OR:
-					begin
-						OR myOr (
-							.A(Rsrc),
-							.B(Rdest),
-							.Out(Out)
-						);
-					end
-				
-				XOR:
-					begin
-						XOR myXor (
-							.A(Rsrc),
-							.B(Rdest),
-							.Out(Out)
-						);
-					end
-				
-				NOT:
-					begin
-						NOT myNot (
-							.A(Rsrc),
-							.Out(Out)
-						);
-					end
-				
-				LSH:
-					begin
-						LeftShift myLeftShift (
-							.inValue(Rsrc),
-							.outValue(Out)
-						);
-					end
-				
-				RSH:
-					begin
-						RightShift myRightShift (
-							.inValue(Rsrc),
-							.outValue(Out)
-						);
-					end
-				
-				ARSH:
-					begin
-							RightShiftA myRightShiftA (
-							.inValue(Rsrc),
-							.outValue(Out)
-						);
-					end
-				
-				default:
-					begin
-						
-					end
+				ADD: begin Out = out_add; Flags = flags_add; end 
+				SUB: begin Out = out_sub; Flags = flags_sub; end 
+				CMP: begin Out = out_cmp; Flags = flags_cmp; end 
+				AND: Out = out_and; 
+				OR:  Out = out_or;
+				XOR: Out = out_xor;
+				NOT: Out = out_not; 
+				LSH: Out = out_lsh;
+				RSH: Out = out_rsh;
+				ARSH:Out = out_arsh; 
+				default: Out = out_add; 
 			endcase 
 		end
 endmodule 
@@ -188,9 +118,9 @@ module add_sub (rdest, rsrc, Cin, flags, out);
 	
 endmodule
 
-module CMP (rdest, rsrc, flags, out);
+module CMP (rdest, rsrc, flags, out, Cin);
 	input  [15:0] rdest, rsrc;
-	input  Cin = 1;
+	input  Cin;
 	output reg [15:0] out;
 	output reg [4:0] flags;
 	
@@ -213,7 +143,7 @@ module CMP (rdest, rsrc, flags, out);
 	
 endmodule
 
-module AND (A, B, Out); 
+module AND_ALU (A, B, Out); 
 	input [15:0] A, B;
 	output[15:0] Out;
 	
@@ -222,7 +152,7 @@ module AND (A, B, Out);
 endmodule
 
 
-module OR (A, B, Out);
+module OR_ALU (A, B, Out);
 	input [15:0] A, B;
 	output [15:0] Out;
 
@@ -231,14 +161,14 @@ module OR (A, B, Out);
 	endmodule 
 
 
-module XOR (A, B, Out);
+module XOR_ALU (A, B, Out);
 	input [15:0] A, B;
 	output[15:0] Out;
 
 	assign Out = A ^ B;
 endmodule
 
-module NOT (A, Out);
+module NOT_ALU (A, Out);
 	input [15:0] A;
 	output[15:0] Out;
 
