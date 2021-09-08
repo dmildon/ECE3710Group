@@ -21,7 +21,7 @@ module tb_ALU_BO(); //must match name of file and don't forget endmodule
 
 
 	integer i, j;
-	reg [15:0] testWire, desired_result, j_val, i_val;
+	reg [15:0] testWire, desired_result_and, desired_result_or, desired_result_xor, desired_result_not,desired_result_lsh,desired_result_rsh, desired_result_arsh, j_val, i_val;
 	
 
 	
@@ -42,61 +42,88 @@ ALU uut(
 initial begin
 
 	$display("Starting Boolean Algebra Testbench");
-//	OpCode = SUB;
-//	#1;
-//	
-//	// ADD TEST 
-//	Rsrc = 1; 
-//	Rdest = 1; 
-//	OpCode = ADD;
-//	
-//	#10000; 
-//	
-//	OpCode = AND; 
-//	Rsrc = 4; 
-//	Rdest = -1;	
 	
-	
-//OpCode = ADD;
-//#1000;
-//OpCode = AND;
-//
-//Rsrc = 1; 
-//Rdest = -1; 
-//
-//#1000;
-	
-
-
 	for(i= 0; i<(2**16); i= i+1) begin
 		i_val = i;
+		Rsrc = i;
 		
-		for(j = 0; j<(2**16); j=j+1) begin
+		//for(j = 0; j<(2**16); j=j+1) begin 
+		//if we want to run exaustive tests we can uncomment this loop and set j_val to j not 16'b1010111100001100
 			
-			j_val = j;
+			j_val = 16'b1010111100001100;
 			OpCode = ADD;
 			#5;
 			
-			Rsrc = i;
 			Rdest = j;
+			desired_result_and = j_val & i_val;
+			desired_result_or = j_val | i_val;
+			desired_result_xor = j_val ^ i_val;
+			
 			
 			OpCode = AND;
 			#5;
-			
-			desired_result = j_val & i_val;
-			
-			#5;
-			if(desired_result != Out) begin 
-				$display("ADD failed");
+			if(desired_result_and != Out) begin 
+				$display("AND failed");
 				$stop;
 			end 
+			#5;// <--- I (Alex) dont think these need to be here because I dont need to wait to change or. 
+			  // However Nate and I put them there and I dont want to remove if it needs to be here
 			
-			// $display("%b and %b = %b,     (%b)", j_val, i_val, desired_result, Out);
+			OpCode = OR;
+			#5;
+			if(desired_result_or != Out) begin 
+				$display("OR failed");
+				$stop;
+			end 
+			#5;
 			
+			OpCode = XOR;
+			#5;
+			if(desired_result_xor != Out) begin 
+				$display("Xor failed");
+				$stop;
+			end
+		//end
 		
-		end
+		desired_result_not = !i_val;
+		desired_result_lsh = i_val << 1;
+		desired_result_rsh = i_val >> 1;
+		desired_result_arsh = i_val >>> 1;
+		
+		OpCode = NOT;
+		#5;
+		if(desired_result_not != Out) begin 
+			$display("Not failed");
+			$stop;
+		end 
+		#5;
+		
+		OpCode = LSH;
+		#5;
+		if(desired_result_lsh != Out) begin 
+			$display("Left Shift failed");
+			$stop;
+		end 
+		#5;
+		
+		OpCode = RSH;
+		#5;
+		if(desired_result_rsh != Out) begin 
+			$display("Right Shift failed");
+			$stop;
+		end 
+		#5;
+		
+		OpCode = ARSH;
+		#5;
+		if(desired_result_arsh != Out) begin 
+			$display("Arithmetic Right Shift failed");
+			$stop;
+		end 
+		#5;
 		
 	end
+	$display("Boolean Algebra Testbench Finished with no errors");
 	
 	
 end
