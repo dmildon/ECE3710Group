@@ -101,14 +101,14 @@ module ALU (Rsrc, Rdest, OpCode, Out, Flags);
 				ADD: begin Out = out_add; Flags = flags_add; end 
 				SUB: begin Out = out_sub; Flags = flags_sub; end 
 				CMP: begin Out = 16'bz; Flags = flags_cmp; end 
-				AND: begin Out = out_and; Flags = 5'b0; end
-				OR:  begin Out = out_or; Flags = 5'b0; end
-				XOR: begin Out = out_xor; Flags = 5'b0; end
-				NOT: begin Out = out_not; Flags = 5'b0; end
-				LSH: begin Out = out_lsh; Flags = 5'b0; end
-				RSH: begin Out = out_rsh; Flags = 5'b0; end
-				ARSH: begin Out = out_arsh; Flags = 5'b0; end
-				default: begin Out = out_add; Flags = 5'b0; end
+				AND: begin Out = out_and; Flags = 5'bz; end
+				OR:  begin Out = out_or; Flags = 5'bz; end
+				XOR: begin Out = out_xor; Flags = 5'bz; end
+				NOT: begin Out = out_not; Flags = 5'bz; end
+				LSH: begin Out = out_lsh; Flags = 5'bz; end
+				RSH: begin Out = out_rsh; Flags = 5'bz; end
+				ARSH: begin Out = out_arsh; Flags = 5'bz; end
+				default: begin Out = out_add; Flags = 5'bz; end
 			endcase 
 		end
 endmodule 
@@ -141,9 +141,9 @@ module CMP (rdest, rsrc, flags);
 	input  [15:0] rdest, rsrc;
 	output [4:0] flags;
 	
-	assign flags[0] = 0;
+	assign flags[0] = 5'bz;
 	assign flags[1] = rdest < rsrc;
-	assign flags[2] = 0;
+	assign flags[2] = 5'bz;
 	assign flags[3] = rdest == rsrc;
 	assign flags[4] = $signed(rdest) < $signed(rsrc);
 endmodule
@@ -153,7 +153,6 @@ module AND_ALU (A, B, Out);
 	output[15:0] Out;
 	
 	assign Out = (A & B);
-	
 endmodule
 
 
@@ -162,8 +161,7 @@ module OR_ALU (A, B, Out);
 	output [15:0] Out;
 
 	assign Out = A | B;
-
-	endmodule 
+endmodule 
 
 
 module XOR_ALU (A, B, Out);
@@ -186,42 +184,25 @@ endmodule
 //shiftDir = 0 is left, shiftDir = 1 is right
 //it would probably be easier to just do this opperation in the main module
 module LeftShift(inValue, outValue);
-	
 	input [15:0] inValue;
+	output [15:0] outValue;
 	
-	output reg [15:0] outValue;
-	
-	always@(inValue)
-		begin
-			//shift Left
-			outValue = inValue <<< 1;
-		end
-
+	assign outValue = inValue <<< 1;
 endmodule
 
 
 module RightShift(inValue, outValue);
 	input [15:0] inValue;
+	output [15:0] outValue;
 	
-	output reg [15:0] outValue;
-	
-	always@(inValue)
-		begin
-			//shift Right
-			outValue = inValue >> 1;
-		end
+	assign outValue = inValue >> 1;
 endmodule
 
 module RightShiftA(inValue, outValue);
 	input [15:0] inValue;
+	output [15:0] outValue;
 	
-	output reg [15:0] outValue;
-	
-	always@(inValue)
-		begin
-			//shift Right
-			outValue = inValue >>> 1;
-		end
+	assign outValue = inValue >>> 1;
 endmodule
 
 
