@@ -139,7 +139,7 @@ endmodule
 
 module CMP (rdest, rsrc, flags);
 	input  [15:0] rdest, rsrc;
-	output reg [4:0] flags;
+	output [4:0] flags;
 	
 	assign flags[0] = 0;
 	assign flags[1] = rdest < rsrc;
