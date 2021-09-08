@@ -37,7 +37,7 @@ module ALU (Rsrc, Rdest, OpCode, Out, Flags);
 	
 	add_sub mySub (
 		.rdest(Rdest),
-		.rsrc(Rsrc),
+		.rsrc(~Rsrc),
 		.Cin(1),
 		.flags(flags_sub),
 		.out(out_sub)
@@ -102,14 +102,14 @@ module ALU (Rsrc, Rdest, OpCode, Out, Flags);
 				ADD: begin Out = out_add; Flags = flags_add; end 
 				SUB: begin Out = out_sub; Flags = flags_sub; end 
 				CMP: begin Out = out_cmp; Flags = flags_cmp; end 
-				AND: Out = out_and; 
-				OR:  Out = out_or;
-				XOR: Out = out_xor;
-				NOT: Out = out_not; 
-				LSH: Out = out_lsh;
-				RSH: Out = out_rsh;
-				ARSH:Out = out_arsh; 
-				default: Out = out_add; 
+				AND: begin Out = out_and; Flags = 5'b0; end
+				OR:  begin Out = out_or; Flags = 5'b0; end
+				XOR: begin Out = out_xor; Flags = 5'b0; end
+				NOT: begin Out = out_not; Flags = 5'b0; end
+				LSH: begin Out = out_lsh; Flags = 5'b0; end
+				RSH: begin Out = out_rsh; Flags = 5'b0; end
+				ARSH: begin Out = out_arsh; Flags = 5'b0; end
+				default: begin Out = out_add; Flags = 5'b0; end
 			endcase 
 		end
 endmodule 
@@ -131,35 +131,18 @@ module add_sub (rdest, rsrc, Cin, flags, out);
 	output reg [15:0] out;
 	output reg [4:0] flags;
 	
-	always@(*) begin
+	always@(rdest, rsrc, Cin) begin
 	
-		// Subtraction 
-		if(Cin)
-			{flags[0], out} = rdest + ~rsrc + Cin;
 		// Addition
-		else
-			{flags[0], out} = rsrc + rdest;
-			
-		if(out == 0)
-			flags[3] = 1;
-		else
-			flags[3] = 0;
-			
-		if(rdest < rsrc)
-			flags[1] = 1;
-		else
-			flags[1] = 0;
+		{flags[0], out} = rsrc + rdest + Cin;
 		
-		if($signed(rdest) < $signed(rsrc))
-			flags[4] = 1;
-		else
-			flags[4] = 0;
+		flags[1] = rdest < rsrc;
+			
+		flags[2] = (rsrc[15] & rdest[15] & ~out[15]) | (~rsrc[15] & ~rdest[15] & out[15]);
+
+		flags[3] = 0;
 		
-		if((rsrc[15] == 1 & rdest[15] == 1 & out[15] == 0) || 
-		(rsrc[15] == 0 & rdest[15] == 0 & out[15] == 1))
-			flags[2] = 1;
-		else
-			flags[2] = 0;
+		flags[4] = $signed(rdest) < $signed(rsrc);
 	end
 	
 endmodule

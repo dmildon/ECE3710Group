@@ -42,11 +42,11 @@ initial begin
 	#1;
 	
 	// ADD TEST 
-	Rsrc = 1; 
-	Rdest = 1; 
+	Rsrc = -1; 
+	Rdest = 2**16 - 2**15; 
 	OpCode = ADD;
 //	
-//	#10000; 
+	#10000; 
 //	
 //	OpCode = AND; 
 //	Rsrc = 4; 
