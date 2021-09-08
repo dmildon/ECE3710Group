@@ -128,23 +128,14 @@ endmodule
 module add_sub (rdest, rsrc, Cin, flags, out);
 	input  [15:0] rdest, rsrc;
 	input  Cin;
-	output reg [15:0] out;
-	output reg [4:0] flags;
+	output [15:0] out;
+	output [4:0] flags;
 	
-	always@(rdest, rsrc, Cin) begin
-	
-		// Addition
-		{flags[0], out} = rsrc + rdest + Cin;
-		
-		flags[1] = rdest < rsrc;
-			
-		flags[2] = (rsrc[15] & rdest[15] & ~out[15]) | (~rsrc[15] & ~rdest[15] & out[15]);
-
-		flags[3] = 0;
-		
-		flags[4] = $signed(rdest) < $signed(rsrc);
-	end
-	
+	assign {flags[0], out} = rsrc + rdest + Cin;
+	assign flags[1] = rdest < rsrc;
+	assign flags[2] = (rsrc[15] & rdest[15] & ~out[15]) | (~rsrc[15] & ~rdest[15] & out[15]);
+	assign flags[3] = 0;
+	assign flags[4] = $signed(rdest) < $signed(rsrc);
 endmodule
 
 module CMP (rdest, rsrc, flags, out);
