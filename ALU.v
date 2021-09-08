@@ -47,7 +47,7 @@ module ALU (Rsrc, Rdest, OpCode, Out, Flags);
 	CMP myCmp (
 		.rdest(Rdest),
 		.rsrc(Rsrc),
-		.flags(flags_cmp),
+		.flags(flags_cmp)
 	);
 	
 	
