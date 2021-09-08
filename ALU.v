@@ -22,7 +22,7 @@ module ALU (Rsrc, Rdest, OpCode, Out, Flags);
 	parameter RSH 		= 5'b1000;
 	parameter ARSH 	= 5'b1001;
 
-	wire [15:0] out_add, out_sub, out_cmp, out_and, out_or, out_xor, out_not, out_lsh, out_rsh, out_arsh; 
+	wire [15:0] out_add, out_sub, out_and, out_or, out_xor, out_not, out_lsh, out_rsh, out_arsh; 
 	wire [4:0] flags_add, flags_sub, flags_cmp;
 	
 
@@ -44,11 +44,10 @@ module ALU (Rsrc, Rdest, OpCode, Out, Flags);
 	);
 	
 	
-	add_sub myCmp (
+	CMP myCmp (
 		.rdest(Rdest),
 		.rsrc(Rsrc),
 		.flags(flags_cmp),
-		.out(out_cmp)
 	);
 	
 	
@@ -101,7 +100,7 @@ module ALU (Rsrc, Rdest, OpCode, Out, Flags);
 			case(OpCode)
 				ADD: begin Out = out_add; Flags = flags_add; end 
 				SUB: begin Out = out_sub; Flags = flags_sub; end 
-				CMP: begin Out = out_cmp; Flags = flags_cmp; end 
+				CMP: begin Out = 16'bz; Flags = flags_cmp; end 
 				AND: begin Out = out_and; Flags = 5'b0; end
 				OR:  begin Out = out_or; Flags = 5'b0; end
 				XOR: begin Out = out_xor; Flags = 5'b0; end
@@ -134,32 +133,19 @@ module add_sub (rdest, rsrc, Cin, flags, out);
 	assign {flags[0], out} = rsrc + rdest + Cin;
 	assign flags[1] = rdest < rsrc;
 	assign flags[2] = (rsrc[15] & rdest[15] & ~out[15]) | (~rsrc[15] & ~rdest[15] & out[15]);
-	assign flags[3] = 0;
+	assign flags[3] = rdest == rsrc;
 	assign flags[4] = $signed(rdest) < $signed(rsrc);
 endmodule
 
-module CMP (rdest, rsrc, flags, out);
+module CMP (rdest, rsrc, flags);
 	input  [15:0] rdest, rsrc;
-	output reg [15:0] out;
 	output reg [4:0] flags;
 	
-	always@(rsrc, rdest) begin
-		// Addition
-		{flags[0], out} = rsrc + rdest;
-			
-		if(rdest < rsrc)
-			flags[1] = 1;
-		else
-			flags[1] = 0;
-		
-		if($signed(rdest) < $signed(rsrc))
-			flags[4] = 1;
-		else
-			flags[4] = 0;
-		
-		out = 16'bz;
-	end
-	
+	assign flags[0] = 0;
+	assign flags[1] = rdest < rsrc;
+	assign flags[2] = 0;
+	assign flags[3] = rdest == rsrc;
+	assign flags[4] = $signed(rdest) < $signed(rsrc);
 endmodule
 
 module AND_ALU (A, B, Out); 
