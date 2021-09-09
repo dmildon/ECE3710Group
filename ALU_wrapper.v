@@ -20,32 +20,31 @@ module ALU_wrapper (clk, data_input, ld_op_code, ld_src, ld_dest, Flags, Out);
 	); 
 
 	//Register for opcode
-	always@(posedge(clk), negedge(ld_op_code)) begin
+	always@(negedge(ld_op_code)) begin
 			
 			if(ld_op_code == 0) begin 
 				OpCode = data_input[4:0]; 
 			end 
-	
+			
 	end
 
-	/*
+
 	//Register for Rsrc
-	always@(posedge(clk), negedge(ld_src)) begin
+	always@(negedge(ld_src)) begin
 			
-			if(ld_op_code == 0)
+			if(ld_src == 0) begin
 				Rsrc = {data_input[9:0],6'b000000}; 
-	
+			end
 	end
 	
 	
 	//Register for Rdest
-	always@(posedge(clk), negedge(ld_dest)) begin
+	always@(negedge(ld_dest)) begin
 			
-			if(ld_op_code == 0)
+			if(ld_dest == 0) begin
 				Rdest = {data_input[9:0],6'b000000}; 
-	
+			end 
 	end
-	*/
 	
 
 endmodule 

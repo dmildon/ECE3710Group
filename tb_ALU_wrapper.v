@@ -34,8 +34,17 @@ initial begin
 	
 	// OR Operation
 	ld_op_code = 0; 
-	data_input = 10'b0000000100; 
+	data_input = 10'b0000000011; 
+	
 	#10;
+	ld_src = 0; 
+	data_input = 10'b0101010101; 
+	#10; 
+	
+	ld_dest = 0; 
+	data_input = 10'b1010101010; 
+	#10; 
+	
 	
 end
 
