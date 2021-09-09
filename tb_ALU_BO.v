@@ -83,44 +83,43 @@ initial begin
 				$display("Xor failed");
 				$stop;
 			end
-		//end
 		
-		desired_result_not = !i_val;
-		desired_result_lsh = i_val << 1;
-		desired_result_rsh = i_val >> 1;
-		desired_result_arsh = i_val >>> 1;
+			desired_result_not = !i_val;
+			desired_result_lsh = i_val << 1;
+			desired_result_rsh = i_val >> 1;
+			desired_result_arsh = i_val >>> 1;
 		
-		OpCode = NOT;
-		#5;
-		if(desired_result_not != Out) begin 
-			$display("Not failed");
-			$stop;
-		end 
-		#5;
+			OpCode = NOT;
+			#5;
+			if(desired_result_not != Out) begin 
+				$display("Not failed");
+				$stop;
+			end 
+			#5;
 		
-		OpCode = LSH;
-		#5;
-		if(desired_result_lsh != Out) begin 
-			$display("Left Shift failed");
-			$stop;
-		end 
-		#5;
+			OpCode = LSH;
+			#5;
+			if(desired_result_lsh != Out) begin 
+				$display("Left Shift failed");
+				$stop;
+			end 
+			#5;
 		
-		OpCode = RSH;
-		#5;
-		if(desired_result_rsh != Out) begin 
-			$display("Right Shift failed");
-			$stop;
-		end 
-		#5;
+			OpCode = RSH;
+			#5;
+			if(desired_result_rsh != Out) begin 
+				$display("Right Shift failed");
+				$stop;
+			end 
+			#5;
 		
-		OpCode = ARSH;
-		#5;
-		if(desired_result_arsh != Out) begin 
-			$display("Arithmetic Right Shift failed");
-			$stop;
-		end 
-		#5;
+			OpCode = ARSH;
+			#5;
+			if(desired_result_arsh != Out) begin 
+				$display("Arithmetic Right Shift failed");
+				$stop;
+			end 
+			#5;
 		
 	end
 	$display("Boolean Algebra Testbench Finished with no errors");
