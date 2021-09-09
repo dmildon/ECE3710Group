@@ -83,6 +83,7 @@ initial begin
 				$display("Xor failed");
 				$stop;
 			end
+			//end //<---this is to exit the commented out for loop
 		
 			desired_result_not = !i_val;
 			desired_result_lsh = i_val << 1;
