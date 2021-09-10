@@ -85,7 +85,7 @@ initial begin
 			end
 			//end //<---this is to exit the commented out for loop
 		
-			desired_result_not = !i_val;
+			desired_result_not = ~i_val;
 			desired_result_lsh = i_val << 1;
 			desired_result_rsh = i_val >> 1;
 			desired_result_arsh = i_val >>> 1;
