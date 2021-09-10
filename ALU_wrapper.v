@@ -1,4 +1,4 @@
-module ALU_wrapper (clk, data_input, ld_op_code, ld_src, ld_dest, Flags, Out, out1, out2, out3, out4);
+module ALU_wrapper (clk, data_input, ld_op_code, ld_src, ld_dest, Flags, out1, out2, out3, out4);
 
 	input clk; 
 	input [9:0] data_input;
@@ -9,25 +9,41 @@ module ALU_wrapper (clk, data_input, ld_op_code, ld_src, ld_dest, Flags, Out, ou
 	reg [15:0] Rsrc, Rdest;
 	reg [4:0] OpCode;
 	output [4:0] Flags;
-	output reg [15:0] Out;
-	output [6:0]out1;
-	output [6:0]out2;
-	output [6:0]out3;
-	output [6:0]out4;
+	wire [15:0] aluOut;
+	output [6:0]out1, out2, out3, out4;
 	
 	ALU myALU(
 		.Rsrc(Rsrc), 
 		.Rdest(Rdest), 
 		.OpCode(OpCode), 
 		.Flags(Flags), 
-		.Out(Out)
+		.Out(aluOut)
 	); 
 	
 	hexTo7Seg seg1(
-		.x(data_input[3:0]),
+		.x(aluOut[15:12]),
 		.z(out1)
 	
 	);
+	
+	hexTo7Seg seg2(
+		.x(aluOut[11:8]),
+		.z(out2)
+	
+	);
+
+	hexTo7Seg seg3(
+		.x(aluOut[7:4]),
+		.z(out3)
+	
+	);
+
+	hexTo7Seg seg4(
+		.x(aluOut[3:0]),
+		.z(out4)
+	
+	);
+
 
 	//Register for opcode
 	always@(negedge(ld_op_code)) begin
