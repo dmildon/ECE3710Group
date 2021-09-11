@@ -22,26 +22,28 @@ module ALU (Rsrc, Rdest, OpCode, Out, Flags);
 	parameter RSH 		= 5'b1000;
 	parameter ARSH 	= 5'b1001;
 
-	wire [15:0] out_add, out_sub, out_and, out_or, out_xor, out_not, out_lsh, out_rsh, out_arsh; 
+	wire [15:0] out_add, out_sub, out_and, out_or, out_xor, out_not, out_lsh, out_rsh, out_arsh;
+	reg [15:0] Rsrc_add; 
 	wire [4:0] flags_add, flags_sub, flags_cmp;
+	reg Cin_wire;
 	
-
+	
 	add_sub myAdd (
 		.rdest(Rdest),
-		.rsrc(Rsrc),
-		.Cin(0),
+		.rsrc(Rsrc_add),
+		.Cin(Cin_wire),
 		.flags(flags_add),
 		.out(out_add)
 	);
 	
 	
-	add_sub mySub (
-		.rdest(Rdest),
-		.rsrc(~Rsrc),
-		.Cin(1),
-		.flags(flags_sub),
-		.out(out_sub)
-	);
+//	add_sub mySub (
+//		.rdest(Rdest),
+//		.rsrc(~Rsrc),
+//		.Cin(1),
+//		.flags(flags_sub),
+//		.out(out_sub)
+//	);
 	
 	
 	CMP myCmp (
@@ -98,8 +100,8 @@ module ALU (Rsrc, Rdest, OpCode, Out, Flags);
 	always@(*)
 		begin
 			case(OpCode)
-				ADD: begin Out = out_add; Flags = flags_add; end 
-				SUB: begin Out = out_sub; Flags = flags_sub; end 
+				ADD: begin Rsrc_add = Rsrc; Cin_wire = 0; Out = out_add; Flags = flags_add; end 
+				SUB: begin Rsrc_add = ~Rsrc; Cin_wire = 1; Out = out_add; Flags = flags_add; end 
 				CMP: begin Out = 16'bx; Flags = flags_cmp; end 
 				AND: begin Out = out_and; Flags = 5'bx; end
 				OR:  begin Out = out_or; Flags = 5'bx; end
@@ -199,6 +201,7 @@ module RightShift(inValue, outValue);
 	
 	assign outValue = inValue >> 1;
 endmodule
+
 
 module RightShiftA(inValue, outValue);
 	input [15:0] inValue;
