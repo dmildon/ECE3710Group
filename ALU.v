@@ -91,16 +91,16 @@ module ALU (Rsrc, Rdest, OpCode, Out, Flags);
 	always@(*)
 		begin
 			case(OpCode)
-				ADD: begin Rsrc_add = Rsrc; Cin_wire = 0; Out = out_add; Flags = flags_add; end 
-				SUB: begin Rsrc_add = ~Rsrc; Cin_wire = 1; Out = out_add; Flags = flags_add; end 
-				CMP: begin Out = 16'bx; Flags = flags_cmp; end 
-				AND: begin Out = out_and; Flags = 5'bx; end
-				OR:  begin Out = out_or; Flags = 5'bx; end
-				XOR: begin Out = out_xor; Flags = 5'bx; end
-				NOT: begin Out = out_not; Flags = 5'bx; end
-				LSH: begin Out = out_lsh; Flags = 5'bx; end
-				RSH: begin Out = out_rsh; Flags = 5'bx; end
-				ARSH: begin Out = out_arsh; Flags = 5'bx; end
+				ADD:  begin Rsrc_add = Rsrc; Cin_wire = 0; Out = out_add; Flags = flags_add; end 
+				SUB:  begin Rsrc_add = ~Rsrc; Cin_wire = 1; Out = out_add; Flags = flags_add; end 
+				CMP:  begin Rsrc_add = 16'bx; Cin_wire = 1'bx; Out = 16'bx; Flags = flags_cmp; end 
+				AND:  begin Rsrc_add = 16'bx; Cin_wire = 1'bx; Out = out_and; Flags = 5'bx; end
+				OR:   begin Rsrc_add = 16'bx; Cin_wire = 1'bx; Out = out_or; Flags = 5'bx; end
+				XOR:  begin Rsrc_add = 16'bx; Cin_wire = 1'bx; Out = out_xor; Flags = 5'bx; end
+				NOT:  begin Rsrc_add = 16'bx; Cin_wire = 1'bx; Out = out_not; Flags = 5'bx; end
+				LSH:  begin Rsrc_add = 16'bx; Cin_wire = 1'bx; Out = out_lsh; Flags = 5'bx; end
+				RSH:  begin Rsrc_add = 16'bx; Cin_wire = 1'bx; Out = out_rsh; Flags = 5'bx; end
+				ARSH: begin Rsrc_add = 16'bx; Cin_wire = 1'bx; Out = out_arsh; Flags = 5'bx; end
 				default: begin Out = out_add; Flags = 5'bx; end
 			endcase 
 		end
