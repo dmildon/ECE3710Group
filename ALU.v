@@ -37,15 +37,6 @@ module ALU (Rsrc, Rdest, OpCode, Out, Flags);
 	);
 	
 	
-//	add_sub mySub (
-//		.rdest(Rdest),
-//		.rsrc(~Rsrc),
-//		.Cin(1),
-//		.flags(flags_sub),
-//		.out(out_sub)
-//	);
-	
-	
 	CMP myCmp (
 		.rdest(Rdest),
 		.rsrc(Rsrc),
@@ -183,10 +174,6 @@ module NOT_ALU (A, Out);
 endmodule
 
 
-//Arithmetic shift
-//input 16-bit inValue, 1 bit shift Dir
-//shiftDir = 0 is left, shiftDir = 1 is right
-//it would probably be easier to just do this opperation in the main module
 module LeftShift(inValue, outValue);
 	input [15:0] inValue;
 	output [15:0] outValue;
@@ -209,44 +196,3 @@ module RightShiftA(inValue, outValue);
 	
 	assign outValue = inValue >>> 1;
 endmodule
-
-
-
-//Sign Extension
-//A is the 8 bit immediate
-//S is signed
-//out is the signed extended immediate
-	
-module signExtend(A,S, Out);
-	
-	input [7:0] A;
-	input wire S;
-	output reg [15:0] Out;
-	
-	always@(A, S) begin
-		
-		if(S) begin
-			
-			if(A[7]) begin
-				Out[15:8] = 8'b11111111;
-				Out[7:0] = A;
-			end
-		
-			else begin 
-				Out[15:8] = 8'b00000000;
-				Out[7:0] = A;
-			end 
-		
-		end
-	
-		else begin 
-			Out[15:8] = 8'b00000000;
-			Out[7:0] = A;
-		end
-	
-	end
-		
-endmodule
-
-
-
