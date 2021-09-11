@@ -177,7 +177,7 @@ module NOT_ALU (A, Out);
 	input [15:0] A;
 	output[15:0] Out;
 
-	assign Out = !A;
+	assign Out = ~A;
 endmodule
 
 
