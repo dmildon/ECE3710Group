@@ -194,5 +194,5 @@ module RightShiftA(inValue, outValue);
 	input [15:0] inValue;
 	output [15:0] outValue;
 	
-	assign outValue = inValue >>> 1;
+	assign outValue = $signed(inValue) >>> 1;
 endmodule
