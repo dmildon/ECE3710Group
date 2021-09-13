@@ -191,8 +191,9 @@ endmodule
 
 
 module RightShiftA(inValue, outValue);
-	input [15:0] inValue;
+	input wire signed [15:0] inValue;
 	output [15:0] outValue;
 	
-	assign outValue = $signed(inValue) >>> 1;
+	
+assign outValue = inValue >>> 1;
 endmodule
