@@ -38,7 +38,7 @@
 
 set_global_assignment -name FAMILY "Cyclone V"
 set_global_assignment -name DEVICE 5CSEMA5F31C6
-set_global_assignment -name TOP_LEVEL_ENTITY ALU_wrapper
+set_global_assignment -name TOP_LEVEL_ENTITY ALU
 set_global_assignment -name ORIGINAL_QUARTUS_VERSION 18.1.0
 set_global_assignment -name PROJECT_CREATION_TIME_DATE "16:50:37  AUGUST 31, 2021"
 set_global_assignment -name LAST_QUARTUS_VERSION "18.1.0 Lite Edition"
@@ -66,9 +66,6 @@ set_global_assignment -name VERILOG_FILE ALU_wrapper.v
 set_global_assignment -name VERILOG_FILE ALU.v
 set_global_assignment -name VERILOG_FILE tb_ALU_BO.v
 set_global_assignment -name VERILOG_FILE tb_ALU.v
-set_global_assignment -name PARTITION_NETLIST_TYPE SOURCE -section_id Top
-set_global_assignment -name PARTITION_FITTER_PRESERVATION_LEVEL PLACEMENT_AND_ROUTING -section_id Top
-set_global_assignment -name PARTITION_COLOR 16764057 -section_id Top
 set_location_assignment PIN_Y21 -to Flags[4]
 set_location_assignment PIN_W21 -to Flags[3]
 set_location_assignment PIN_W20 -to Flags[2]
@@ -115,4 +112,7 @@ set_location_assignment PIN_AC28 -to out4[3]
 set_location_assignment PIN_AD29 -to out4[2]
 set_location_assignment PIN_AE29 -to out4[1]
 set_location_assignment PIN_AB23 -to out4[0]
+set_global_assignment -name PARTITION_NETLIST_TYPE SOURCE -section_id Top
+set_global_assignment -name PARTITION_FITTER_PRESERVATION_LEVEL PLACEMENT_AND_ROUTING -section_id Top
+set_global_assignment -name PARTITION_COLOR 16764057 -section_id Top
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top
