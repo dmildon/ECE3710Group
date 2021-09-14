@@ -1,6 +1,5 @@
-`timescale 1ps/1ps //Always include this 
-
-module tb_ALU(); //must match name of file and don't forget endmodule
+`timescale 1ps/1ps 
+module tb_ALU(); 
 
 
 	reg signed [15:0] Rsrc, Rdest;
@@ -22,10 +21,6 @@ module tb_ALU(); //must match name of file and don't forget endmodule
 
 	integer i, j;
 	reg [15:0] testWire, desired_result_and, desired_result_or, desired_result_xor, desired_result_not,desired_result_lsh,desired_result_rsh, desired_result_arsh, j_val, i_val;
-	
-//declare test module
-//module name, variable name, portmapping
-//original or verilog file name of variable(test bench variable)
 
 ALU uut(
 	.Rsrc(Rsrc),
@@ -39,15 +34,6 @@ initial
 	begin
 
 		$display("Starting Testbench");
-		OpCode = SUB;
-		#1;
-		
-		// ADD TEST 
-		Rsrc = -1; 
-		Rdest = 2**16 - 2**15; 
-		OpCode = ADD;
-		#10000;
-		
 		
 		//Self checking ADD
 		$display("Testing ADD");
@@ -58,11 +44,11 @@ initial
 					begin
 						OpCode = 4'b1111;
 						
-						#100;
+						#5;
 						Rsrc = i;
 						Rdest = j;
 						OpCode = ADD;
-						#100;
+						#5;
 						
 						if (Out == testWire)
 							begin
@@ -84,11 +70,11 @@ initial
 					begin
 						OpCode = 4'b1111;
 						
-						#100;
+						#5;
 						Rsrc = i;
 						Rdest = j;
 						OpCode = ADD;
-						#100;
+						#5;
 						
 						if (Out == testWire)
 							begin
@@ -111,11 +97,11 @@ initial
 					begin
 						OpCode = 4'b1111;
 						
-						#100;
+						#5;
 						Rsrc = j;
 						Rdest = i;
 						OpCode = SUB;
-						#100;
+						#5;
 						
 						if (Out == testWire)
 							begin
@@ -137,11 +123,11 @@ initial
 					begin
 						OpCode = 4'b1111;
 						
-						#100;
+						#5;
 						Rsrc = j;
 						Rdest = i;
 						OpCode = SUB;
-						#100;
+						#5;
 						
 						if (Out == testWire)
 							begin
@@ -163,11 +149,11 @@ initial
 			begin
 				OpCode = 4'b1111;
 				
-				#100;
+				#5;
 				Rsrc = i;
 				Rdest = j;
 				OpCode = ADD;
-				#100;
+				#5;
 				
 				if (j >= 2**4 && !Flags[0])
 					begin
@@ -196,11 +182,11 @@ initial
 			begin
 				OpCode = 4'b1111;
 				
-				#100;
+				#5;
 				Rsrc = i;
 				Rdest = j;
 				OpCode = ADD;
-				#100;
+				#5;
 				
 				if (j < 2**2 && !Flags[1])
 					begin
@@ -229,12 +215,12 @@ initial
 	
 		//Self checking F flag
 		$display("Testing F Flag");
-		#50;
+		#5;
 		Rsrc = -1;
 		Rdest = 16'b1000000000000000;
-		#50;
+		#5;
 		OpCode = ADD;
-		#50;
+		#5;
 	
 		if(!Flags[2]) 
 			begin
@@ -382,92 +368,83 @@ initial
 			begin
 				i_val = i;
 				Rsrc = i;
+				j_val = 16'b1010111100001100;
+				OpCode = ADD;
+				#5;
 				
-				//for(j = 0; j<(2**16); j=j+1) begin 
-				//if we want to run exaustive tests we can uncomment this loop and set j_val to j not 16'b1010111100001100
+				Rdest = j_val;
+				desired_result_and = j_val & i_val;
+				desired_result_or = j_val | i_val;
+				desired_result_xor = j_val ^ i_val;
+				
+				
+				OpCode = AND;
+				#5;
+				if(desired_result_and != Out) 
+					begin 
+						$display("AND failed");
+						$stop;
+					end 
+				#5;
+				OpCode = OR;
+				#5;
+				if(desired_result_or != Out) 
+					begin 
+						$display("OR failed");
+						$stop;
+					end 
+				#5;
+				
+				OpCode = XOR;
+				#5;
+				if(desired_result_xor != Out) 
+					begin 
+						$display("Xor failed");
+						$stop;
+					end
 					
-					j_val = 16'b1010111100001100;
-					OpCode = ADD;
-					#5;
-					
-					Rdest = j_val;
-					desired_result_and = j_val & i_val;
-					desired_result_or = j_val | i_val;
-					desired_result_xor = j_val ^ i_val;
-					
-					
-					OpCode = AND;
-					#5;
-					if(desired_result_and != Out) 
-						begin 
-							$display("AND failed");
-							$stop;
-						end 
-					#5;// <--- I (Alex) dont think these need to be here because I dont need to wait to change or. 
-					  // However Nate and I put them there and I dont want to remove if it needs to be here
-					
-					OpCode = OR;
-					#5;
-					if(desired_result_or != Out) 
-						begin 
-							$display("OR failed");
-							$stop;
-						end 
-					#5;
-					
-					OpCode = XOR;
-					#5;
-					if(desired_result_xor != Out) 
-						begin 
-							$display("Xor failed");
-							$stop;
-						end
-					//end //<---this is to exit the commented out for loop
 				
-					desired_result_not = ~i_val;
-					desired_result_lsh = i_val << 1;
-					desired_result_rsh = i_val >> 1;
-					desired_result_arsh = $signed(i_val) >>> 1;
-				
-					OpCode = NOT;
-					#5;
-					if(desired_result_not != Out) 
-						begin 
-							$display("Not failed");
-							$stop;
-						end 
-					#5;
-				
-					OpCode = LSH;
-					#5;
-					if(desired_result_lsh != Out) 
-						begin 
-							$display("Left Shift failed");
-							$stop;
-						end 
-					#5;
-				
-					OpCode = RSH;
-					#5;
-					if(desired_result_rsh != Out) 
-						begin 
-							$display("Right Shift failed");
-							$stop;
-						end 
-					#5;
-				
-					OpCode = ARSH;
-					#5;
-					if(desired_result_arsh != Out) 
-						begin 
-							$display("Arithmetic Right Shift failed");
-							$stop;
-						end 
-					#5;
-				
+				desired_result_not = ~i_val;
+				desired_result_lsh = i_val << 1;
+				desired_result_rsh = i_val >> 1;
+				desired_result_arsh = $signed(i_val) >>> 1;
+			
+				OpCode = NOT;
+				#5;
+				if(desired_result_not != Out) 
+					begin 
+						$display("Not failed");
+						$stop;
+					end 
+				#5;
+			
+				OpCode = LSH;
+				#5;
+				if(desired_result_lsh != Out) 
+					begin 
+						$display("Left Shift failed");
+						$stop;
+					end 
+				#5;
+			
+				OpCode = RSH;
+				#5;
+				if(desired_result_rsh != Out) 
+					begin 
+						$display("Right Shift failed");
+						$stop;
+					end 
+				#5;
+			
+				OpCode = ARSH;
+				#5;
+				if(desired_result_arsh != Out) 
+					begin 
+						$display("Arithmetic Right Shift failed");
+						$stop;
+					end 
+				#5;
 			end
-		$display("Boolean Algebra Testbench Finished with no errors");
-	
+		$display("Testbench Finished with no errors");
 	end
-
 endmodule

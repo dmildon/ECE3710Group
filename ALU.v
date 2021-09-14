@@ -194,6 +194,5 @@ module RightShiftA(inValue, outValue);
 	input wire signed [15:0] inValue;
 	output [15:0] outValue;
 	
-	
-assign outValue = inValue >>> 1;
+	assign outValue = inValue >>> 1;
 endmodule
