@@ -45,7 +45,7 @@ module RegFile (RdestRegLoc, RsrcRegLoc, Clk, En, Rst, Load, RdestOut, RsrcOut);
 		end
 	endgenerate
 	
-	always @(negedge Rst, posedge Clk) begin
+	always @(posedge Clk) begin
 		case(RdestRegLoc)
 			reg00: begin RdestOut = Out[0]; end
 			reg01: begin RdestOut = Out[1]; end
@@ -66,7 +66,7 @@ module RegFile (RdestRegLoc, RsrcRegLoc, Clk, En, Rst, Load, RdestOut, RsrcOut);
 		endcase
 	end
 	
-		always @(negedge Rst, posedge Clk) begin
+	always @(posedge Clk) begin
 		case(RsrcRegLoc)
 			reg00: begin RsrcOut = Out[0]; end
 			reg01: begin RsrcOut = Out[1]; end

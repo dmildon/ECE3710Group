@@ -27,8 +27,8 @@ module RegFile_wrapper (clk, data_input, ld_Reg, ld_Op_Code, ld_Imm, ld_En_Rst, 
 		.Imm_s(Imm_s), 
 		.OpCode(OpCode), 
 		.AluOutput(aluOutput), 
-		.Flags(Flags);
-	
+		.Flags(Flags)
+	);
 	
 	hexTo7Seg seg1(
 		.x(aluOutput[15:12]),

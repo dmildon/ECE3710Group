@@ -9,7 +9,8 @@ module RegFile_Alu (RdestRegLoc, RsrcRegLoc, Clk, En, Rst, Imm,Imm_s, OpCode, Al
 	input [4:0] OpCode;
 	output [4:0] Flags;
 	
-	wire [15:0] RdestOut, RsrcOut, RsrcAlu;
+	wire [15:0] RdestOut, RsrcOut;
+	reg [15:0] RsrcAlu;
 	
 	RegFile myReg(
 		.RdestRegLoc(RdestRegLoc), 
@@ -35,7 +36,7 @@ module RegFile_Alu (RdestRegLoc, RsrcRegLoc, Clk, En, Rst, Imm,Imm_s, OpCode, Al
 			RsrcAlu <= RsrcOut;
 		
 		else begin
-			RsrcAlu <= imm;
+			RsrcAlu <= Imm;
 		end
 	end
 	
