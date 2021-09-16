@@ -108,6 +108,7 @@ module Register(in, clk, en, rst, out);
 	end
 endmodule 
 
+
 module Dec4to16(in, E, en);
 	input [3:0] in;
 	input E;
