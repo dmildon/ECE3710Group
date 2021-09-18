@@ -8,8 +8,20 @@ module tb_RegFile_Alu ();
 	
 	wire [15:0] AluOutput, RdestOut; 
 	wire [4:0] Flags;
+	wire [15:0] AluSrcIn;
 	
-//	integer i, j;
+	parameter ADD 		= 4'b0000;
+	parameter SUB 		= 4'b0001;
+	parameter CMP 		= 4'b0010;
+	parameter AND 		= 4'b0011;
+	parameter OR 		= 4'b0100;
+	parameter XOR 		= 4'b0101;
+	parameter NOT 		= 4'b0110;
+	parameter LSH 		= 4'b0111;
+	parameter RSH 		= 4'b1000;
+	parameter ARSH 	= 4'b1001;
+	
+	integer i;
 	
 	RegFile_Alu uut(
 		.RdestRegLoc(RdestRegLoc),
@@ -22,7 +34,8 @@ module tb_RegFile_Alu ();
 		.OpCode(OpCode), 
 		.AluOutput(AluOutput), 
 		.RdestOut(RdestOut),
-		.Flags(Flags)
+		.Flags(Flags),
+		.AluSrcIn(AluSrcIn)
 	);
  
 	initial begin
@@ -34,33 +47,25 @@ module tb_RegFile_Alu ();
 		Clk = 0;
 		Rst = 1;
 		En = 0;
-		#10;
+		#5; //Clk=1
 		Rst = 0;
-		#10;
+		#5; //Clk=0
 		Rst = 1;
 		RdestRegLoc = 4'b0000;
-		#20;
-		$display("Rdest = %d", RdestOut); //Should be 0
-		$display("AluOutput = %d", AluOutput); //Should be x
-		#10;
-		OpCode = 4'b0000; //ADD
-		Imm_s = 1;
-		Imm = 5;
 		En =  1;
-		#10;
-//		Clk = 1;
-		#10;
-		$display("Rdest = %d", RdestOut); // Should be 5
-		$display("AluOutput = %d", AluOutput); // Should be 5
-		#10;
-		Clk = 0;
-		#10;
-		Clk = 1;
-		$display("Rdest = %d", RdestOut); //Should be 5
-		$display("AluOutput = %d", AluOutput); //Should be 10
-		#10;
-		Clk = 0;
+		OpCode = ADD;
+		Imm_s = 1;
+		Imm = 1;
+		#5; //Clk=1
+		$display("RdestOut = %b", RdestOut);
+		
+		#10; //Clk=1
 		En = 0;
-		#10;
+		
+		$display("RdestOut = %b", RdestOut);
+		
+		
+		
 	end
+	always #5 Clk = ~Clk;
 endmodule

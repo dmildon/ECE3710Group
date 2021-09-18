@@ -11,16 +11,16 @@ module ALU (Rsrc, Rdest, OpCode, Out, Flags);
 			Flags[4] = N
 		*/
 
-	parameter ADD 		= 5'b0000;
-	parameter SUB 		= 5'b0001;
-	parameter CMP 		= 5'b0010;
-	parameter AND 		= 5'b0011;
-	parameter OR 		= 5'b0100;
-	parameter XOR 		= 5'b0101;
-	parameter NOT 		= 5'b0110;
-	parameter LSH 		= 5'b0111;
-	parameter RSH 		= 5'b1000;
-	parameter ARSH 	= 5'b1001;
+	parameter ADD 		= 4'b0000;
+	parameter SUB 		= 4'b0001;
+	parameter CMP 		= 4'b0010;
+	parameter AND 		= 4'b0011;
+	parameter OR 		= 4'b0100;
+	parameter XOR 		= 4'b0101;
+	parameter NOT 		= 4'b0110;
+	parameter LSH 		= 4'b0111;
+	parameter RSH 		= 4'b1000;
+	parameter ARSH 	= 4'b1001;
 
 	wire [15:0] out_add, out_sub, out_and, out_or, out_xor, out_not, out_lsh, out_rsh, out_arsh;
 	reg [15:0] Rsrc_add; 
