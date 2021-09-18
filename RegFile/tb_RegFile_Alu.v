@@ -34,40 +34,33 @@ module tb_RegFile_Alu ();
 		Clk = 0;
 		Rst = 1;
 		En = 0;
-		#5; // Clk = 1
+		#10;
 		Rst = 0;
-		#5; // Clk = 0
+		#10;
 		Rst = 1;
 		RdestRegLoc = 4'b0000;
-		#15; // Clk = 1
-		$display("Rdest = %d", RdestOut);
-		$display("AluOutput = %d", AluOutput);
-
-		#5;
-		
-		OpCode = 4'b0000;
+		#20;
+		$display("Rdest = %d", RdestOut); //Should be 0
+		$display("AluOutput = %d", AluOutput); //Should be x
+		#10;
+		OpCode = 4'b0000; //ADD
 		Imm_s = 1;
 		Imm = 5;
-		
-		
-		
 		En =  1;
-		
-		#5;
-		$display("Rdest = %d", RdestOut);
-		$display("AluOutput = %d", AluOutput);
-		#5;
-		$display("Rdest = %d", RdestOut);
-		$display("AluOutput = %d", AluOutput);
-		#5;
+		#10;
+//		Clk = 1;
+		#10;
+		$display("Rdest = %d", RdestOut); // Should be 5
+		$display("AluOutput = %d", AluOutput); // Should be 5
+		#10;
+		Clk = 0;
+		#10;
+		Clk = 1;
+		$display("Rdest = %d", RdestOut); //Should be 5
+		$display("AluOutput = %d", AluOutput); //Should be 10
+		#10;
+		Clk = 0;
 		En = 0;
-		$display("Rdest = %d", RdestOut);
-		$display("AluOutput = %d", AluOutput);
-		#25;
-		$display("Rdest = %d", RdestOut);
-		$display("AluOutput = %d", AluOutput);
-		
+		#10;
 	end
-	
-	always #5 Clk = ~Clk;
 endmodule
