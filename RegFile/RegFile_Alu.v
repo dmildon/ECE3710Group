@@ -10,7 +10,7 @@ module RegFile_Alu (RdestRegLoc, RsrcRegLoc, Clk, En, Rst, Imm,Imm_s, OpCode, Al
 	output [4:0] Flags;
 	
 	wire [15:0] RdestOut, RsrcOut;
-	reg [15:0] RsrcAlu;
+	reg [15:0] AluSrcIn;
 	
 	RegFile myReg(
 		.RdestRegLoc(RdestRegLoc), 
@@ -24,19 +24,19 @@ module RegFile_Alu (RdestRegLoc, RsrcRegLoc, Clk, En, Rst, Imm,Imm_s, OpCode, Al
 	);
 	
 	ALU myALU(
-		.Rsrc(RsrcOut), 
+		.Rsrc(AluSrcIn), 
 		.Rdest(RdestOut), 
 		.OpCode(OpCode), 
 		.Flags(Flags), 
 		.Out(AluOutput)
 	);
 	
-	always @(Imm_s) begin
+	always @(posedge Clk) begin
 		if (~Imm_s)
-			RsrcAlu <= RsrcOut;
+			AluSrcIn <= RsrcOut;
 		
 		else begin
-			RsrcAlu <= Imm;
+			AluSrcIn <= Imm;
 		end
 	end
 	

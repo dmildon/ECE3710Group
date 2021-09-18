@@ -53,14 +53,20 @@ module tb_RegFile_Alu ();
 		
 		En =  1;
 		
-		#15;
-		$display("Rdest = %d", RdestOut);
-		$display("AluOutput = %d", AluOutput);
-		En = 0;
 		#5;
-		
 		$display("Rdest = %d", RdestOut);
 		$display("AluOutput = %d", AluOutput);
+		#5;
+		$display("Rdest = %d", RdestOut);
+		$display("AluOutput = %d", AluOutput);
+		#5;
+		En = 0;
+		$display("Rdest = %d", RdestOut);
+		$display("AluOutput = %d", AluOutput);
+		#25;
+		$display("Rdest = %d", RdestOut);
+		$display("AluOutput = %d", AluOutput);
+		
 	end
 	
 	always #5 Clk = ~Clk;
