@@ -38,7 +38,7 @@
 
 set_global_assignment -name FAMILY "Cyclone V"
 set_global_assignment -name DEVICE 5CSEMA5F31C6
-set_global_assignment -name TOP_LEVEL_ENTITY RegFile_Alu
+set_global_assignment -name TOP_LEVEL_ENTITY RegFile_wrapper
 set_global_assignment -name ORIGINAL_QUARTUS_VERSION 18.1.0
 set_global_assignment -name PROJECT_CREATION_TIME_DATE "17:04:19  SEPTEMBER 15, 2021"
 set_global_assignment -name LAST_QUARTUS_VERSION "18.1.0 Lite Edition"
@@ -52,23 +52,66 @@ set_global_assignment -name EDA_OUTPUT_DATA_FORMAT "VERILOG HDL" -section_id eda
 set_global_assignment -name POWER_PRESET_COOLING_SOLUTION "23 MM HEAT SINK WITH 200 LFPM AIRFLOW"
 set_global_assignment -name POWER_BOARD_THERMAL_MODEL "NONE (CONSERVATIVE)"
 set_global_assignment -name EDA_TEST_BENCH_ENABLE_STATUS TEST_BENCH_MODE -section_id eda_simulation
-set_global_assignment -name EDA_NATIVELINK_SIMULATION_TEST_BENCH tb_RegFile_Alu -section_id eda_simulation
-set_global_assignment -name EDA_TEST_BENCH_NAME tb_RegFile -section_id eda_simulation
-set_global_assignment -name EDA_DESIGN_INSTANCE_NAME NA -section_id tb_RegFile
-set_global_assignment -name EDA_TEST_BENCH_MODULE_NAME tb_RegFile -section_id tb_RegFile
+set_global_assignment -name EDA_NATIVELINK_SIMULATION_TEST_BENCH tb_RegFile_wrapper -section_id eda_simulation
 set_global_assignment -name VERILOG_FILE RegFile_wrapper.v
 set_global_assignment -name VERILOG_FILE RegFile_Alu.v
 set_global_assignment -name VERILOG_FILE ../ALU/ALU.v
 set_global_assignment -name VERILOG_FILE RegFile.v
 set_global_assignment -name VERILOG_FILE tb_RegFile.v
-set_global_assignment -name VERILOG_FILE tb_RegFile_Alu.v
-set_global_assignment -name EDA_TEST_BENCH_NAME tb_RegFile_Alu -section_id eda_simulation
-set_global_assignment -name EDA_DESIGN_INSTANCE_NAME NA -section_id tb_RegFile_Alu
-set_global_assignment -name EDA_TEST_BENCH_MODULE_NAME tb_RegFile_Alu -section_id tb_RegFile_Alu
-set_global_assignment -name EDA_GENERATE_FUNCTIONAL_NETLIST ON -section_id eda_simulation
+set_location_assignment PIN_Y21 -to Flags[4]
+set_location_assignment PIN_W21 -to Flags[3]
+set_location_assignment PIN_W20 -to Flags[2]
+set_location_assignment PIN_Y19 -to Flags[1]
+set_location_assignment PIN_W19 -to Flags[0]
+set_location_assignment PIN_AE12 -to data_input[9]
+set_location_assignment PIN_AD10 -to data_input[8]
+set_location_assignment PIN_AC9 -to data_input[7]
+set_location_assignment PIN_AE11 -to data_input[6]
+set_location_assignment PIN_AD12 -to data_input[5]
+set_location_assignment PIN_AD11 -to data_input[4]
+set_location_assignment PIN_AF10 -to data_input[3]
+set_location_assignment PIN_AF9 -to data_input[2]
+set_location_assignment PIN_AC12 -to data_input[1]
+set_location_assignment PIN_AB12 -to data_input[0]
+set_location_assignment PIN_Y16 -to ld_Reg
+set_location_assignment PIN_W15 -to ld_Setup
+set_location_assignment PIN_AA15 -to ld_Imm
+set_location_assignment PIN_AA14 -to ld_clk
+set_location_assignment PIN_AA25 -to out1[6]
+set_location_assignment PIN_AA26 -to out1[5]
+set_location_assignment PIN_AB26 -to out1[4]
+set_location_assignment PIN_AB27 -to out1[3]
+set_location_assignment PIN_Y27 -to out1[2]
+set_location_assignment PIN_AA28 -to out1[1]
+set_location_assignment PIN_V25 -to out1[0]
+set_location_assignment PIN_W25 -to out2[6]
+set_location_assignment PIN_V23 -to out2[5]
+set_location_assignment PIN_W24 -to out2[4]
+set_location_assignment PIN_W22 -to out2[3]
+set_location_assignment PIN_Y24 -to out2[2]
+set_location_assignment PIN_Y23 -to out2[1]
+set_location_assignment PIN_AA24 -to out2[0]
+set_location_assignment PIN_AB22 -to out3[6]
+set_location_assignment PIN_AB25 -to out3[5]
+set_location_assignment PIN_AB28 -to out3[4]
+set_location_assignment PIN_AC25 -to out3[3]
+set_location_assignment PIN_AD25 -to out3[2]
+set_location_assignment PIN_AC27 -to out3[1]
+set_location_assignment PIN_AD26 -to out3[0]
+set_location_assignment PIN_AC30 -to out4[6]
+set_location_assignment PIN_AC29 -to out4[5]
+set_location_assignment PIN_AD30 -to out4[4]
+set_location_assignment PIN_AC28 -to out4[3]
+set_location_assignment PIN_AD29 -to out4[2]
+set_location_assignment PIN_AE29 -to out4[1]
+set_location_assignment PIN_AB23 -to out4[0]
+set_global_assignment -name VERILOG_FILE tb_RegFile_wrapper.v
+set_global_assignment -name EDA_TEST_BENCH_NAME tb_RegFile_wrapper -section_id eda_simulation
+set_global_assignment -name EDA_DESIGN_INSTANCE_NAME NA -section_id tb_RegFile_wrapper
+set_global_assignment -name EDA_TEST_BENCH_MODULE_NAME tb_RegFile_wrapper -section_id tb_RegFile_wrapper
+set_global_assignment -name EDA_TEST_BENCH_FILE tb_RegFile_wrapper.v -section_id tb_RegFile_wrapper
 set_global_assignment -name PARTITION_NETLIST_TYPE SOURCE -section_id Top
 set_global_assignment -name PARTITION_FITTER_PRESERVATION_LEVEL PLACEMENT_AND_ROUTING -section_id Top
 set_global_assignment -name PARTITION_COLOR 16764057 -section_id Top
-set_global_assignment -name EDA_TEST_BENCH_FILE tb_RegFile.v -section_id tb_RegFile
-set_global_assignment -name EDA_TEST_BENCH_FILE tb_RegFile_Alu.v -section_id tb_RegFile_Alu
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top
+set_global_assignment -name EDA_GENERATE_FUNCTIONAL_NETLIST ON -section_id eda_simulation

@@ -1,21 +1,28 @@
-module RegFile_wrapper (clk, data_input, ld_Reg, ld_Op_Code, ld_Imm, ld_En_Rst, Flags, out1, out2, out3, out4);
+module RegFile_wrapper (data_input, ld_Reg, ld_Setup, ld_Imm, ld_clk, Flags, out1, out2, out3, out4);
 
-	input clk; 
 	input [9:0] data_input;
 	input ld_Reg;
-	input ld_Op_Code;
+	input ld_Setup;
 	input ld_Imm; 
-	input ld_En_Rst; 
+	input ld_clk; 
 	
 	reg [3:0] RsrcLoc, RdestLoc;
 	reg [4:0] OpCode;
 	reg [15:0] imm_val;
 	reg Rst,En, Imm_s;
 	output [4:0] Flags;
-	wire [15:0] aluOutput;
+	wire [15:0] aluOutput, RdestOut;
+	reg clk;
 	output [6:0]out1, out2, out3, out4;
 	
 	//TODO: Add clock enable when an input is sent and turn it off after one tick. 
+	initial begin
+		//rst registers
+		//Rst = 1;
+		// #5;
+		Rst = 0;
+		clk = 0;
+	end
 	
 	RegFile_Alu myRegALu(
 		.RdestRegLoc(RdestLoc), 
@@ -26,41 +33,43 @@ module RegFile_wrapper (clk, data_input, ld_Reg, ld_Op_Code, ld_Imm, ld_En_Rst, 
 		.Imm(imm_val),
 		.Imm_s(Imm_s), 
 		.OpCode(OpCode), 
-		.AluOutput(aluOutput), 
+		.RdestOut(RdestOut),
 		.Flags(Flags)
 	);
 	
 	hexTo7Seg seg1(
-		.x(aluOutput[15:12]),
+		.x(RdestOut[15:12]),
 		.z(out1)
 	
 	);
 	
 	hexTo7Seg seg2(
-		.x(aluOutput[11:8]),
+		.x(RdestOut[11:8]),
 		.z(out2)
 	
 	);
 
 	hexTo7Seg seg3(
-		.x(aluOutput[7:4]),
+		.x(RdestOut[7:4]),
 		.z(out3)
 	
 	);
 
 	hexTo7Seg seg4(
-		.x(aluOutput[3:0]),
+		.x(RdestOut[3:0]),
 		.z(out4)
 	
 	);
 
 
 	//Register for opcode
-	always@(negedge(ld_Op_Code)) begin
+	always@(negedge(ld_Setup)) begin
 			
-			if(ld_Op_Code == 0) begin 
+			if(ld_Setup == 0) begin 
 				OpCode = data_input[4:0]; 
-				Imm_s = data_input[9];
+				Imm_s = data_input[7];
+				En = data_input[8];
+				Rst = data_input[9];
 			end 
 			
 	end
@@ -84,7 +93,35 @@ module RegFile_wrapper (clk, data_input, ld_Reg, ld_Op_Code, ld_Imm, ld_En_Rst, 
 			end 
 	end
 	
+	always@(ld_clk) begin
+		
+		if(ld_clk == 0) begin
+			clk = 1; 
+		end 
+		else begin 
+			clk = 0; 
+		end 
+		
+	end 
+	
+	/*
+	always@(negedge(ld_clk)) begin
+		
+		if(ld_clk == 0) begin
+			clk = 1; 
+		end 
+	end 
+	
+	always@(posedge(ld_clk)) begin
+		
+		if(ld_clk == 1) begin
+			clk = 0; 
+		end 
+	end
+	*/
+	
 	//Register for loading Enable / RST
+	/*
 	always@(negedge(ld_En_Rst)) begin
 			
 			if(ld_En_Rst == 0) begin
@@ -92,6 +129,7 @@ module RegFile_wrapper (clk, data_input, ld_Reg, ld_Op_Code, ld_Imm, ld_En_Rst, 
 				Rst = data_input[0];
 			end 
 	end
+	*/ 
 	
 
 endmodule 
