@@ -15,16 +15,16 @@ module RegFile_Alu (RdestRegLoc, RsrcRegLoc, Clk, En, Rst, Imm,Imm_s, OpCode, Al
 	RegFile myReg(
 		.RdestRegLoc(RdestRegLoc), 
 		.RsrcRegLoc(RsrcRegLoc), 
-		.Clk(clk), 
+		.Clk(Clk), 
 		.En(En), 
 		.Rst(Rst), 
 		.Load(AluOutput), 
 		.RdestOut(RdestOut), 
-		.RsrcOut(RscrcOut)
+		.RsrcOut(RsrcOut)
 	);
 	
 	ALU myALU(
-		.Rsrc(RsrcAlu), 
+		.Rsrc(RsrcOut), 
 		.Rdest(RdestOut), 
 		.OpCode(OpCode), 
 		.Flags(Flags), 

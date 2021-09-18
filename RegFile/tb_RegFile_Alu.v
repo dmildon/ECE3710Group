@@ -34,13 +34,15 @@ module tb_RegFile_Alu ();
 		Clk = 0;
 		Rst = 1;
 		En = 0;
-		#5;
+		#5; // Clk = 1
 		Rst = 0;
-		#5;
+		#5; // Clk = 0
 		Rst = 1;
 		RdestRegLoc = 4'b0000;
-		#5;
+		#15; // Clk = 1
 		$display("Rdest = %d", RdestOut);
+		$display("AluOutput = %d", AluOutput);
+
 		#5;
 		
 		OpCode = 4'b0000;
@@ -51,12 +53,14 @@ module tb_RegFile_Alu ();
 		
 		En =  1;
 		
-		#5;
+		#15;
 		$display("Rdest = %d", RdestOut);
+		$display("AluOutput = %d", AluOutput);
 		En = 0;
 		#5;
 		
 		$display("Rdest = %d", RdestOut);
+		$display("AluOutput = %d", AluOutput);
 	end
 	
 	always #5 Clk = ~Clk;
