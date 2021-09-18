@@ -1,4 +1,4 @@
-module RegFile_Alu (RdestRegLoc, RsrcRegLoc, Clk, En, Rst, Imm,Imm_s, OpCode, AluOutput, RdestOut, Flags, AluSrcIn);
+module RegFile_Alu (RdestRegLoc, RsrcRegLoc, Clk, En, Rst, Imm,Imm_s, OpCode, AluOutput, RdestOut, Flags, AluSrcIn, RsrcOut);
 
 	input [3:0] RdestRegLoc, RsrcRegLoc;
 	input Clk, En, Rst, Imm_s; //Imm_s is 1 when we want to use the Imm value, else its 0 if we want to use RegSrc
@@ -9,7 +9,7 @@ module RegFile_Alu (RdestRegLoc, RsrcRegLoc, Clk, En, Rst, Imm,Imm_s, OpCode, Al
 	input [4:0] OpCode;
 	output [4:0] Flags;
 	
-	wire [15:0] RsrcOut;
+	output wire [15:0] RsrcOut;
 	output reg [15:0] AluSrcIn;
 	
 	RegFile myReg(
@@ -18,7 +18,7 @@ module RegFile_Alu (RdestRegLoc, RsrcRegLoc, Clk, En, Rst, Imm,Imm_s, OpCode, Al
 		.Clk(Clk), 
 		.En(En), 
 		.Rst(Rst), 
-		.Load(AluSrcIn), 
+		.Load(AluOutput), 
 		.RdestOut(RdestOut), 
 		.RsrcOut(RsrcOut)
 	);

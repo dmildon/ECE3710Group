@@ -6,7 +6,7 @@ module tb_RegFile_Alu ();
 	reg [15:0] Imm;
 	reg [4:0] OpCode;
 	
-	wire [15:0] AluOutput, RdestOut; 
+	wire [15:0] AluOutput, RdestOut, RsrcOut; 
 	wire [4:0] Flags;
 	wire [15:0] AluSrcIn;
 	
@@ -35,14 +35,15 @@ module tb_RegFile_Alu ();
 		.AluOutput(AluOutput), 
 		.RdestOut(RdestOut),
 		.Flags(Flags),
-		.AluSrcIn(AluSrcIn)
+		.AluSrcIn(AluSrcIn),
+		.RsrcOut(RsrcOut)
 	);
  
 	initial begin
 		
 		$display("Starting integrated testbench");
 		
-		$display("");
+		$display("Setup");
 		
 		Clk = 0;
 		Rst = 1;
@@ -56,16 +57,26 @@ module tb_RegFile_Alu ();
 		OpCode = ADD;
 		Imm_s = 1;
 		Imm = 1;
-		#5; //Clk=1
-		$display("RdestOut = %b", RdestOut);
-		
-		#10; //Clk=1
+		#10; //Clk=0
 		En = 0;
-		
-		$display("RdestOut = %b", RdestOut);
-		
+		Imm_s = 0;
 		
 		
+		$display("Test adding to different register");
+		for (i = 1; i < 16; i = i + 1) begin
+			RsrcRegLoc = 4'b0;
+			RdestRegLoc = i;
+			En = 1;
+			#15; //Clk = 1
+			En = 0;
+			if (RdestOut != 1) begin
+				$display("Test failed");
+				$stop;
+			end
+			#5; //Clk = 0
+		end
+		
+		$display("All Tests passed");
 	end
 	always #5 Clk = ~Clk;
 endmodule
