@@ -29,12 +29,6 @@ module RegFile_Alu (RdestRegLoc, RsrcRegLoc, Clk, En, Rst, Imm,Imm_s, OpCode, Tr
 		.OpCode(OpCode), 
 		.Flags(Flags), 
 		.Out(AluOutput)
-	); 
-	
-	TriStateBuff myBuff (
-		.in(AluOutput),
-		.en(Clk),
-		.out(TriBuffOut)
 	);
 	
 	always @(Imm_s) begin
@@ -46,17 +40,4 @@ module RegFile_Alu (RdestRegLoc, RsrcRegLoc, Clk, En, Rst, Imm,Imm_s, OpCode, Tr
 		end
 	end
 	
-endmodule 
-
-
-module TriStateBuff (in, en, out);
-
-	input [15:0] in;
-	input en;
-   output reg [15:0] out;
-
-	always @(*) begin
-		out <= (en ? in : 'bz);
-	end
-
 endmodule 
