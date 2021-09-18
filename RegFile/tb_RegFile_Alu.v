@@ -6,7 +6,6 @@ module tb_RegFile_Alu ();
 	reg [15:0] Imm;
 	reg [4:0] OpCode;
 	
-	wire [15:0] AluOutput, RdestOut, RsrcOut; 
 	wire [4:0] Flags;
 	wire [15:0] AluSrcIn;
 	
@@ -32,11 +31,8 @@ module tb_RegFile_Alu ();
 		.Imm(Imm),
 		.Imm_s(Imm_s), 
 		.OpCode(OpCode), 
-		.AluOutput(AluOutput), 
 		.RdestOut(RdestOut),
-		.Flags(Flags),
-		.AluSrcIn(AluSrcIn),
-		.RsrcOut(RsrcOut)
+		.Flags(Flags)
 	);
  
 	initial begin
