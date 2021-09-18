@@ -56,9 +56,9 @@ module RegFile_wrapper (clk, data_input, ld_Reg, ld_Op_Code, ld_Imm, ld_En_Rst, 
 
 
 	//Register for opcode
-	always@(negedge(ld_op_code)) begin
+	always@(negedge(ld_Op_Code)) begin
 			
-			if(ld_op_code == 0) begin 
+			if(ld_Op_Code == 0) begin 
 				OpCode = data_input[4:0]; 
 				Imm_s = data_input[9];
 			end 
@@ -69,7 +69,7 @@ module RegFile_wrapper (clk, data_input, ld_Reg, ld_Op_Code, ld_Imm, ld_En_Rst, 
 	//Register for Imm
 	always@(negedge(ld_Imm)) begin
 			
-			if(ld_src == 0) begin
+			if(ld_Imm == 0) begin
 				imm_val = {data_input[9:0],6'b000000}; 
 			end
 	end
@@ -78,16 +78,16 @@ module RegFile_wrapper (clk, data_input, ld_Reg, ld_Op_Code, ld_Imm, ld_En_Rst, 
 	//Register for loading Reg locations
 	always@(negedge(ld_Reg)) begin
 			
-			if(ld_dest == 0) begin
+			if(ld_Reg == 0) begin
 				RdestLoc = data_input[9:6];
 				RsrcLoc = data_input[3:0];
 			end 
 	end
 	
 	//Register for loading Enable / RST
-	always@(negedge(ld_Reg)) begin
+	always@(negedge(ld_En_Rst)) begin
 			
-			if(ld_dest == 0) begin
+			if(ld_En_Rst == 0) begin
 				En = data_input[1];
 				Rst = data_input[0];
 			end 
