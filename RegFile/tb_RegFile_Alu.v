@@ -7,7 +7,7 @@ module tb_RegFile_Alu ();
 	reg [4:0] OpCode;
 	
 	wire [4:0] Flags;
-	wire [15:0] AluSrcIn;
+	wire [15:0] RdestOut;
 	
 	parameter ADD 		= 4'b0000;
 	parameter SUB 		= 4'b0001;
@@ -56,6 +56,11 @@ module tb_RegFile_Alu ();
 		#10; //Clk=0
 		En = 0;
 		Imm_s = 0;
+		if (RdestOut != 1) begin
+			$display("Setup Failed");
+			$stop;
+		end
+		$display("Setup finished without error.");
 		
 		
 		$display("Test adding to different register");
@@ -63,13 +68,13 @@ module tb_RegFile_Alu ();
 			RsrcRegLoc = 4'b0;
 			RdestRegLoc = i;
 			En = 1;
-			#15; //Clk = 1
+			#10; //Clk = 0
 			En = 0;
 			if (RdestOut != 1) begin
 				$display("Test failed");
 				$stop;
 			end
-			#5; //Clk = 0
+			#10; //Clk = 0
 		end
 		
 		$display("All Tests passed");
