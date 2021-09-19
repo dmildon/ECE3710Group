@@ -9,6 +9,7 @@ module tb_RegFile_wrapper();
 	
 	wire [4:0] Flags;
 	wire [6:0] out1, out2, out3, out4;
+	wire[15:0] RdestOut;
 	
 	
 	RegFile_wrapper uut (
@@ -21,13 +22,30 @@ module tb_RegFile_wrapper();
 		.out1(out1),
 		.out2(out2),
 		.out3(out3), 
-		.out4(out4) 
+		.out4(out4),
+		.RdestOut(RdestOut)
 	);
 	
 	initial begin
 		
-		$display("Starting ALU Wrapper Testbench");
+		$display("Starting Regfile + ALU Wrapper Testbench");
+		//rst all registers
+		data_input = 10'b1000000000; 
+		ld_Setup = 1;
+		ld_clk = 1; 
+		ld_Imm = 1;
+		ld_Reg = 1;
 		
+		#5; 
+		ld_Setup = 0;
+		
+		#5; 
+		ld_Setup = 1;
+		
+		 
+		
+		 #10;
+		//simulate actual user input ADD 8 to the first register
 		data_input = 10'b0001000000; 
 		ld_Reg = 0; 
 		
@@ -45,11 +63,23 @@ module tb_RegFile_wrapper();
 		
 		#10; 
 		ld_Imm = 0;
-		
 		ld_clk = 0; 
 		 
 		 #10; 
 		ld_clk = 1; 
+		
+		//step through again so its on the pos edge
+		ld_clk = 0; 
+		 #10; 
+		ld_clk = 1; 
+		#10;
+		ld_clk = 0; 
+		#10;
+		ld_clk = 1;	
+		#10;
+		ld_clk = 0; 
+		#10;
+		
 			
 	end
 	

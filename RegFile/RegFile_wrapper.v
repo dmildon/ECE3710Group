@@ -1,4 +1,4 @@
-module RegFile_wrapper (data_input, ld_Reg, ld_Setup, ld_Imm, ld_clk, Flags, out1, out2, out3, out4);
+module RegFile_wrapper (data_input, ld_Reg, ld_Setup, ld_Imm, ld_clk, Flags, out1, out2, out3, out4,RdestOut);
 
 	input [9:0] data_input;
 	input ld_Reg;
@@ -11,7 +11,7 @@ module RegFile_wrapper (data_input, ld_Reg, ld_Setup, ld_Imm, ld_clk, Flags, out
 	reg [15:0] imm_val;
 	reg Rst,En, Imm_s;
 	output [4:0] Flags;
-	wire [15:0] aluOutput, RdestOut;
+	output wire [15:0] RdestOut;
 	reg clk;
 	output [6:0]out1, out2, out3, out4;
 	
