@@ -5,7 +5,8 @@ module tb_RegFile_wrapper();
 	reg ld_Reg;
 	reg ld_Setup;
 	reg ld_Imm; 
-	reg ld_clk; 
+	reg ld_Inst; 
+	reg clk; 
 	
 	wire [4:0] Flags;
 	wire [6:0] out1, out2, out3, out4;
@@ -17,7 +18,8 @@ module tb_RegFile_wrapper();
 		.ld_Reg(ld_Reg),
 		.ld_Setup(ld_Setup),
 		.ld_Imm(ld_Imm),
-		.ld_clk(ld_clk),
+		.ld_Inst(ld_Inst), 
+		.clk(clk),
 		.Flags(Flags),
 		.out1(out1),
 		.out2(out2),
@@ -28,8 +30,32 @@ module tb_RegFile_wrapper();
 	
 	initial begin
 		
+		
+		clk = 1; 
 		$display("Starting Regfile + ALU Wrapper Testbench");
+		
+		data_input = 10'b0001000000; 
+		ld_Reg = 0; 
+		#10; 
+		
+		ld_Reg = 1;
+		data_input = 10'b0000000000; 
+		ld_Setup = 0;
+		#10; 
+		
+		ld_Setup = 1;
+		data_input = 10'b1111000000; 
+		ld_Imm = 0; 	
+		#10; 
+		
+		ld_Imm = 1; 
+		ld_Inst = 0; 
+		#10; 
+		
+		
+		
 		//rst all registers
+		/*
 		data_input = 10'b1000000000; 
 		ld_Setup = 1;
 		ld_clk = 1; 
@@ -79,8 +105,10 @@ module tb_RegFile_wrapper();
 		#10;
 		ld_clk = 0; 
 		#10;
-		
+		*/ 
 			
 	end
+	always #5 clk = ~clk;
+	
 	
 endmodule

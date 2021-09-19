@@ -1,21 +1,27 @@
-module RegFile_wrapper (data_input, ld_Reg, ld_Setup, ld_Imm, ld_clk, Flags, out1, out2, out3, out4,RdestOut);
+module RegFile_wrapper (data_input, ld_Reg, ld_Setup, ld_Imm, ld_Inst, clk, Flags, out1, out2, out3, out4, RdestOut);
 
 	input [9:0] data_input;
 	input ld_Reg;
 	input ld_Setup;
 	input ld_Imm; 
-	input ld_clk; 
+	input ld_Inst; 
+	input clk;
 	
 	reg [3:0] RsrcLoc, RdestLoc;
 	reg [4:0] OpCode;
 	reg [15:0] imm_val;
-	reg Rst,En, Imm_s;
+	reg Rst,En, Imm_s, Instr_Btn_Pressed;
+	wire Instr_Btn_en;
+	wire Instr_Btn_out;
+	
 	output [4:0] Flags;
 	output wire [15:0] RdestOut;
-	reg clk;
 	output [6:0]out1, out2, out3, out4;
 	
-	//TODO: Add clock enable when an input is sent and turn it off after one tick. 
+	
+	
+	//TODO: Add clock enable when an input is sent and turn it off after one tick.
+	/*
 	initial begin
 		//rst registers
 		//Rst = 1;
@@ -23,6 +29,7 @@ module RegFile_wrapper (data_input, ld_Reg, ld_Setup, ld_Imm, ld_clk, Flags, out
 		Rst = 0;
 		clk = 0;
 	end
+	*/
 	
 	RegFile_Alu myRegALu(
 		.RdestRegLoc(RdestLoc), 
@@ -61,15 +68,38 @@ module RegFile_wrapper (data_input, ld_Reg, ld_Setup, ld_Imm, ld_clk, Flags, out
 	
 	);
 
+	
+	//Register for loading Reg locations
+	always@(negedge(ld_Reg)) begin
+			
+			if(ld_Reg == 0) begin
+				RdestLoc = data_input[9:6];
+				RsrcLoc = data_input[3:0];
+			end 
+	end
 
-	//Register for opcode
+	//Register for setup
 	always@(negedge(ld_Setup)) begin
 			
 			if(ld_Setup == 0) begin 
-				OpCode = data_input[4:0]; 
-				Imm_s = data_input[7];
-				En = data_input[8];
-				Rst = data_input[9];
+				OpCode = data_input[3:0]; 
+				Imm_s = data_input[4];
+				
+				Rst = data_input[9]; 
+				
+				/*
+				if(Rst == 1) begin 
+					
+					RdestLoc = 0; 
+					RsrcLoc  = 0; 
+					OpCode   = 0; 
+					Imm_s    = 0; 
+					// imm_val  = 0; 
+					En       = 0; 
+					
+				end
+				*/
+				
 			end 
 			
 	end
@@ -82,17 +112,50 @@ module RegFile_wrapper (data_input, ld_Reg, ld_Setup, ld_Imm, ld_clk, Flags, out
 				imm_val = {data_input[9:0],6'b000000}; 
 			end
 	end
+
 	
+	always@(negedge(ld_Inst) or negedge(clk)) begin 
+		
+		if(ld_Inst == 0) begin  
+			Instr_Btn_Pressed = 1; 
+		end
+		
+		else if(Instr_Btn_Pressed == 1) begin
+			En = 1;
+			Instr_Btn_Pressed = 0; 
+		end
+		
+		else begin
+			En = 0;
+		end
 	
-	//Register for loading Reg locations
-	always@(negedge(ld_Reg)) begin
-			
-			if(ld_Reg == 0) begin
-				RdestLoc = data_input[9:6];
-				RsrcLoc = data_input[3:0];
-			end 
+	end 
+	
+	/*
+	always@(negedge(ld_Inst)) begin
+	
+		if(ld_Inst == 0) begin 
+			Instr_Btn_en = 1; 
+			Instr_Btn_Pressed = 1; 
+		end
+		
 	end
 	
+	always@(negedge(clk)) begin 
+		
+		//if button press reg is on
+		if(Instr_Btn_out == 1) begin
+			En = 1;
+			Instr_Btn_en = 0; 
+		end
+		else begin
+			En = 0;
+		end
+	
+	end
+	*/ 	
+	
+	/*
 	always@(ld_clk) begin
 		
 		if(ld_clk == 0) begin
@@ -103,22 +166,8 @@ module RegFile_wrapper (data_input, ld_Reg, ld_Setup, ld_Imm, ld_clk, Flags, out
 		end 
 		
 	end 
+	*/ 
 	
-	/*
-	always@(negedge(ld_clk)) begin
-		
-		if(ld_clk == 0) begin
-			clk = 1; 
-		end 
-	end 
-	
-	always@(posedge(ld_clk)) begin
-		
-		if(ld_clk == 1) begin
-			clk = 0; 
-		end 
-	end
-	*/
 	
 	//Register for loading Enable / RST
 	/*
@@ -133,6 +182,29 @@ module RegFile_wrapper (data_input, ld_Reg, ld_Setup, ld_Imm, ld_clk, Flags, out
 	
 
 endmodule 
+
+ 
+
+module Register_Button(in, button_en, out);
+	
+	input in;
+	input button_en;
+	
+	output reg out;
+	
+	always @(button_en) begin
+		
+		if(button_en == 0) begin 
+			out = 0; 
+		end 
+		
+		else begin 
+			out = in; 
+		end
+	end
+	
+endmodule
+ 
 
 module hexTo7Seg(
 		input [3:0]x,
