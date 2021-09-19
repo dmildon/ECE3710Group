@@ -163,6 +163,56 @@ module tb_RegFile_Alu ();
 			#10; //Clk = 0
 		end
 		
+		Rst = 1;
+		#5; //Clk=1
+		Rst = 0;
+		#5; //Clk=0
+		Rst = 1;
+		RdestRegLoc = 4'b0100;
+		En =  1;
+		OpCode = ADD;
+		Imm_s = 1;
+		Imm = 16'b1101000110101100;
+		#10; //Clk=0
+		En = 0;
+		Imm_s = 0;
+		if (RdestOut != 16'b1101000110101100) begin
+			$display("Setup Boolean Operations Failed");
+			$stop;
+		end
+		
+		RsrcRegLoc = 4'b0100;
+		RdestRegLoc = 4'b0011;
+		En = 1;
+		#10;
+		En = 0;
+		if (RdestOut != 16'b1101000110101100) begin
+			$display("Setup Boolean Operations Failed");
+			$stop;
+		end
+		OpCode = AND;
+		$display("Setup Boolean Operations finished without error.");
+		#10;
+		En = 1;
+		#10;
+		En = 0;
+		if (RdestOut != 16'b1101000110101100) begin
+			$display("Setup Boolean Operations Failed");
+			$stop;
+		end
+		OpCode = OR;
+		#10;
+		En = 1;
+		#10;
+		En = 0;
+		if (RdestOut != 16'b1101000110101100) begin
+			$display("Setup Boolean Operations Failed");
+			$stop;
+		end
+		$display("Boolean Operations Passed");
+		
+		
+		
 		$display("All Tests passed");
 	end
 	always #5 Clk = ~Clk;
