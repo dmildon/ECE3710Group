@@ -1,16 +1,12 @@
-module RegFile_wrapper (data_input, ld_Reg, ld_Setup, ld_Imm, ld_Inst, clk, Flags, out1, out2, out3, out4, RdestOut);
+module RegFile_wrapper (data_input, ld_Reg, ld_Setup, ld_Imm, clk, en, Flags, out1, out2, out3, out4, RdestOut);
 
-	input [9:0] data_input;
-	input ld_Reg;
-	input ld_Setup;
-	input ld_Imm; 
-	input ld_Inst; 
-	input clk;
+	input [7:0] data_input;
+	input ld_Reg, ld_Setup, ld_Imm, clk, en;
 	
 	reg [3:0] RsrcLoc, RdestLoc;
 	reg [4:0] OpCode;
 	reg [15:0] imm_val;
-	reg Rst,En, Imm_s, Instr_Btn_Pressed;
+	reg Rst, Imm_s, Instr_Btn_Pressed;
 	wire Instr_Btn_en;
 	wire Instr_Btn_out;
 	
@@ -35,7 +31,7 @@ module RegFile_wrapper (data_input, ld_Reg, ld_Setup, ld_Imm, ld_Inst, clk, Flag
 		.RdestRegLoc(RdestLoc), 
 		.RsrcRegLoc(RsrcLoc), 
 		.Clk(clk), 
-		.En(En), 
+		.En(en), 
 		.Rst(Rst), 
 		.Imm(imm_val),
 		.Imm_s(Imm_s), 
@@ -67,13 +63,13 @@ module RegFile_wrapper (data_input, ld_Reg, ld_Setup, ld_Imm, ld_Inst, clk, Flag
 		.z(out4)
 	
 	);
-
+	
 	
 	//Register for loading Reg locations
 	always@(negedge(ld_Reg)) begin
 			
 			if(ld_Reg == 0) begin
-				RdestLoc = data_input[9:6];
+				RdestLoc = data_input[7:4];
 				RsrcLoc = data_input[3:0];
 			end 
 	end
@@ -85,7 +81,7 @@ module RegFile_wrapper (data_input, ld_Reg, ld_Setup, ld_Imm, ld_Inst, clk, Flag
 				OpCode = data_input[3:0]; 
 				Imm_s = data_input[4];
 				
-				Rst = data_input[9]; 
+				Rst = data_input[7]; 
 				
 				/*
 				if(Rst == 1) begin 
@@ -109,27 +105,10 @@ module RegFile_wrapper (data_input, ld_Reg, ld_Setup, ld_Imm, ld_Inst, clk, Flag
 	always@(negedge(ld_Imm)) begin
 			
 			if(ld_Imm == 0) begin
-				imm_val = {data_input[9:0],6'b000000}; 
+				imm_val = {data_input[7:0],8'b000000}; 
 			end
 	end
 
-	
-	always@(negedge(ld_Inst) or negedge(clk)) begin 
-		
-		if(ld_Inst == 0) begin  
-			Instr_Btn_Pressed = 1; 
-		end
-		
-		else if(Instr_Btn_Pressed == 1) begin
-			En = 1;
-			Instr_Btn_Pressed = 0; 
-		end
-		
-		else begin
-			En = 0;
-		end
-	
-	end 
 	
 	/*
 	always@(negedge(ld_Inst)) begin

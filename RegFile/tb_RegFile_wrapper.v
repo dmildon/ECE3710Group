@@ -2,11 +2,7 @@
 module tb_RegFile_wrapper();
 	
 	reg [9:0] data_input;
-	reg ld_Reg;
-	reg ld_Setup;
-	reg ld_Imm; 
-	reg ld_Inst; 
-	reg clk; 
+	reg ld_Reg, ld_Setup, ld_Imm, clk, en;
 	
 	wire [4:0] Flags;
 	wire [6:0] out1, out2, out3, out4;
@@ -18,8 +14,8 @@ module tb_RegFile_wrapper();
 		.ld_Reg(ld_Reg),
 		.ld_Setup(ld_Setup),
 		.ld_Imm(ld_Imm),
-		.ld_Inst(ld_Inst), 
 		.clk(clk),
+		.en(en),
 		.Flags(Flags),
 		.out1(out1),
 		.out2(out2),
@@ -29,28 +25,80 @@ module tb_RegFile_wrapper();
 	);
 	
 	initial begin
+		//initialize the clock
+		clk = 0;
+		en = 0;
 		
 		
-		clk = 1; 
-		$display("Starting Regfile + ALU Wrapper Testbench");
-		
-		data_input = 10'b0001000000; 
-		ld_Reg = 0; 
-		#10; 
-		
-		ld_Reg = 1;
-		data_input = 10'b0000000000; 
-		ld_Setup = 0;
-		#10; 
-		
+		//resets all registers to 0
+		data_input = 8'b00000000;
 		ld_Setup = 1;
-		data_input = 10'b1111000000; 
-		ld_Imm = 0; 	
-		#10; 
+		#5; //clk = 1
+		ld_Setup = 0;
+		#5;//clk = 0
+		data_input = 8'b10000000;
+		ld_Setup = 1;
+		#5; //clk = 0
+		ld_Setup = 0;
+		#10; //clk = 0
 		
-		ld_Imm = 1; 
-		ld_Inst = 0; 
-		#10; 
+		
+		//choose a register for rdest and rsrc
+		data_input = 8'b00000001; //Rdest = reg0; Rsrc = reg1
+		ld_Reg = 1;
+		#5; //clk = 1
+		ld_Reg = 0;
+		#5; //clk = 0
+		
+		
+		//set immediate value
+		data_input = 1;
+		ld_Imm = 1;
+		#5; //clk = 1
+		ld_Imm = 0;
+		#5 //clk = 0
+		
+		
+		//prepare to load the immediate
+		data_input = 8'b10010000;
+		ld_Setup = 1;
+		#5; //clk = 1
+		ld_Setup = 0;
+		#5; //clk = 0
+		
+		
+		en = 1;
+		#10; //clk = 0
+		en = 0;
+		
+		
+		
+		
+		
+		
+		
+		
+		
+//		clk = 1; 
+//		$display("Starting Regfile + ALU Wrapper Testbench");
+//		
+//		data_input = 10'b0001000000; 
+//		ld_Reg = 0; 
+//		#10; 
+//		
+//		ld_Reg = 1;
+//		data_input = 10'b0000000000; 
+//		ld_Setup = 0;
+//		#10; 
+//		
+//		ld_Setup = 1;
+//		data_input = 10'b1111000000; 
+//		ld_Imm = 0; 	
+//		#10; 
+//		
+//		ld_Imm = 1; 
+//		ld_Inst = 0; 
+//		#10; 
 		
 		
 		
