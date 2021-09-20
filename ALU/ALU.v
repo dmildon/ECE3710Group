@@ -66,25 +66,25 @@ module ALU (Rsrc, Rdest, OpCode, Out, Flags);
 	
 	
 	NOT_ALU myNot (
-		.A(Rsrc),
+		.A(Rdest),
 		.Out(out_not)
 	);
 	
 	
 	LeftShift myLeftShift (
-		.inValue(Rsrc),
+		.inValue(Rdest),
 		.outValue(out_lsh)
 	);
 	
 	
 	RightShift myRightShift (
-		.inValue(Rsrc),
+		.inValue(Rdest),
 		.outValue(out_rsh)
 	);
 	
 	
 	RightShiftA myRightShiftA (
-		.inValue(Rsrc),
+		.inValue(Rdest),
 		.outValue(out_arsh)
 	);
 	
