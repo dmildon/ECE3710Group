@@ -10,7 +10,7 @@ module tb_RegFile ();
 	
 	RegFile uut (
 		.RdestRegLoc(RdestRegLoc),
-		.RsrcRegLoc(RsrsRegLoc),
+		.RsrcRegLoc(RsrcRegLoc),
 		.Clk(Clk),
 		.En(En),
 		.Rst(Rst),

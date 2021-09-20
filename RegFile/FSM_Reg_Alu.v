@@ -3,7 +3,7 @@ module FSM_Reg_Alu (rst, btn_clk, out1, out2, out3, out4);
 	
 	input rst, btn_clk;
 	wire [15:0] RdestOut;
-	output [6:0]out1, out2, out3, out4;
+	output [6:0] out1, out2, out3, out4;
 	
 	FSM myFSM(
 	.Rst(rst),
@@ -35,8 +35,7 @@ module FSM_Reg_Alu (rst, btn_clk, out1, out2, out3, out4);
 	
 	);
 
-	
-	
+
 endmodule 
 
 module hexTo7Seg(
