@@ -1,6 +1,6 @@
 module ALU (Rsrc, Rdest, OpCode, Out, Flags); 
 	input [15:0] Rsrc, Rdest;
-	input [4:0] OpCode;
+	input [3:0] OpCode;
 	output reg [15:0] Out;
 	output reg [4:0] Flags;
 		/*

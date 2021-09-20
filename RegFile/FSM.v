@@ -5,7 +5,7 @@ module FSM (Rst, Clk, RdestOut);
 	
 	reg [2:0] PS, NS;
 	reg [15:0] Imm;
-	reg [3:0] RdestRegLoc, RsrcRegLoc, ALUOpCode, i;
+	reg [3:0] RdestRegLoc, RsrcRegLoc, OpCode, i;
 	reg en, Imm_s;
 	
 	wire [4:0] Flags;
@@ -23,12 +23,12 @@ module FSM (Rst, Clk, RdestOut);
 	RegFile_Alu myRegAlu(
 		.RdestRegLoc(RdestRegLoc),
 		.RsrcRegLoc(RsrcRegLoc),
-		.Clk(RsrcRegLoc),
+		.Clk(Clk),
 		.En(en),
 		.Rst(Rst),
 		.Imm(Imm),
 		.Imm_s(Imm_s),
-		.OpCode(ALUOpCode),
+		.OpCode(OpCode),
 		.RdestOut(RdestOut),
 		.Flags(Flags)
 	);
@@ -49,38 +49,70 @@ module FSM (Rst, Clk, RdestOut);
 			S4: NS = S5;
 			S5: NS = S2;
 			default: NS = S0;
-			endcase
+		endcase
 	end
 	
 	always@(PS) begin
 		case(PS)
 			S0: begin
-				RdestRegLoc = 4'b0001;
+				RdestRegLoc	= 4'b0001;
 				Imm_s = 1;
 				Imm = 1;
 				en = 1;
+				OpCode = 4'b0000;
+				
+				i = 1;
+				RsrcRegLoc = 4'b0;
 			end
 			S1: begin
 				en = 0;
 				Imm_s = 0;
-				i = 1;
+				i = i;
+				
+				OpCode = OpCode;
+				RdestRegLoc	= 	RdestRegLoc;
+				RsrcRegLoc = RsrcRegLoc;
+				Imm = Imm;
 			end
 			S2: begin
 				RsrcRegLoc = i;
-				RdestRegLoc = i - 1;
+				RdestRegLoc	= i - 1;
 				en = 1;
+				
+				Imm_s = Imm_s;
+				i = i;
+				OpCode = OpCode;
+				Imm = Imm;
 			end
 			S3: begin
 				en = 0;
+				
+				RdestRegLoc	= 	RdestRegLoc;
+				RsrcRegLoc = RsrcRegLoc;
+				Imm_s = Imm_s;
+				i = i;
+				OpCode = OpCode;
+				Imm = Imm;
 			end
 			S4: begin
-				RdestRegLoc = i + 1;
+				RdestRegLoc	= i + 1;
 				RsrcRegLoc = i - 1;
 				en = 1;
+				
+				Imm_s = Imm_s;
+				i = i;
+				OpCode = OpCode;
+				Imm = Imm;
 			end
 			S5: begin
 				en = 0;
 				i = i + 1;
+				
+				RdestRegLoc	= 	RdestRegLoc;
+				RsrcRegLoc = RsrcRegLoc;
+				Imm_s = Imm_s;
+				OpCode = OpCode;
+				Imm = Imm;
 			end
 			endcase
 	end

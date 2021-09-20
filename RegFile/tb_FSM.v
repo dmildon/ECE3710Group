@@ -2,27 +2,26 @@
 
 module tb_FSM ();
 	
-	reg [15:0] Instr;
 	reg Rst, Clk;
 	
 	wire [15:0] RdestOut;
-	wire [2:0] NS;
 	
 	FSM uut(
-		.Instr(Instr),
-		.Rst(Rst),
-		.Clk(Clk),
-		.RdestOut(RdestOut),
-		.NS(NS)
+	.Rst(Rst),
+	.Clk(Clk), 
+	.RdestOut(RdestOut)
 	);
 	
 	initial begin
+		Rst = 1;
 		Clk = 0;
-		Instr = 16'b0100000011110000;
-		#100;
+		#10;
 		
-		Instr = 16'b0101000000000001; 
-		#100; 
+		Rst = 0;
+		#23;
+		
+		Rst = 1;
+		
 		
 	end
 	always	 #5 Clk = ~Clk;
