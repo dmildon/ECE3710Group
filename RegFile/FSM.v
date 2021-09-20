@@ -34,21 +34,21 @@ module FSM (Rst, Clk, RdestOut);
 	);
 		
 	always@(negedge Rst, negedge Clk) begin
-		if(~Rst)
+		if(~Rst) begin
 			PS <= S0;
+			NS = S0;
+		end
 		else
 			PS <= NS;
-	end
-	
-	always@(negedge Clk) begin
-		case(PS)
+			
+		case(NS)
 			S0: NS = S1;
 			S1: NS = S2;
 			S2: NS = S3;
 			S3: NS = S4;
 			S4: NS = S5;
 			S5: NS = S2;
-			default: NS = S0;
+			default: NS = S1;
 		endcase
 	end
 	
