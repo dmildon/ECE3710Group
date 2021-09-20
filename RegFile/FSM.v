@@ -15,7 +15,8 @@ module FSM (Rst, Clk, RdestOut);
 				 S2 = 3'b010,
 				 S3 = 3'b011,
 				 S4 = 3'b100,
-				 S5 = 3'b101;
+				 S5 = 3'b101,
+				 S6 = 3'b110;
 
 	parameter ADD  = 4'b0000;
 
@@ -35,21 +36,24 @@ module FSM (Rst, Clk, RdestOut);
 		
 	always@(negedge Rst, negedge Clk) begin
 		if(~Rst) begin
-			PS <= S0;
-			NS = S0;
+			PS = S0;
+//			NS = S0;
 		end
-		else
-			PS <= NS;
+		else begin
+//			PS = NS;
 			
-		case(NS)
-			S0: NS = S1;
-			S1: NS = S2;
-			S2: NS = S3;
-			S3: NS = S4;
-			S4: NS = S5;
-			S5: NS = S2;
-			default: NS = S1;
-		endcase
+			case(PS)
+				S0: PS = S6;
+				S6: PS = S1;
+				S1: PS = S2;
+				S2: PS = S3;
+				S3: PS = S4;
+				S4: PS = S5;
+				S5: PS = S2;
+				
+				default: PS = S1;
+			endcase
+		end
 	end
 	
 	always@(PS) begin
@@ -58,12 +62,23 @@ module FSM (Rst, Clk, RdestOut);
 				RdestRegLoc	= 4'b0001;
 				Imm_s = 1;
 				Imm = 1;
-				en = 1;
+				en = 0;
 				OpCode = 4'b0000;
 				
 				i = 1;
 				RsrcRegLoc = 4'b0;
 			end
+			S6: begin 
+				en = 1;
+				
+				RdestRegLoc	= 	RdestRegLoc;
+				RsrcRegLoc = RsrcRegLoc;
+				Imm_s = Imm_s;
+				i = i;
+				OpCode = OpCode;
+				Imm = Imm;
+			end
+			
 			S1: begin
 				en = 0;
 				Imm_s = 0;
