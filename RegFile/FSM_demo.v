@@ -36,33 +36,50 @@ module FSM_demo (Rst, Clk, RdestOut);
 	
 		always@(negedge Rst, negedge Clk) begin
 		if(~Rst) begin
-			PS = S0;
+			PS = S4;
 //			NS = S0;
 		end
 		else begin
 //			PS = NS;
 			case(PS)
-				S0: PS = S1;
+				S4: PS = S0;
+				S0: PS = S5;
+				S5: PS = S1;
 				S1: PS = S2;
 				S2: PS = S3;
 				S3: PS = S3;
 				
-				default: PS = S0;
+				default: PS = S4;
 			endcase
 		end
 	end
 	
 	always@(PS) begin
 		case(PS)
-			S0: begin
+			S4: begin
 				RdestRegLoc	= 4'b0000;
-				Imm_s = 1;
+				Imm_s = 0;
 				Imm = 1;
 				en = 1;
 				OpCode = 4'b0000;
 				RsrcRegLoc = 4'b0;
 			end
-			
+			S0: begin
+				RdestRegLoc	= RdestRegLoc;
+				Imm_s = 1;
+				Imm = Imm;
+				en = en;
+				OpCode = OpCode;
+				RsrcRegLoc = RsrcRegLoc;
+			end
+			S5: begin
+				RdestRegLoc	= RdestRegLoc;
+				Imm_s = Imm_s;
+				Imm = 0;
+				en = en;
+				OpCode = OpCode;
+				RsrcRegLoc = RsrcRegLoc;
+			end
 			S1: begin
 				RdestRegLoc	= 4'b0001;
 				Imm_s = Imm_s;
