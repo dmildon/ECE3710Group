@@ -36,20 +36,19 @@ module FSM_demo (Rst, Clk, RdestOut);
 	
 		always@(negedge Rst, negedge Clk) begin
 		if(~Rst) begin
-			PS = S4;
-//			NS = S0;
+			NS <= S0;
 		end
 		else begin
-//			PS = NS;
-			case(PS)
-				S4: PS = S0;
-				S0: PS = S5;
-				S5: PS = S1;
-				S1: PS = S2;
-				S2: PS = S3;
-				S3: PS = S3;
+			PS <= NS;
+			case(NS)
+//				S4: NS <= S0;
+				S0: NS <= S1;
+//				S5: NS <= S1;
+				S1: NS <= S2;
+				S2: NS <= S3;
+				S3: NS <= S3;
 				
-				default: PS = S4;
+				default: NS <= S0;
 			endcase
 		end
 	end
@@ -58,20 +57,22 @@ module FSM_demo (Rst, Clk, RdestOut);
 		case(PS)
 			S4: begin
 				RdestRegLoc	= 4'b0000;
-				Imm_s = 0;
+				Imm_s = 1;
 				Imm = 1;
 				en = 1;
 				OpCode = 4'b0000;
 				RsrcRegLoc = 4'b0;
 			end
+			
 			S0: begin
-				RdestRegLoc	= RdestRegLoc;
+				RdestRegLoc	= 4'b0000;
 				Imm_s = 1;
-				Imm = Imm;
-				en = en;
-				OpCode = OpCode;
-				RsrcRegLoc = RsrcRegLoc;
+				Imm = 1;
+				en = 1;
+				OpCode = 4'b0000;
+				RsrcRegLoc = 4'b0;
 			end
+			
 			S5: begin
 				RdestRegLoc	= RdestRegLoc;
 				Imm_s = Imm_s;
@@ -80,6 +81,7 @@ module FSM_demo (Rst, Clk, RdestOut);
 				OpCode = OpCode;
 				RsrcRegLoc = RsrcRegLoc;
 			end
+			
 			S1: begin
 				RdestRegLoc	= 4'b0001;
 				Imm_s = Imm_s;
@@ -97,6 +99,7 @@ module FSM_demo (Rst, Clk, RdestOut);
 				OpCode = OpCode;
 				RsrcRegLoc = RsrcRegLoc;
 			end
+			
 			S3: begin
 				RdestRegLoc	= RdestRegLoc;
 				Imm_s = Imm_s;
