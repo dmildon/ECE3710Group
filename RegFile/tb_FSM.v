@@ -6,7 +6,7 @@ module tb_FSM ();
 	
 	wire [15:0] RdestOut;
 	
-	FSM uut(
+	FSM_demo uut(
 	.Rst(Rst),
 	.Clk(Clk), 
 	.RdestOut(RdestOut)
