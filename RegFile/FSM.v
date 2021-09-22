@@ -36,22 +36,18 @@ module FSM (Rst, Clk, RdestOut);
 		
 	always@(negedge Rst, negedge Clk) begin
 		if(~Rst) begin
-			PS = S0;
-//			NS = S0;
+			NS <= S0;
 		end
 		else begin
-//			PS = NS;
+			PS <= NS;
 			
-			case(PS)
-				S0: PS = S6;
-				S6: PS = S1;
-				S1: PS = S2;
-				S2: PS = S3;
-				S3: PS = S4;
-				S4: PS = S5;
-				S5: PS = S2;
+			case(NS)
+				S0: NS <= S1;
+				S1: NS <= S2;
+				S2: NS <= S3;
+				S3: NS <= S1;
 				
-				default: PS = S1;
+				default: NS <= S0;
 			endcase
 		end
 	end
@@ -62,73 +58,41 @@ module FSM (Rst, Clk, RdestOut);
 				RdestRegLoc	= 4'b0001;
 				Imm_s = 1;
 				Imm = 1;
-				en = 0;
+				en = 1;
 				OpCode = 4'b0000;
-				
 				i = 1;
 				RsrcRegLoc = 4'b0;
 			end
-			S6: begin 
-				en = 1;
-				
-				RdestRegLoc	= 	RdestRegLoc;
-				RsrcRegLoc = RsrcRegLoc;
-				Imm_s = Imm_s;
-				i = i;
-				OpCode = OpCode;
-				Imm = Imm;
-			end
 			
 			S1: begin
-				en = 0;
+				RdestRegLoc	= i-1;
 				Imm_s = 0;
-				i = i;
-				
-				OpCode = OpCode;
-				RdestRegLoc	= 	RdestRegLoc;
-				RsrcRegLoc = RsrcRegLoc;
 				Imm = Imm;
-			end
-			S2: begin
+				en = 1;
+				OpCode = OpCode;
+				i = i;
 				RsrcRegLoc = i;
-				RdestRegLoc	= i - 1;
-				en = 1;
-				
-				Imm_s = Imm_s;
-				i = i;
-				OpCode = OpCode;
-				Imm = Imm;
 			end
-			S3: begin
-				en = 0;
-				
-				RdestRegLoc	= 	RdestRegLoc;
-				RsrcRegLoc = RsrcRegLoc;
-				Imm_s = Imm_s;
-				i = i;
-				OpCode = OpCode;
-				Imm = Imm;
-			end
-			S4: begin
-				RdestRegLoc	= i + 1;
+			
+			S2: begin
 				RsrcRegLoc = i - 1;
-				en = 1;
-				
+				RdestRegLoc	= i + 1;
+				en = en;
 				Imm_s = Imm_s;
+				OpCode = OpCode;
+				Imm = Imm;
 				i = i;
-				OpCode = OpCode;
-				Imm = Imm;
 			end
-			S5: begin
-				en = 0;
-				i = i + 1;
-				
-				RdestRegLoc	= 	RdestRegLoc;
-				RsrcRegLoc = RsrcRegLoc;
+			
+			S3: begin
+				RdestRegLoc	= RdestRegLoc;
 				Imm_s = Imm_s;
-				OpCode = OpCode;
 				Imm = Imm;
+				en = 0;
+				OpCode = OpCode;
+				i = i + 1;
+				RsrcRegLoc = RsrcRegLoc;
 			end
-			endcase
+		endcase
 	end
 endmodule
