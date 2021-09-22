@@ -34,36 +34,39 @@ module FSM_demo (Rst, Clk, RdestOut);
 		.Flags(Flags)
 	);
 	
-		always@(negedge Rst, negedge Clk) begin
+
+	always @(negedge Clk)
+		PS <= NS;
+		
+	always@(negedge Rst, posedge Clk) begin
 		if(~Rst) begin
-			NS <= S0;
+			NS <= S4;
 		end
 		else begin
-			PS <= NS;
 			case(NS)
-//				S4: NS <= S0;
+				S4: NS <= S0;
 				S0: NS <= S1;
 //				S5: NS <= S1;
 				S1: NS <= S2;
 				S2: NS <= S3;
-				S3: NS <= S3;
-				
-				default: NS <= S0;
+				S3: NS <= S2;
+				default: NS <= S4;
 			endcase
 		end
 	end
 	
 	always@(PS) begin
 		case(PS)
+			// idle
 			S4: begin
 				RdestRegLoc	= 4'b0000;
 				Imm_s = 1;
-				Imm = 1;
-				en = 1;
+				Imm = 1;				
+			        en = 0;
 				OpCode = 4'b0000;
 				RsrcRegLoc = 4'b0;
 			end
-			
+			// load immediate 1 into R0
 			S0: begin
 				RdestRegLoc	= 4'b0000;
 				Imm_s = 1;
@@ -73,42 +76,53 @@ module FSM_demo (Rst, Clk, RdestOut);
 				RsrcRegLoc = 4'b0;
 			end
 			
-			S5: begin
-				RdestRegLoc	= RdestRegLoc;
-				Imm_s = Imm_s;
-				Imm = 0;
-				en = en;
-				OpCode = OpCode;
-				RsrcRegLoc = RsrcRegLoc;
-			end
+//			S5: begin
+//				RdestRegLoc	= RdestRegLoc;
+//				Imm_s = Imm_s;
+//				Imm = 0;
+//				en = en;
+//				OpCode = OpCode;
+//				RsrcRegLoc = RsrcRegLoc;
+//			end
 			
+			// load immediate 1 into R1
 			S1: begin
 				RdestRegLoc	= 4'b0001;
-				Imm_s = Imm_s;
-				Imm = 2;
-				en = en;
-				OpCode = OpCode;
-				RsrcRegLoc = RsrcRegLoc;
+				Imm_s = 1;
+				Imm = 1;
+				en = 1;
+				OpCode = 4'b0;
+				RsrcRegLoc = 4'b0001;
 			end
 			
+			
 			S2: begin
-				RdestRegLoc	= RdestRegLoc;
+				RdestRegLoc	= 4'b0000;
 				Imm_s = 0;
-				Imm = Imm;
-				en = en;
-				OpCode = OpCode;
-				RsrcRegLoc = RsrcRegLoc;
+				Imm = 16'bx;
+				en = 1;
+				OpCode = 4'b0;
+				RsrcRegLoc = 4'b0001;
 			end
 			
 			S3: begin
-				RdestRegLoc	= RdestRegLoc;
-				Imm_s = Imm_s;
-				Imm = Imm;
-				en = 0;
-				OpCode = OpCode;
-				RsrcRegLoc = RsrcRegLoc;
+				RdestRegLoc	= 4'b0001;
+				Imm_s = 0;
+				Imm = 16'bx;
+				en = 1;
+				OpCode = 4'b0;
+				RsrcRegLoc = 4'b0000;
 			end
-			endcase
+			
+			default: begin
+				RdestRegLoc	= 4'bx;
+				Imm_s = 1'bx;
+				Imm = 16'bx;
+				en = 1'bx;
+				OpCode = 4'bx;
+				RsrcRegLoc = 4'bx;
+			end	
+		       endcase
 	end
 
 endmodule 
