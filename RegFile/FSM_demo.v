@@ -1,3 +1,8 @@
+/**
+* Code here was edited by Sam Hirsch.
+* This file should not be used in future assignments without further editting.
+*/
+
 module FSM_demo (Rst, Clk, RdestOut);
 	input Rst, Clk;
 	
