@@ -5,7 +5,7 @@ module FSM_Reg_Alu (rst, btn_clk, out1, out2, out3, out4);
 	wire [15:0] RdestOut;
 	output [6:0] out1, out2, out3, out4;
 	
-	FSM_demo myFSM(
+	FSM myFSM(
 	.Rst(rst),
 	.Clk(btn_clk), 
 	.RdestOut(RdestOut)
