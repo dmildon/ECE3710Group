@@ -24,12 +24,12 @@ module RAM_block
 	begin
 		if (we_a) 
 		begin
-			ram[addr_a] <= data_a;
-			q_a <= data_a;
+			ram[addr_a] = data_a;
+			q_a = data_a;
 		end
 		else 
 		begin
-			q_a <= ram[addr_a];
+			q_a = ram[addr_a];
 		end 
 	end 
 
@@ -38,12 +38,12 @@ module RAM_block
 	begin
 		if (we_b) 
 		begin
-			ram[addr_b] <= data_b;
-			q_b <= data_b;
+			ram[addr_b] = data_b;
+			q_b = data_b;
 		end
 		else 
 		begin
-			q_b <= ram[addr_b];
+			q_b = ram[addr_b];
 		end 
 	end
 

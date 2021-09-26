@@ -31,7 +31,7 @@ module RAM
 		.q_b(q_b[1])
 	);
 	
-	always @(posedge clk) begin
+	always @(*) begin
 		if (addr_a[9] == 0)
 			q_a_out = q_a[0];
 		else
