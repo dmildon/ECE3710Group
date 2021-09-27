@@ -5,9 +5,9 @@ module tb_FSM_RAM ();
 	reg clk;
 	wire [15:0] q_a_out;
 	
-	FSM_RAM uut(
-	.clk(clk), 
-	.q_a_out(q_a_out)
+	FSM_advanced uut(
+		.clk(clk), 
+		.q_a_out(q_a_out)
 	);
 	
 	initial begin
