@@ -50,7 +50,7 @@ module FSM_advanced (clk, q_a_out, q_b_out);
 		case(PS)
 			S0: begin
 				data_a = 0;
-				data_b = 700;
+				data_b = 1;
 				addr_a = 0;
 				addr_b = 1;
 				we_a = 0;
@@ -61,7 +61,7 @@ module FSM_advanced (clk, q_a_out, q_b_out);
 				data_a = q_a_out + q_b_out;
 				data_b = q_a_out + q_b_out;
 				addr_a = 0;
-				addr_b = 700;
+				addr_b = 1;
 				we_a = 1;
 				we_b = 0;
 			end
@@ -70,7 +70,7 @@ module FSM_advanced (clk, q_a_out, q_b_out);
 				data_a = q_a_out + q_b_out;
 				data_b = q_a_out + q_b_out;
 				addr_a = 0;
-				addr_b = 700;
+				addr_b = 1;
 				we_a = 0;
 				we_b = 1;
 			end
