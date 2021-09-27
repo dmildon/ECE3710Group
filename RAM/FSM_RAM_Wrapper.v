@@ -1,38 +1,51 @@
- 
-module FSM_RAM_Wrapper (btn_clk, out1, out2, out3, out4);
+module FSM_RAM_Wrapper (btn_clk, out1A, out2A, out3A, out1B, out2B, out3B);
 	
 	input btn_clk;
-	wire [15:0] q_a_out;
-	output [6:0] out1, out2, out3, out4;
+	wire [15:0] q_a_out, q_b_out;
+	output [6:0] out1A, out2A, out3A, out1B, out2B, out3B;
 	
-	FSM_RAM myFSM(
+	FSM_advanced myFSM(
 	.clk(btn_clk), 
-	.q_a_out(q_a_out)
+	.q_a_out(q_a_out),
+	.q_b_out(q_b_out)
 	);
 	
 	hexTo7Seg seg1(
-		.x(q_a_out[15:12]),
-		.z(out1)
+		.x(q_a_out[11:8]),
+		.z(out1A)
 	
 	);
 	
 	hexTo7Seg seg2(
-		.x(q_a_out[11:8]),
-		.z(out2)
+		.x(q_a_out[7:4]),
+		.z(out2A)
 	
 	);
 
 	hexTo7Seg seg3(
-		.x(q_a_out[7:4]),
-		.z(out3)
+		.x(q_a_out[3:0]),
+		.z(out3A)
+	);
+	
+	//----------------- out B ----------------//
+
+	hexTo7Seg seg4(
+		.x(q_b_out[11:8]),
+		.z(out1B)
+	
+	);
+	
+	hexTo7Seg seg5(
+		.x(q_b_out[7:4]),
+		.z(out2B)
 	
 	);
 
-	hexTo7Seg seg4(
-		.x(q_a_out[3:0]),
-		.z(out4)
-	
+	hexTo7Seg seg6(
+		.x(q_b_out[3:0]),
+		.z(out3B)
 	);
+
 
 
 endmodule 

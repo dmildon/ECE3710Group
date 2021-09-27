@@ -1,13 +1,12 @@
-module FSM_advanced (clk, q_a_out);
+module FSM_advanced (clk, q_a_out, q_b_out);
 	input clk;
-	output [15:0] q_a_out;
+	output [15:0] q_a_out, q_b_out;
 	
 	parameter DATA_WIDTH=16;
 	parameter ADDR_WIDTH=10;
 	reg [(DATA_WIDTH-1):0] data_a, data_b;
 	reg [(ADDR_WIDTH-1):0] addr_a, addr_b;
 	reg we_a, we_b;
-	wire [(DATA_WIDTH-1):0] q_b_out;
 
 	
 	reg [2:0] PS, NS;
@@ -18,8 +17,6 @@ module FSM_advanced (clk, q_a_out);
 				 S3 = 3'b011,
 				 S4 = 3'b100;
 	
-	integer i;
-	reg [15:0] temp;
 	
 	RAM my_RAM (
 		.data_a(data_a),
@@ -43,9 +40,7 @@ module FSM_advanced (clk, q_a_out);
 		case(NS)
 			S0: NS <= S1;
 			S1: NS <= S2;
-			S2: NS <= S3;
-			S3: NS <= S4;
-			S4: NS <= S2;
+			S2: NS <= S1;
 				
 			default: NS <= S0;
 		endcase
@@ -54,58 +49,30 @@ module FSM_advanced (clk, q_a_out);
 	always@(PS) begin
 		case(PS)
 			S0: begin
-				data_a = 1;
-				data_b = 0;
-				addr_a = 1;
-				addr_b = 2;
-				we_a = 1;
-				we_b = 0;
-				i = 1;
-				temp = 0;
+				data_a = 0;
+				data_b = 700;
+				addr_a = 0;
+				addr_b = 1;
+				we_a = 0;
+				we_b = 1;
 			end
 			
 			S1: begin
-				data_a = 1;
-				data_b = q_a_out + temp;
-				addr_a = 1;
-				addr_b = 2;
-				we_a = 0;
-				we_b = 1;
-				i = i + 1;
-				temp = temp;
+				data_a = q_a_out + q_b_out;
+				data_b = q_a_out + q_b_out;
+				addr_a = 0;
+				addr_b = 700;
+				we_a = 1;
+				we_b = 0;
 			end
 			
 			S2: begin
-				data_a = 1;
-				data_b = 1;
-				addr_a = i;
-				addr_b = i + 1;
-				we_a = 0;
-				we_b = 0;
-				i = i;
-				temp = q_a_out;
-			end
-			
-			S3: begin
-				data_a = 1;
-				data_b = q_a_out + temp;
-				addr_a = i;
-				addr_b = i + 1;
+				data_a = q_a_out + q_b_out;
+				data_b = q_a_out + q_b_out;
+				addr_a = 0;
+				addr_b = 700;
 				we_a = 0;
 				we_b = 1;
-				i = i;
-				temp = temp;
-			end
-			
-			S4: begin
-				data_a = 1;
-				data_b = q_a_out + temp;
-				addr_a = i;
-				addr_b = i + 1;
-				we_a = 0;
-				we_b = 0;
-				i = i + 1;
-				temp = temp;
 			end
 			
 		endcase
