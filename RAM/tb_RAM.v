@@ -6,7 +6,7 @@ module tb_RAM ();
 	reg [(ADDR_WIDTH-1):0] addr_a, addr_b;
 	reg we_a, we_b, clk;
 	wire [(DATA_WIDTH-1):0] q_a_out, q_b_out;
-	
+	integer i, j, k, l;
 	RAM uut (
 		.data_a(data_a),
 		.data_b(data_b),
@@ -22,37 +22,29 @@ module tb_RAM ();
 	initial begin
 		clk = 0;
 		#5; //clk = 1
-		addr_a = 13;
-		addr_b = 47;
-		we_a = 1;
+		addr_b = 1;
 		we_b = 1;
-		data_a = 3;
-		data_b = 7;
+		data_b = 1;
 		#5; // clk = 0
-		we_a =0;
-		we_b = 0;
-		#15; // clk = 1
-		addr_a = 7;
-		addr_b = 718;
-		#10;
-		addr_a = 42;
-		addr_b = 101;
-		#10;
-		addr_a = 66;
-		addr_b = 511;
-		#10;
-		addr_a = 1023;
-		addr_b = 67;
-		data_a = 43;
-		data_b = 1776;
-		we_a = 1;
-		we_b = 1;
-		#10;
 		we_a = 0;
 		we_b = 0;
 		#10;
 		
-		
+		j = 0; k = 1; l = 0;
+		for(i = 1; i < 1023; i = i + 2) begin
+			addr_a = i;
+			addr_b = i + 1;
+			data_a = 12;
+			data_b = 66;
+			we_a = 1;
+			we_b = 1;
+			#10; // clk = 0
+			if (q_a_out != 12 && q_b_out != 66) begin
+				$display("Everything failed. Abort now");
+				$stop;
+			end
+			#10;
+		end
 		
 		
 	end
