@@ -1,8 +1,9 @@
 module CPU_FSM 
-	(  input Clk,
+	(  
+		input Clk,
 		input [15:0] Instr,
 		input [4:0] ALUFlags,
-		output reg Imm_s, RegEn, RAMEn, PCEn, Signed, //eventually we will need to have RAMEn for load/store
+		output reg Imm_s, RegEn, RAMEn, PCEn, Signed,
 		output reg [3:0] ALUOpCode, RdestRegLoc, RsrcRegLoc,
 		output reg [7:0] Imm
 	);
