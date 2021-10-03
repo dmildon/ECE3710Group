@@ -7,7 +7,7 @@ module tb_RAM_block ();
 	reg we_a, we_b, clk;
 	wire [(DATA_WIDTH-1):0] q_a, q_b;
 	
-	RAM_block uut (
+	RAM_block_file uut (
 		.data_a(data_a),
 		.data_b(data_b),
 		.addr_a(addr_a),
@@ -22,23 +22,23 @@ module tb_RAM_block ();
 	initial begin
 		clk = 0;
 		#5;
-		addr_a = 13;
-		addr_b = 47;
+		addr_a = 0;
+		addr_b = 1;
 		we_a = 1;
 		we_b = 1;
-		data_a = 3;
-		data_b = 7;
+		data_a =66;
+		data_b = 77;
 		#5;
 		we_a =0;
 		we_b = 0;
 		#5;
-		addr_a = 7;
-		addr_b = 32;
+		addr_a = 2;
+		addr_b = 3;
 		#5;
-		addr_a = 42;
-		addr_b = 101;
+		addr_a = 4;
+		addr_b = 5;
 		#5;
-		addr_a = 66;
+		addr_a = 6;
 		addr_b = 511;
 		
 		
