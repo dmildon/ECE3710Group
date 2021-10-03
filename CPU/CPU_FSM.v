@@ -25,7 +25,18 @@ module CPU_FSM
 						 S2 = 3'b010,
 						 S3 = 3'b011,
 						 S4 = 3'b100;
+						
+	
 	reg [2:0] PS, NS;
+	wire [15:0] savedInstr;
+	
+	Register16Bit savedInstrModule(
+		.in(Instr),
+		.clk(Clk),
+		.en(PS == S0),
+		.out(savedInstr)
+	);
+	
 	always @(posedge Clk) begin
 		PS <= NS;
 	end
@@ -34,8 +45,8 @@ module CPU_FSM
 		case(PS)
 			S0: NS <= S1;
 			S1: begin
-					if (Instr[15:12] == 4'b0) begin
-						if (Instr[7:4] == 4'b1101 || Instr[7:4] == 4'b0 || Instr[7:4] == 4'b0100 || 	Instr[7:4] == 4'b1000 || Instr[7:4] == 4'b1100 || Instr[7:4] == 4'b1111) begin
+					if (savedInstr[15:12] == 4'b0) begin
+						if (savedInstr[7:4] == 4'b1101 || savedInstr[7:4] == 4'b0 || savedInstr[7:4] == 4'b0100 || 	savedInstr[7:4] == 4'b1000 || savedInstr[7:4] == 4'b1100 || savedInstr[7:4] == 4'b1111) begin
 							NS <= S0;
 						end
 						else begin
@@ -43,11 +54,11 @@ module CPU_FSM
 						end
 					end
 					
-					else if (Instr[15:12] == 4'b0101 || Instr[15:12] == 4'b0110 || Instr[15:12] == 4'b0111 || Instr[15:12] == 4'b1110 || Instr[15:12] == 4'b1001 || Instr[15:12] == 4'b1010 || Instr[15:12] == 4'b1011 || Instr[15:12] == 4'b0001 || Instr[15:12] == 4'b0010 || Instr[15:12] == 4'b0011 || Instr[15:12] == 4'b1000) begin
+					else if (savedInstr[15:12] == 4'b0101 || savedInstr[15:12] == 4'b0110 || savedInstr[15:12] == 4'b0111 || savedInstr[15:12] == 4'b1110 || savedInstr[15:12] == 4'b1001 || savedInstr[15:12] == 4'b1010 || savedInstr[15:12] == 4'b1011 || savedInstr[15:12] == 4'b0001 || savedInstr[15:12] == 4'b0010 || savedInstr[15:12] == 4'b0011 || savedInstr[15:12] == 4'b1000) begin
 						NS <= S2;
 					end
 					
-					else if(Instr[15:12] == 4'b1000 && Instr[7:4] == 4'b0100) begin 
+					else if(savedInstr[15:12] == 4'b1000 && savedInstr[7:4] == 4'b0100) begin 
 						NS <= S2; 
 					end 
 					
@@ -56,11 +67,13 @@ module CPU_FSM
 					end
 				 end
 			S2: begin
-					if (Instr[15:12] == 4'b0) begin NS <= S3; end
+					if (savedInstr[15:12] == 4'b0) begin NS <= S3; end
 					else begin NS <= S4; end
 				 end
 			S3: NS <= S0;
 			S4: NS <= S0;
+			
+			default: NS <= S0;
 			
 		endcase
 	end
@@ -95,7 +108,7 @@ module CPU_FSM
 					RegEn = 0;
 					Signed = 0; 
 					RsrcRegLoc = 4'bx;
-					RdestRegLoc = Instr[11:8];
+					RdestRegLoc = savedInstr[11:8];
 					ALUOpCode = 4'bx;
 					Imm_s = 0;
 					Imm = 8'bx;
@@ -105,30 +118,30 @@ module CPU_FSM
 					RAMEn = 0;
 					RegEn = 1;
 					Signed = 0; 
-					RsrcRegLoc = Instr[3:0];
-					RdestRegLoc = Instr[11:8];
+					RsrcRegLoc = savedInstr[3:0];
+					RdestRegLoc = savedInstr[11:8];
 					Imm_s = 0;
 					Imm = 8'bx;
 					
-					if (Instr[7:4] == 4'b0101 || Instr[7:4] == 4'b0110 || Instr[7:4] == 4'b0111)
+					if (savedInstr[7:4] == 4'b0101 || savedInstr[7:4] == 4'b0110 || savedInstr[7:4] == 4'b0111)
 						ALUOpCode = ADD;
 						
-					else if (Instr[7:4] == 4'b1110)
+					else if (savedInstr[7:4] == 4'b1110)
 						ALUOpCode = MUL;
 						
-					else if (Instr[7:4] == 4'b1001 || Instr[7:4] == 4'b1010)
+					else if (savedInstr[7:4] == 4'b1001 || savedInstr[7:4] == 4'b1010)
 						ALUOpCode = SUB;
 						
-					else if (Instr[7:4] == 4'b1011)
+					else if (savedInstr[7:4] == 4'b1011)
 						ALUOpCode = CMP;
 					
-					else if (Instr[7:4] == 4'b0001)
+					else if (savedInstr[7:4] == 4'b0001)
 						ALUOpCode = AND;
 					
-					else if (Instr[7:4] == 4'b0010)
+					else if (savedInstr[7:4] == 4'b0010)
 						ALUOpCode = OR;
 						
-					else if (Instr[7:4] == 4'b0011)
+					else if (savedInstr[7:4] == 4'b0011)
 						ALUOpCode = XOR;
 						
 					else
@@ -139,41 +152,41 @@ module CPU_FSM
 					RAMEn = 0;
 					RegEn = 1;
 					RsrcRegLoc = 4'bx;
-					RdestRegLoc = Instr[11:8];
+					RdestRegLoc = savedInstr[11:8];
 					Imm_s = 1;
-					Imm = Instr[7:0];
+					Imm = savedInstr[7:0];
 					
-					if(Instr[15:12] == 4'b0101 || Instr[15:12] == 4'b0111) begin 
+					if(savedInstr[15:12] == 4'b0101 || savedInstr[15:12] == 4'b0111) begin 
 						ALUOpCode = ADD; 
 						Signed = 1; 
 					end
 					
-					else if(Instr[15:12] == 4'b0110) begin 
+					else if(savedInstr[15:12] == 4'b0110) begin 
 						ALUOpCode = ADD; 
 						Signed = 0;
 					end
 					
-					else if(Instr[15:12] == 4'b1110) begin 
+					else if(savedInstr[15:12] == 4'b1110) begin 
 						ALUOpCode = MUL; 
 						Signed = 1;
 					end
 					
-					else if(Instr[15:12] == 4'b1001 || Instr[15:12] == 4'b1010) begin 
+					else if(savedInstr[15:12] == 4'b1001 || savedInstr[15:12] == 4'b1010) begin 
 						ALUOpCode = SUB; 
 						Signed = 1;
 					end
 					
-					else if(Instr[15:12] == 4'b1011) begin 
+					else if(savedInstr[15:12] == 4'b1011) begin 
 						ALUOpCode = CMP; 
 						Signed = 1;
 					end
 					
-					else if(Instr[15:12] == 4'b0001) begin 
+					else if(savedInstr[15:12] == 4'b0001) begin 
 						ALUOpCode = AND; 
 						Signed = 1;
 					end
 					
-					else if(Instr[15:12] == 4'b0010) begin 
+					else if(savedInstr[15:12] == 4'b0010) begin 
 						ALUOpCode = OR; 
 						Signed = 1;
 					end
@@ -186,5 +199,32 @@ module CPU_FSM
 				 end
 		endcase
 	end
-	
 endmodule
+
+
+module Register16Bit(in, clk, en, out);
+	input [15:0] in;
+	input clk, en;
+	
+	output reg [15:0] out;
+	
+	always @(posedge clk) begin
+		if (en)
+			out <= in;
+		else
+			out <= out;
+	end
+endmodule 
+
+
+
+
+
+
+
+
+
+
+
+
+

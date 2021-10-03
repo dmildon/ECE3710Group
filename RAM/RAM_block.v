@@ -2,7 +2,7 @@
 // True Dual Port RAM with single clock
 
 module RAM_block
-#(parameter DATA_WIDTH=16, parameter ADDR_WIDTH=9)
+#(parameter DATA_WIDTH=16, parameter ADDR_WIDTH=9, parameter FILENAME = "C:/Users/Dawson_Mildon/My_Stuff/SchoolStuff/Fall_Semester_2021/ECE3710/ECE3710Group/RAM/RamInit.txt")
 (
 	input [(DATA_WIDTH-1):0] data_a, data_b,
 	input [(ADDR_WIDTH-1):0] addr_a, addr_b,
@@ -15,9 +15,10 @@ module RAM_block
 	integer i;
 	//creation of ram
 	initial begin
-		for(i = 0; i < 512; i = i + 1) begin
-			ram[i] = 0; 
-		end
+//		for(i = 0; i < 512; i = i + 1) begin
+//			ram[i] = 0; 
+//		end
+		$readmemb(FILENAME, ram);
 	end
 
 	// Port A 
