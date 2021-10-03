@@ -6,7 +6,7 @@ module RegFile_Alu (RdestRegLoc, RsrcRegLoc, Clk, En, Rst, Imm, Imm_s, OpCode, R
 	
 	output [15:0] RdestOut; //feeds in to Reg load and is outputed from the ALU
 	
-	input [4:0] OpCode;
+	input [3:0] OpCode;
 	output [4:0] Flags;
 	
 	wire [15:0] RsrcOut, AluOutput;
