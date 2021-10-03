@@ -17,6 +17,7 @@ module tb_ALU();
 	parameter LSH 		= 5'b0111;
 	parameter RSH 		= 5'b1000;
 	parameter ARSH 	= 5'b1001;
+	parameter MUL     = 4'b1010;
 
 
 	integer i, j;
@@ -141,6 +142,25 @@ initial
 					end
 			end
 		
+		//Self checking MUL
+		$display("Testing MUL");
+		i = 7;
+		for (j = 0; j < 2**4; j = j + 1) begin
+				testWire = j * i;
+						OpCode = 4'b1111;
+						
+						#5;
+						Rsrc = i;
+						Rdest = j;
+						OpCode = MUL;
+						#5;
+						
+						if  (Out != testWire)
+							begin
+								$display("MUL failed");
+								$stop;
+							end
+			end
 		
 		//Self checking C flag
 		$display("Testing C Flag");
@@ -404,10 +424,10 @@ initial
 					end
 					
 				
-				desired_result_not = ~i_val;
-				desired_result_lsh = i_val << 1;
-				desired_result_rsh = i_val >> 1;
-				desired_result_arsh = $signed(i_val) >>> 1;
+				desired_result_not = ~j_val;
+				desired_result_lsh = j_val << 1;
+				desired_result_rsh = j_val >> 1;
+				desired_result_arsh = $signed(j_val) >>> 1;
 			
 				OpCode = NOT;
 				#5;
@@ -445,6 +465,9 @@ initial
 					end 
 				#5;
 			end
+			
+		
+			
 		$display("Testbench Finished with no errors");
 	end
 endmodule
