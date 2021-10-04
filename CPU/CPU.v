@@ -1,15 +1,15 @@
 module CPU 
 	(
-		input Clk, Rst
+		input Clk, Rst,
+		output [15:0] RdestOut
 	);
 	
 	wire [3:0] RdestRegLoc, RsrcRegLoc, ALUOpCode;
 	wire RegEn, Imm_s, Signed, RAMEn, PCEn;
-	wire [15:0] RdestOut, SignedImm, RamOutA, RamOutB;
+	wire [15:0] SignedImm, RamOutA, RamOutB;
 	wire [4:0] Flags;
 	wire [7:0] Imm;
 	wire [9:0] RamAddrA;
-
 	
 	RegFile_Alu myRegFile_ALU (
 		.RdestRegLoc(RdestRegLoc),
@@ -38,6 +38,7 @@ module CPU
 	
 	CPU_FSM myFSM(
 		.Clk(Clk),
+		.Rst(Rst), 
 		.Instr(RamOutA),
 		.ALUFlags(Flags),
 		.Imm_s(Imm_s),
@@ -53,6 +54,7 @@ module CPU
 	
 	Program_Counter PCLaptops_We_Love_You(
 		.clk(Clk),
+		.rst(Rst), 
 		.pc_en(PCEn),
 		.cnt(RamAddrA)
 	);

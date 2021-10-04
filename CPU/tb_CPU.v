@@ -1,10 +1,12 @@
 `timescale 1ps/1ps
 module tb_CPU ();
 	reg Clk, Rst;
+	wire [15:0] RdestOut;
 	
 	CPU uut (
 		.Clk(Clk),
-		.Rst(Rst)
+		.Rst(Rst),
+		.RdestOut(RdestOut)
 	);
 	
 	initial begin

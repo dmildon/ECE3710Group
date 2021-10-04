@@ -1,6 +1,6 @@
 module CPU_FSM 
 	(  
-		input Clk,
+		input Clk, Rst, 
 		input [15:0] Instr,
 		input [4:0] ALUFlags,
 		output reg Imm_s, RegEn, RAMEn, PCEn, Signed,
@@ -42,42 +42,48 @@ module CPU_FSM
 		PS <= NS;
 	end
 	
-	always @(negedge Clk) begin
-		case(PS)
-			S0: NS <= S1;
-			S1: begin
-					if (savedInstr[15:12] == 4'b0) begin
-						if (savedInstr[7:4] == 4'b1101 || savedInstr[7:4] == 4'b0 || savedInstr[7:4] == 4'b0100 || 	savedInstr[7:4] == 4'b1000 || savedInstr[7:4] == 4'b1100 || savedInstr[7:4] == 4'b1111) begin
-							NS <= S0;
+	always @(negedge Clk, negedge Rst) begin
+		if (~Rst) begin 
+			NS <= S0; 
+		end 
+		
+		else begin 
+			case(PS)
+				S0: NS <= S1;
+				S1: begin
+						if (savedInstr[15:12] == 4'b0) begin
+							if (savedInstr[7:4] == 4'b1101 || savedInstr[7:4] == 4'b0 || savedInstr[7:4] == 4'b0100 || 	savedInstr[7:4] == 4'b1000 || savedInstr[7:4] == 4'b1100 || savedInstr[7:4] == 4'b1111) begin
+								NS <= S0;
+							end
+							else begin
+								NS <= S2;
+							end
 						end
-						else begin
+						
+						else if (savedInstr[15:12] == 4'b0101 || savedInstr[15:12] == 4'b0110 || savedInstr[15:12] == 4'b0111 || savedInstr[15:12] == 4'b1110 || savedInstr[15:12] == 4'b1001 || savedInstr[15:12] == 4'b1010 || savedInstr[15:12] == 4'b1011 || savedInstr[15:12] == 4'b0001 || savedInstr[15:12] == 4'b0010 || savedInstr[15:12] == 4'b0011 || savedInstr[15:12] == 4'b1000) begin
 							NS <= S2;
 						end
-					end
-					
-					else if (savedInstr[15:12] == 4'b0101 || savedInstr[15:12] == 4'b0110 || savedInstr[15:12] == 4'b0111 || savedInstr[15:12] == 4'b1110 || savedInstr[15:12] == 4'b1001 || savedInstr[15:12] == 4'b1010 || savedInstr[15:12] == 4'b1011 || savedInstr[15:12] == 4'b0001 || savedInstr[15:12] == 4'b0010 || savedInstr[15:12] == 4'b0011 || savedInstr[15:12] == 4'b1000) begin
-						NS <= S2;
-					end
-					
-					else if(savedInstr[15:12] == 4'b1000 && savedInstr[7:4] == 4'b0100) begin 
-						NS <= S2; 
-					end 
-					
-					else begin
-						NS <= S0;
-					end
-				 end
-			S2: begin
-					if (savedInstr[15:12] == 4'b0) begin NS <= S3; end
-					else begin NS <= S4; end
-				 end
-			S3: NS <= S5;
-			S4: NS <= S5;
-			S5: NS <= S0;
-			
-			default: NS <= S0;
-			
-		endcase
+						
+						else if(savedInstr[15:12] == 4'b1000 && savedInstr[7:4] == 4'b0100) begin 
+							NS <= S2; 
+						end 
+						
+						else begin
+							NS <= S0;
+						end
+					 end
+				S2: begin
+						if (savedInstr[15:12] == 4'b0) begin NS <= S3; end
+						else begin NS <= S4; end
+					 end
+				S3: NS <= S5;
+				S4: NS <= S5;
+				S5: NS <= S0;
+				
+				default: NS <= S0;
+				
+			endcase
+		end 
 	end
 	
 	always @(PS) begin
@@ -206,6 +212,18 @@ module CPU_FSM
 					Signed = 0; 
 					RsrcRegLoc = 4'bx;
 					RdestRegLoc = savedInstr[11:8];
+					ALUOpCode = 4'bx;
+					Imm_s = 0;
+					Imm = 8'bx;
+				 end
+				 
+			default: begin
+					PCEn = 0;
+					RAMEn = 0;
+					RegEn = 0;
+					Signed = 0; 
+					RsrcRegLoc = 4'bx;
+					RdestRegLoc = 4'bx;
 					ALUOpCode = 4'bx;
 					Imm_s = 0;
 					Imm = 8'bx;
