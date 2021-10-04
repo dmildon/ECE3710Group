@@ -24,7 +24,8 @@ module CPU_FSM
 						 S1 = 3'b001,
 						 S2 = 3'b010,
 						 S3 = 3'b011,
-						 S4 = 3'b100;
+						 S4 = 3'b100,
+						 S5 = 3'b101;
 						
 	
 	reg [2:0] PS, NS;
@@ -70,8 +71,9 @@ module CPU_FSM
 					if (savedInstr[15:12] == 4'b0) begin NS <= S3; end
 					else begin NS <= S4; end
 				 end
-			S3: NS <= S0;
-			S4: NS <= S0;
+			S3: NS <= S5;
+			S4: NS <= S5;
+			S5: NS <= S0;
 			
 			default: NS <= S0;
 			
@@ -196,6 +198,17 @@ module CPU_FSM
 						Signed = 1;
 					end
 					
+				 end
+			S5: begin
+					PCEn = 0;
+					RAMEn = 0;
+					RegEn = 0;
+					Signed = 0; 
+					RsrcRegLoc = 4'bx;
+					RdestRegLoc = savedInstr[11:8];
+					ALUOpCode = 4'bx;
+					Imm_s = 0;
+					Imm = 8'bx;
 				 end
 		endcase
 	end

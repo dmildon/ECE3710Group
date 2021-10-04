@@ -100,7 +100,7 @@ module ALU (Rsrc, Rdest, OpCode, Out, Flags);
 			case(OpCode)
 				ADD:  begin Rsrc_add = Rsrc; Cin_wire = 0; Out = out_add; Flags = flags_add; end 
 				SUB:  begin Rsrc_add = ~Rsrc; Cin_wire = 1; Out = out_add; Flags = flags_add; end 
-				CMP:  begin Rsrc_add = 16'bx; Cin_wire = 1'bx; Out = 16'bx; Flags = flags_cmp; end 
+				CMP:  begin Rsrc_add = 16'bx; Cin_wire = 1'bx; Out = Rdest; Flags = flags_cmp; end 
 				AND:  begin Rsrc_add = 16'bx; Cin_wire = 1'bx; Out = out_and; Flags = 5'bx; end
 				OR:   begin Rsrc_add = 16'bx; Cin_wire = 1'bx; Out = out_or; Flags = 5'bx; end
 				XOR:  begin Rsrc_add = 16'bx; Cin_wire = 1'bx; Out = out_xor; Flags = 5'bx; end
