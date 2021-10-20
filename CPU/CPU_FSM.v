@@ -3,7 +3,7 @@ module CPU_FSM
 		input Clk,
 		input [15:0] Instr,
 		input [4:0] ALUFlags,
-		output reg Imm_s, RegEn, RAMEn, PCEn, Signed,
+		output reg Imm_s, RegEn, RAMEn, PCEn, Signed, RamAddrSelect, LoadInSelect,
 		output reg [3:0] ALUOpCode, RdestRegLoc, RsrcRegLoc,
 		output reg [7:0] Imm
 	);
@@ -17,18 +17,21 @@ module CPU_FSM
 	parameter NOT 		= 4'b0110;
 	parameter LSH 		= 4'b0111;
 	parameter RSH 		= 4'b1000;
-	parameter ARSH 	= 4'b1001;
-	parameter MUL     = 4'b1010;
+	parameter ARSH 		= 4'b1001;
+	parameter MUL     	= 4'b1010;
 	
-	parameter [2:0] S0 = 3'b000,
-						 S1 = 3'b001,
-						 S2 = 3'b010,
-						 S3 = 3'b011,
-						 S4 = 3'b100,
-						 S5 = 3'b101;
-						
+	parameter [3:0] S0 = 4'b0000,
+					S1 = 4'b0001,
+					S2 = 4'b0010,
+					S3 = 4'b0011,
+					S4 = 4'b0100,
+					S5 = 4'b0101,
+					S6 = 4'b0110,
+					S7 = 4'b0111,
+					S8 = 4'b1000,
+					S9 = 4'b1001;
 	
-	reg [2:0] PS, NS;
+	reg [3:0] PS, NS;
 	wire [15:0] savedInstr;
 	
 	Register16Bit savedInstrModule(
@@ -38,11 +41,11 @@ module CPU_FSM
 		.out(savedInstr)
 	);
 	
-	always @(posedge Clk) begin
+	always @(negedge Clk) begin
 		PS <= NS;
 	end
 	
-	always @(negedge Clk) begin
+	always @(posedge Clk) begin
 		case(PS)
 			S0: NS <= S1;
 			S1: begin
@@ -62,6 +65,10 @@ module CPU_FSM
 					else if(savedInstr[15:12] == 4'b1000 && savedInstr[7:4] == 4'b0100) begin 
 						NS <= S2; 
 					end 
+
+					else if (savedInstr[15:12] == 4'b0100 && (savedInstr[7:4] == 4'b0000 || savedInstr[7:4] == 4'b0100)) begin
+						NS <= S5;
+					end
 					
 					else begin
 						NS <= S0;
@@ -71,10 +78,21 @@ module CPU_FSM
 					if (savedInstr[15:12] == 4'b0) begin NS <= S3; end
 					else begin NS <= S4; end
 				 end
-			S3: NS <= S5;
-			S4: NS <= S5;
-			S5: NS <= S0;
-			
+			S3: NS <= S0;
+			S4: NS <= S0;
+			S5: begin
+					if (savedInstr[7:4] == 4'b0000) begin
+						NS <= S6;
+					end
+					else begin
+						NS <= S7;
+					end
+				end
+			S6: NS <= S9;
+			S9: NS <= S8;
+			S7: NS <= S8;
+			S8: NS <= S0;
+
 			default: NS <= S0;
 			
 		endcase
@@ -92,6 +110,8 @@ module CPU_FSM
 					ALUOpCode = 4'bx;
 					Imm_s = 0;
 					Imm = 8'bx;
+					RamAddrSelect = 0;
+					LoadInSelect = 0;
 				 end
 			S1: begin
 					PCEn = 0;
@@ -103,6 +123,8 @@ module CPU_FSM
 					ALUOpCode = 4'bx;
 					Imm_s = 0;
 					Imm = 8'bx;
+					RamAddrSelect = 0;
+					LoadInSelect = 0;
 				 end
 			S2: begin
 					PCEn = 0;
@@ -114,6 +136,8 @@ module CPU_FSM
 					ALUOpCode = 4'bx;
 					Imm_s = 0;
 					Imm = 8'bx;
+					RamAddrSelect = 0;
+					LoadInSelect = 0;
 				 end
 			S3: begin
 					PCEn = 0;
@@ -124,6 +148,8 @@ module CPU_FSM
 					RdestRegLoc = savedInstr[11:8];
 					Imm_s = 0;
 					Imm = 8'bx;
+					RamAddrSelect = 0;
+					LoadInSelect = 0;
 					
 					if (savedInstr[7:4] == 4'b0101 || savedInstr[7:4] == 4'b0110 || savedInstr[7:4] == 4'b0111)
 						ALUOpCode = ADD;
@@ -157,6 +183,8 @@ module CPU_FSM
 					RdestRegLoc = savedInstr[11:8];
 					Imm_s = 1;
 					Imm = savedInstr[7:0];
+					RamAddrSelect = 0;
+					LoadInSelect = 0;
 					
 					if(savedInstr[15:12] == 4'b0101 || savedInstr[15:12] == 4'b0111) begin 
 						ALUOpCode = ADD; 
@@ -204,11 +232,69 @@ module CPU_FSM
 					RAMEn = 0;
 					RegEn = 0;
 					Signed = 0; 
-					RsrcRegLoc = 4'bx;
+					RsrcRegLoc = savedInstr[3:0];
 					RdestRegLoc = savedInstr[11:8];
 					ALUOpCode = 4'bx;
 					Imm_s = 0;
 					Imm = 8'bx;
+					RamAddrSelect = 0;
+					LoadInSelect = 0;
+				 end
+
+			S6: begin
+					PCEn = 0;
+					RAMEn = 0;
+					RegEn = 0;
+					Signed = 0; 
+					RsrcRegLoc = savedInstr[3:0];
+					RdestRegLoc = savedInstr[11:8];
+					ALUOpCode = 4'bx;
+					Imm_s = 0;
+					Imm = 8'bx;
+					RamAddrSelect = 1;
+					LoadInSelect = 1;
+				end
+				
+				S9: begin
+					PCEn = 0;
+					RAMEn = 0;
+					RegEn = 1;
+					Signed = 0; 
+					RsrcRegLoc = savedInstr[3:0];
+					RdestRegLoc = savedInstr[11:8];
+					ALUOpCode = 4'bx;
+					Imm_s = 0;
+					Imm = 8'bx;
+					RamAddrSelect = 1;
+					LoadInSelect = 1;
+					 end
+			
+			S7: begin
+					PCEn = 0;
+					RAMEn = 1;
+					RegEn = 0;
+					Signed = 0; 
+					RsrcRegLoc = savedInstr[3:0];
+					RdestRegLoc = savedInstr[11:8];
+					ALUOpCode = 4'bx;
+					Imm_s = 0;
+					Imm = 8'bx;
+					RamAddrSelect = 1;
+					LoadInSelect = 0;
+				end
+			
+			S8: begin
+					PCEn = 0;
+					RAMEn = 0;
+					RegEn = 0;
+					Signed = 0; 
+					RsrcRegLoc = 4'bx;
+					RdestRegLoc = 4'bx;
+					ALUOpCode = 4'bx;
+					Imm_s = 0;
+					Imm = 8'bx;
+					RamAddrSelect = 0;
+					LoadInSelect = 0;
 				 end
 		endcase
 	end
@@ -221,7 +307,7 @@ module Register16Bit(in, clk, en, out);
 	
 	output reg [15:0] out;
 	
-	always @(posedge clk) begin
+	always @(*) begin
 		if (en)
 			out <= in;
 		else
