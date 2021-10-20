@@ -1,11 +1,12 @@
 module CPU 
 	(
-		input Clk, Rst
+		input Clk, Rst,
+		output [15:0] RdestOut
 	);
 	
 	wire [3:0] RdestRegLoc, RsrcRegLoc, ALUOpCode;
 	wire RegEn, Imm_s, Signed, RAMEn, PCEn, RamAddrSelect, LoadInSelect;
-	wire [15:0] RdestOut, SignedImm, RamOutA, RamOutB, RsrcOut, AluOutput;
+	wire[15:0] SignedImm, RamOutA, RamOutB, RsrcOut, AluOutput;
 	reg [15:0] AluSrcIn, Load;
 	wire [4:0] Flags;
 	wire [7:0] Imm;
