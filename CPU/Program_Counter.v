@@ -1,6 +1,6 @@
-module Program_Counter(clk, pc_en, cnt);
+module Program_Counter(clk, rst, pc_en, cnt);
 
-	input clk; 
+	input clk, rst; 
 	input pc_en; 
 
 	output reg [9:0] cnt;
@@ -11,12 +11,17 @@ module Program_Counter(clk, pc_en, cnt);
 		cnt = 10'b0000000000;
 	end 
 
-	always@(posedge clk)
+	always@(posedge clk, negedge rst)
     
 		begin
-		
-			if(pc_en)
-				cnt = cnt + 1; 
+			if(~rst) begin 
+				cnt = 10'b0;
+			end 
+			
+			else begin 
+				if(pc_en)
+					cnt = cnt + 1; 
+			end 
   
 		end
 
