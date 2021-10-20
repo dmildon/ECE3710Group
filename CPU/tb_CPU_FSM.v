@@ -3,7 +3,7 @@ module tb_CPU_FSM ();
 	reg Clk;
 	reg [15:0] Instr;
 	reg [4:0] ALUFlags;
-	wire Imm_s, RegEn, RAMEn, PCEn, Signed; //eventually we will need to have RAMEn for load/store
+	wire Imm_s, RegEn, RAMEn, PCEn, Signed, RamAddrSelect, LoadInSelect; //eventually we will need to have RAMEn for load/store
 	wire [3:0] ALUOpCode, RdestRegLoc, RsrcRegLoc;
 	wire [7:0] Imm;
 	
@@ -15,7 +15,9 @@ module tb_CPU_FSM ();
 		.RegEn(RegEn),
 		.RAMEn(RAMEn),
 		.PCEn(PCEn),
-		.Signed(Signed), //eventually we will need to have RAMEn for load/store
+		.Signed(Signed),
+		.RamAddrSelect(RamAddrSelect),
+		.LoadInSelect(LoadInSelect),
 		.ALUOpCode(ALUOpCode),
 		.RdestRegLoc(RdestRegLoc),
 		.RsrcRegLoc(RsrcRegLoc),

@@ -1,31 +1,38 @@
 module CPU 
 	(
-		input Clk, Rst,
-		output [15:0] RdestOut
+		input Clk, Rst
 	);
 	
 	wire [3:0] RdestRegLoc, RsrcRegLoc, ALUOpCode;
-	wire RegEn, Imm_s, Signed, RAMEn, PCEn;
-	wire [15:0] SignedImm, RamOutA, RamOutB;
+	wire RegEn, Imm_s, Signed, RAMEn, PCEn, RamAddrSelect, LoadInSelect;
+	wire [15:0] RdestOut, SignedImm, RamOutA, RamOutB, RsrcOut, AluOutput;
+	reg [15:0] AluSrcIn, Load;
 	wire [4:0] Flags;
 	wire [7:0] Imm;
-	wire [9:0] RamAddrA;
+	wire [9:0] PCOut;
+	reg [9:0] RamAddrA;
+
+	RegFile myReg(
+		.RdestRegLoc(RdestRegLoc), 
+		.RsrcRegLoc(RsrcRegLoc), 
+		.Clk(Clk), 
+		.En(RegEn), 
+		.Rst(Rst), 
+		.Load(Load), 
+		.RdestOut(RdestOut), 
+		.RsrcOut(RsrcOut)
+	);
 	
-	RegFile_Alu myRegFile_ALU (
-		.RdestRegLoc(RdestRegLoc),
-		.RsrcRegLoc(RsrcRegLoc),
-		.Clk(Clk),
-		.En(RegEn),
-		.Rst(Rst),
-		.Imm(SignedImm),
-		.Imm_s(Imm_s),
-		.OpCode(ALUOpCode),
-		.RdestOut(RdestOut),
-		.Flags(Flags)
+	ALU myALU(
+		.Rsrc(AluSrcIn), 
+		.Rdest(RdestOut), 
+		.OpCode(ALUOpCode), 
+		.Flags(Flags), 
+		.Out(AluOutput)
 	);
 	
 	RAM myRAM (
-		.data_a(16'bx),
+		.data_a(RdestOut),
 		.data_b(16'bx),
 		.addr_a(RamAddrA),
 		.addr_b(10'bx),
@@ -38,7 +45,6 @@ module CPU
 	
 	CPU_FSM myFSM(
 		.Clk(Clk),
-		.Rst(Rst), 
 		.Instr(RamOutA),
 		.ALUFlags(Flags),
 		.Imm_s(Imm_s),
@@ -46,17 +52,18 @@ module CPU
 		.RAMEn(RAMEn),
 		.PCEn(PCEn),
 		.Signed(Signed),
+		.RamAddrSelect(RamAddrSelect),
+		.LoadInSelect(LoadInSelect),
 		.ALUOpCode(ALUOpCode),
 		.RdestRegLoc(RdestRegLoc),
 		.RsrcRegLoc(RsrcRegLoc),
 		.Imm(Imm)
 	);
 	
-	Program_Counter PCLaptops_We_Love_You(
+	Program_Counter PC(
 		.clk(Clk),
-		.rst(Rst), 
 		.pc_en(PCEn),
-		.cnt(RamAddrA)
+		.cnt(PCOut)
 	);
 	
 	sign_extender mySignExtender (
@@ -65,6 +72,21 @@ module CPU
 		.Out(SignedImm)
 	);
 	
-	
+	always @(*) begin
+		if (~Imm_s)
+			AluSrcIn <= RsrcOut;
+		else 
+			AluSrcIn <= SignedImm;
+		
+		if (LoadInSelect)
+			Load <= RamOutA;
+		else
+			Load <= AluOutput;
+		
+		if (RamAddrSelect)
+			RamAddrA <= RsrcOut[9:0];
+		else
+			RamAddrA <= PCOut;
+	end
 	
 endmodule
