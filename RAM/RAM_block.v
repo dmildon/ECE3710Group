@@ -2,7 +2,7 @@
 // True Dual Port RAM with single clock
 
 module RAM_block
-#(parameter DATA_WIDTH=16, parameter ADDR_WIDTH=9, parameter FILENAME = "D:/Fall 2021 - Summer 2022/ECE 3710/Lab1/ECE3710Group/RAM/RamInit1.txt")
+#(parameter DATA_WIDTH=16, parameter ADDR_WIDTH=9, parameter FILENAME = "C:/Users/Alex/OneDrive/Documents/Projects/BikeSensor (MurryClan)/ECE3710Group/RAM/RamInit1.txt")
 (
 	input [(DATA_WIDTH-1):0] data_a, data_b,
 	input [(ADDR_WIDTH-1):0] addr_a, addr_b,

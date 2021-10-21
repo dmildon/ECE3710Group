@@ -76,6 +76,6 @@ case(x)
 	4'b1111 : 			//Hexadecimal F	
 	z = ~7'b1110001; 
    default :
-	z = ~7'b0000000;
+	z = ~7'b0000111;
 endcase
 endmodule 

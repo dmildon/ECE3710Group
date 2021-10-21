@@ -37,7 +37,7 @@ module CPU_FSM
 	Register16Bit savedInstrModule(
 		.in(Instr),
 		.clk(Clk),
-		.en(PS == S0),
+		.en(NS == S1),
 		.out(savedInstr)
 	);
 	
@@ -307,7 +307,7 @@ module Register16Bit(in, clk, en, out);
 	
 	output reg [15:0] out;
 	
-	always @(*) begin
+	always @(negedge clk) begin
 		if (en)
 			out <= in;
 		else
