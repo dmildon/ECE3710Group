@@ -307,7 +307,7 @@ module Register16Bit(in, clk, en, out);
 	
 	output reg [15:0] out;
 	
-	always @(*) begin
+	always @(posedge clk) begin
 		if (en)
 			out <= in;
 		else

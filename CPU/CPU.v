@@ -7,12 +7,33 @@ module CPU
 	wire [3:0] RdestRegLoc, RsrcRegLoc, ALUOpCode;
 	wire RegEn, Imm_s, Signed, RAMEn, PCEn, RamAddrSelect, LoadInSelect;
 	wire[15:0] SignedImm, RamOutA, RamOutB, RsrcOut, AluOutput;
-	reg [15:0] AluSrcIn, Load;
+	wire [15:0] AluSrcIn, Load;
 	wire [4:0] Flags;
 	wire [7:0] Imm;
 	wire [9:0] PCOut;
-	reg [9:0] RamAddrA;
-
+	wire [9:0] RamAddrA;
+	
+	CPU_MUX imm_Mux (
+		.in00(SignedImm),
+		.in01(RsrcOut),
+		.selector(Imm_s),
+		.out(AluSrcIn)
+	);
+	
+	CPU_MUX Alu_Mux (
+		.in00(RamOutA),
+		.in01(AluOutput),
+		.selector(LoadInSelect),
+		.out(Load)
+	);
+	
+	CPU_MUX #(.Data_width(10)) Ram_Mux (
+		.in00(RsrcOut[9:0]),
+		.in01(PCOut),
+		.selector(RamAddrSelect),
+		.out(RamAddrA)
+	);
+	
 	RegFile myReg(
 		.RdestRegLoc(RdestRegLoc), 
 		.RsrcRegLoc(RsrcRegLoc), 
@@ -63,6 +84,7 @@ module CPU
 	
 	Program_Counter PC(
 		.clk(Clk),
+		.rst(Rst),
 		.pc_en(PCEn),
 		.cnt(PCOut)
 	);
@@ -73,21 +95,31 @@ module CPU
 		.Out(SignedImm)
 	);
 	
-	always @(*) begin
-		if (~Imm_s)
-			AluSrcIn <= RsrcOut;
-		else 
-			AluSrcIn <= SignedImm;
-		
-		if (LoadInSelect)
-			Load <= RamOutA;
-		else
-			Load <= AluOutput;
-		
-		if (RamAddrSelect)
-			RamAddrA <= RsrcOut[9:0];
-		else
-			RamAddrA <= PCOut;
-	end
+//	always @(*) begin
+//		if (~Imm_s)
+//			AluSrcIn <= RsrcOut;
+//		else 
+//			AluSrcIn <= SignedImm;
+//		
+//		if (LoadInSelect)
+//			Load <= RamOutA;
+//		else
+//			Load <= AluOutput;
+//		
+//		if (RamAddrSelect)
+//			RamAddrA <= RsrcOut[9:0];
+//		else
+//			RamAddrA <= PCOut;
+//	end
 	
+endmodule
+
+module CPU_MUX #(parameter Data_width = 16) (in00, in01, selector, out);
+	input selector;
+	input [(Data_width - 1):0] in00, in01;
+	
+	
+	output [(Data_width - 1):0] out;
+	
+	assign out = selector ? in00 : in01;
 endmodule
