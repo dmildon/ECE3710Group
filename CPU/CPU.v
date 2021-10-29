@@ -5,8 +5,9 @@ module CPU
 	);
 	
 	wire [3:0] RdestRegLoc, RsrcRegLoc, ALUOpCode;
-	wire RegEn, Imm_s, Signed, RAMEn, PCEn, RamAddrSelect, LoadInSelect;
-	wire[15:0] SignedImm, RamOutA, RamOutB, RsrcOut, AluOutput;
+	wire RegEn, Imm_s, Signed, RAMEn, PCEn, RamAddrSelect; 
+	wire [1:0] LoadInSelect;
+	wire [15:0] SignedImm, RamOutA, RamOutB, RsrcOut, AluOutput;
 	wire [15:0] AluSrcIn, Load;
 	wire [4:0] Flags;
 	wire [7:0] Imm;
@@ -20,9 +21,10 @@ module CPU
 		.out(AluSrcIn)
 	);
 	
-	CPU_MUX Alu_Mux (
-		.in00(RamOutA),
-		.in01(AluOutput),
+	CPU_2bit_MUX Alu_Mux (
+		.in00(AluOutput),
+		.in01(RamOutA),
+		.in02(SignedImm),
 		.selector(LoadInSelect),
 		.out(Load)
 	);
@@ -123,3 +125,19 @@ module CPU_MUX #(parameter Data_width = 16) (in00, in01, selector, out);
 	
 	assign out = selector ? in00 : in01;
 endmodule
+
+//update later? all one mux?
+module CPU_2bit_MUX #(parameter Data_width = 16) (in00, in01, in02, selector, out);
+	input [1:0] selector;
+	input [(Data_width - 1):0] in00, in01, in02;
+	
+	
+	output [(Data_width - 1):0] out;
+	
+	assign out = (selector == 00) ? in00 :
+					 (selector == 01) ? in01 :
+					 (selector == 10) ? in02 : 16'bx;
+	
+	
+endmodule
+

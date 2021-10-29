@@ -38,7 +38,7 @@
 
 set_global_assignment -name FAMILY "Cyclone V"
 set_global_assignment -name DEVICE 5CSEMA5F31C6
-set_global_assignment -name TOP_LEVEL_ENTITY CPU_Wrapper
+set_global_assignment -name TOP_LEVEL_ENTITY CPU
 set_global_assignment -name ORIGINAL_QUARTUS_VERSION 18.1.0
 set_global_assignment -name PROJECT_CREATION_TIME_DATE "15:50:12  OCTOBER 02, 2021"
 set_global_assignment -name LAST_QUARTUS_VERSION "18.1.0 Lite Edition"
@@ -102,8 +102,8 @@ set_location_assignment PIN_AC28 -to out4A[3]
 set_location_assignment PIN_AD29 -to out4A[2]
 set_location_assignment PIN_AE29 -to out4A[1]
 set_location_assignment PIN_AB23 -to out4A[0]
+set_global_assignment -name VERILOG_FILE sign_extender.v
 set_global_assignment -name PARTITION_NETLIST_TYPE SOURCE -section_id Top
 set_global_assignment -name PARTITION_FITTER_PRESERVATION_LEVEL PLACEMENT_AND_ROUTING -section_id Top
 set_global_assignment -name PARTITION_COLOR 16764057 -section_id Top
-set_global_assignment -name VERILOG_FILE sign_extender.v
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top
