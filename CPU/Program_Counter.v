@@ -30,17 +30,12 @@ module Program_Counter(clk, rst, pc_en, sel, imm, mem_addr, cnt);
 			cnt = cnt + 16'b0000000000000001; 
 		end 
 		
-		
 		else if(sel == Imm_s && pc_en) begin 
-			cnt = cnt + imm; 
+			cnt = imm; 
 		end 
 		
 		else if(sel == MemAddr_s && pc_en) begin 
 			cnt = mem_addr; 
-		end
-		
-		else begin 
-			cnt = cnt + 16'b0000000000000001; 
 		end
 		
 	end 
