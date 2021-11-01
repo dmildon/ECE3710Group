@@ -395,7 +395,7 @@ module CPU_FSM
 					Imm = savedInstr[7:0]; 
 					RamAddrSelect = 0;
 					LoadInSelect = 2'b10;
-					if (CondOut) begin PCState = 2'b10; end
+					if (CondOut) begin PCState = 2'b10; PCEn = 1; end
 					else begin PCState = 2'b00; end 
 				  end
 		endcase
