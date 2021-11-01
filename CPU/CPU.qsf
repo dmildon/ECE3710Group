@@ -38,7 +38,7 @@
 
 set_global_assignment -name FAMILY "Cyclone V"
 set_global_assignment -name DEVICE 5CSEMA5F31C6
-set_global_assignment -name TOP_LEVEL_ENTITY Program_Counter
+set_global_assignment -name TOP_LEVEL_ENTITY CPU_Wrapper
 set_global_assignment -name ORIGINAL_QUARTUS_VERSION 18.1.0
 set_global_assignment -name PROJECT_CREATION_TIME_DATE "15:50:12  OCTOBER 02, 2021"
 set_global_assignment -name LAST_QUARTUS_VERSION "18.1.0 Lite Edition"
@@ -52,7 +52,7 @@ set_global_assignment -name EDA_OUTPUT_DATA_FORMAT "VERILOG HDL" -section_id eda
 set_global_assignment -name POWER_PRESET_COOLING_SOLUTION "23 MM HEAT SINK WITH 200 LFPM AIRFLOW"
 set_global_assignment -name POWER_BOARD_THERMAL_MODEL "NONE (CONSERVATIVE)"
 set_global_assignment -name EDA_TEST_BENCH_ENABLE_STATUS TEST_BENCH_MODE -section_id eda_simulation
-set_global_assignment -name EDA_NATIVELINK_SIMULATION_TEST_BENCH tb_Program_Counter -section_id eda_simulation
+set_global_assignment -name EDA_NATIVELINK_SIMULATION_TEST_BENCH tb_CPU -section_id eda_simulation
 set_global_assignment -name EDA_TEST_BENCH_NAME tb_CPU_FSM -section_id eda_simulation
 set_global_assignment -name EDA_DESIGN_INSTANCE_NAME NA -section_id tb_CPU_FSM
 set_global_assignment -name EDA_TEST_BENCH_MODULE_NAME tb_CPU_FSM -section_id tb_CPU_FSM
@@ -89,9 +89,6 @@ set_location_assignment PIN_AC28 -to out4A[3]
 set_location_assignment PIN_AD29 -to out4A[2]
 set_location_assignment PIN_AE29 -to out4A[1]
 set_location_assignment PIN_AB23 -to out4A[0]
-set_global_assignment -name PARTITION_NETLIST_TYPE SOURCE -section_id Top
-set_global_assignment -name PARTITION_FITTER_PRESERVATION_LEVEL PLACEMENT_AND_ROUTING -section_id Top
-set_global_assignment -name PARTITION_COLOR 16764057 -section_id Top
 set_global_assignment -name VERILOG_FILE tb_Program_Counter.v
 set_global_assignment -name VERILOG_FILE CPU.v
 set_global_assignment -name VERILOG_FILE ../RegFile/RegFile.v
@@ -105,10 +102,13 @@ set_global_assignment -name VERILOG_FILE tb_CPU.v
 set_global_assignment -name VERILOG_FILE ../RAM/RAM.v
 set_global_assignment -name VERILOG_FILE CPU_Wrapper.v
 set_global_assignment -name VERILOG_FILE sign_extender.v
-set_global_assignment -name EDA_TEST_BENCH_FILE tb_CPU_FSM.v -section_id tb_CPU_FSM
-set_global_assignment -name EDA_TEST_BENCH_FILE tb_CPU.v -section_id tb_CPU
 set_global_assignment -name EDA_TEST_BENCH_NAME tb_Program_Counter -section_id eda_simulation
 set_global_assignment -name EDA_DESIGN_INSTANCE_NAME NA -section_id tb_Program_Counter
 set_global_assignment -name EDA_TEST_BENCH_MODULE_NAME tb_Program_Counter -section_id tb_Program_Counter
+set_global_assignment -name EDA_TEST_BENCH_FILE tb_CPU_FSM.v -section_id tb_CPU_FSM
+set_global_assignment -name EDA_TEST_BENCH_FILE tb_CPU.v -section_id tb_CPU
 set_global_assignment -name EDA_TEST_BENCH_FILE tb_Program_Counter.v -section_id tb_Program_Counter
+set_global_assignment -name PARTITION_NETLIST_TYPE SOURCE -section_id Top
+set_global_assignment -name PARTITION_FITTER_PRESERVATION_LEVEL PLACEMENT_AND_ROUTING -section_id Top
+set_global_assignment -name PARTITION_COLOR 16764057 -section_id Top
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top

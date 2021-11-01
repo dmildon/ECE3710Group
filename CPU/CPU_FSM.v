@@ -70,22 +70,13 @@ module CPU_FSM
 		case(PS)
 			S0: NS <= S1;
 			S1: begin
-					if (Instr[15:12] == 4'b0) begin
-						if (Instr[7:4] == 4'b1101 || Instr[7:4] == 4'b0 || Instr[7:4] == 4'b0100 || Instr[7:4] == 4'b1000 || Instr[7:4] == 4'b1100 || Instr[7:4] == 4'b1111) begin
-							NS <= S0;
-						end
-						else begin
-							NS <= S2;
-						end
-					end
-					
-					else if (Instr[15:12] == 4'b0101 || Instr[15:12] == 4'b0110 || Instr[15:12] == 4'b0111 || Instr[15:12] == 4'b1110 || Instr[15:12] == 4'b1001 || Instr[15:12] == 4'b1010 || Instr[15:12] == 4'b1011 || Instr[15:12] == 4'b0001 || Instr[15:12] == 4'b0010 || Instr[15:12] == 4'b0011 || Instr[15:12] == 4'b1000) begin
+					if (Instr[15:12] == 4'b0101 || Instr[15:12] == 4'b0110 || Instr[15:12] == 4'b0111 || Instr[15:12] == 4'b1110 || Instr[15:12] == 4'b1001 || Instr[15:12] == 4'b1010 || Instr[15:12] == 4'b1011 || Instr[15:12] == 4'b0001 || Instr[15:12] == 4'b0010 || Instr[15:12] == 4'b0011 || (Instr[15:12] == 4'b1000 && Instr[7:5] == 3'b000)) begin
 						NS <= S2;
 					end
 					
-					else if(Instr[15:12] == 4'b1000 && Instr[7:4] == 4'b0100) begin 
-						NS <= S2; 
-					end 
+					else if ((Instr[15:12] == 4'b0000 && (~(Instr[7:4] == 4'b1101) || ~(Instr[7:4] == 4'b0000))) || (Instr[15:12] == 4'b1000 && Instr[7:4] == 4'b0100)) begin
+						NS <= S2;
+					end
 
 					else if (Instr[15:12] == 4'b0100 && (Instr[7:4] == 4'b0000 || Instr[7:4] == 4'b0100)) begin
 						NS <= S5;
@@ -368,7 +359,7 @@ module CPU_FSM
 				  end
 				  
 			S11 : begin
-				PCEn = 0;
+				PCEn = 1;
 				RAMEn = 0;
 				RegEn = 1;
 				Signed = 1; 
@@ -378,23 +369,23 @@ module CPU_FSM
 				Imm_s = 0;
 				Imm = savedInstr[7:0]; 
 				RamAddrSelect = 0;
-				LoadInSelect = 2'b10;
+				LoadInSelect = 2'b00;
 				if (CondOut) begin PCState = 2'b01; end
 				else begin PCState = 2'b00; end 
 			end
 			
 			S12: begin
-					PCEn = 0;
+					PCEn = 1;
 					RAMEn = 0;
-					RegEn = 1;
+					RegEn = 0;
 					Signed = 0; 
 					RsrcRegLoc = savedInstr[3:0];
 					RdestRegLoc = 4'bx;
 					ALUOpCode = 4'bx;
 					Imm_s = 0;
-					Imm = savedInstr[7:0]; 
+					Imm = 8'bx; 
 					RamAddrSelect = 0;
-					LoadInSelect = 2'b10;
+					LoadInSelect = 2'b00;
 					if (CondOut) begin PCState = 2'b10; end
 					else begin PCState = 2'b00; end 
 				  end
