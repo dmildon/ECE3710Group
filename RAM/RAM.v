@@ -7,7 +7,7 @@ module RAM
 	output reg [(DATA_WIDTH-1):0] q_a_out, q_b_out
 );
 	wire [(DATA_WIDTH-1):0] q_a [1:0], q_b [1:0];
-	RAM_block #(.FILENAME("C:/Users/alexm/OneDrive/Documents/school/Semesters/14. Fall 21/ECE 3710/ECE3710Group/RAM/RamInit000.txt")) RAM0 (
+	RAM_block #(.FILENAME("D:/Fall 2021 - Summer 2022/ECE 3710/Lab1/ECE3710Group/RAM/RamInit000.txt")) RAM0 (
 		.data_a(data_a),
 		.data_b(data_b),
 		.addr_a(addr_a[ADDR_WIDTH-2:0]),

@@ -49,14 +49,14 @@ module CPU_FSM
 		.out(savedInstr)
 	);
 	
-	Register_FSM FLAGS(
+	Register_FSM #(.width(5)) FLAGS(
 		.in(ALUFlags),
 		.clk(Clk),
 		.en(PS == S3 || PS == S4), // if Flags do be fucked
 		.out(savedFlags)
 	);
 	
-	ConditionDecoder SomeNameWeNeedToChangeLaterBecauseDawsonIsTooLazyToThinkOfAGoodOne (
+	ConditionDecoder Cond_Values (
 		.cond((savedInstr[15:12] == 4'b0100 && savedInstr[7:4] == 4'b1101) ? savedInstr[3:0] : savedInstr[11:8]),
 		.savedFlags(savedFlags),
 		.out(CondOut)

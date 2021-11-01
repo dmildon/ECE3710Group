@@ -6,12 +6,11 @@ module CPU
 	
 	wire [3:0] RdestRegLoc, RsrcRegLoc, ALUOpCode;
 	wire RegEn, Imm_s, Signed, RAMEn, PCEn, RamAddrSelect; 
-	wire [1:0] LoadInSelect;
+	wire [1:0] LoadInSelect, PCState;
 	wire [15:0] SignedImm, RamOutA, RamOutB, RsrcOut, AluOutput;
-	wire [15:0] AluSrcIn, Load;
+	wire [15:0] AluSrcIn, Load, PCOut;
 	wire [4:0] Flags;
 	wire [7:0] Imm;
-	wire [9:0] PCOut;
 	wire [9:0] RamAddrA;
 	
 	CPU_MUX imm_Mux (
@@ -31,7 +30,7 @@ module CPU
 	
 	CPU_MUX #(.Data_width(10)) Ram_Mux (
 		.in00(RsrcOut[9:0]),
-		.in01(PCOut),
+		.in01(PCOut[9:0]),
 		.selector(RamAddrSelect),
 		.out(RamAddrA)
 	);
@@ -78,6 +77,7 @@ module CPU
 		.Signed(Signed),
 		.RamAddrSelect(RamAddrSelect),
 		.LoadInSelect(LoadInSelect),
+		.PCState(PCState),
 		.ALUOpCode(ALUOpCode),
 		.RdestRegLoc(RdestRegLoc),
 		.RsrcRegLoc(RsrcRegLoc),
@@ -88,6 +88,9 @@ module CPU
 		.clk(Clk),
 		.rst(Rst),
 		.pc_en(PCEn),
+		.sel(PCState),
+		.imm(SignedImm), 
+		.mem_addr(RamAddrA), 
 		.cnt(PCOut)
 	);
 	
