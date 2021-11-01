@@ -6,7 +6,7 @@ module CPU
 	
 	wire [3:0] RdestRegLoc, RsrcRegLoc, ALUOpCode;
 	wire RegEn, Imm_s, Signed, RAMEn, PCEn, RamAddrSelect; 
-	wire [1:0] LoadInSelect;
+	wire [1:0] LoadInSelect, PCState;
 	wire [15:0] SignedImm, RamOutA, RamOutB, RsrcOut, AluOutput;
 	wire [15:0] AluSrcIn, Load;
 	wire [4:0] Flags;
@@ -67,7 +67,7 @@ module CPU
 		.q_b_out(RamOutB)
 	);
 	
-	CPU_FSM myFSM(
+	CPU_FSM_FASTER myFSM(
 		.Clk(Clk),
 		.Instr(RamOutA),
 		.ALUFlags(Flags),
@@ -81,7 +81,8 @@ module CPU
 		.ALUOpCode(ALUOpCode),
 		.RdestRegLoc(RdestRegLoc),
 		.RsrcRegLoc(RsrcRegLoc),
-		.Imm(Imm)
+		.Imm(Imm),
+		.PCState(PCState)
 	);
 	
 	Program_Counter PC(

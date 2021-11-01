@@ -1,4 +1,4 @@
-module CPU_FSM 
+module CPU_FSM_FASTER
 	(  
 		input Clk,
 		input [15:0] Instr,
@@ -24,9 +24,9 @@ module CPU_FSM
 	
 	parameter [3:0]
 					S0  = 4'b0000,
-					S1  = 4'b0001,
-					S2  = 4'b0010,
-					S3  = 4'b0011,
+					StateLoad  = 4'b0001,
+					StateStore  = 4'b0010,
+					StateScond  = 4'b0011,
 					S4  = 4'b0100,
 					S5  = 4'b0101,
 					S6  = 4'b0110,
@@ -37,7 +37,7 @@ module CPU_FSM
 					S11 = 4'b1011,
 					S12 = 4'b1100,
 					S13 = 4'b1101,
-					SEnd = 4'b1111;
+					SFinal = 4'b1111;
 	
 	reg [3:0] PS, NS;
 	wire [15:0] savedInstr;
@@ -47,14 +47,14 @@ module CPU_FSM
 	Register_FSM savedInstrModule(
 		.in(Instr),
 		.clk(Clk),
-		.en(PS == S1),
+		.en(PS == S0),
 		.out(savedInstr)
 	);
 	
-	Register_FSM FLAGS(
+	Register_FSM #(.width(5)) FLAGS(
 		.in(ALUFlags),
 		.clk(Clk),
-		.en(PS == S3 || PS == S4), // if Flags do be fucked
+		.en(PS == S0), // if Flags do be fucked
 		.out(savedFlags)
 	);
 	
@@ -105,40 +105,138 @@ module CPU_FSM
 		case(PS)
 			S0: begin
 					//if R-type with imm
-					
-					NS <= StateRtypeImm;
+					if (Instr[15:12] == 4'b0101 || Instr[15:12] == 4'b0110 || Instr[15:12] == 4'b0111 || Instr[15:12] == 4'b1110 || Instr[15:12] == 4'b1001 || Instr[15:12] == 4'b1010 || Instr[15:12] == 4'b1011 || Instr[15:12] == 4'b0001 || Instr[15:12] == 4'b0010 || Instr[15:12] == 4'b0011 || (Instr[15:12] == 4'b1000 && Instr[7:5] == 4'b000))
+						NS <= SFinal;
 					
 					//if R-type without imm
-					NS <= StateRtypeNoImm;
+					else if ((Instr[15:12] == 4'b0000 && (~(Instr[7:4] == 4'b1101) || ~(Instr[7:4] == 4'b0000))) || (Instr[15:12] == 4'b1000 && Instr[7:4] == 4'b0100))
+						NS <= SFinal;
 					
 					//if Load
-					NS <= StateLoad;
+					else if (Instr[15:12] == 4'b0100 && Instr[7:4] == 4'b0000)
+						NS <= StateLoad;
 					
 					//if Store
-					NS <= StateStore;
+					else if (Instr[15:12] == 4'b0100 && Instr[7:4] == 4'b0100)
+						NS <= StateStore;
 					
 					//if scond
-					NS <= StateScond;
+					else if (Instr[15:12] == 4'b0100 && Instr[7:4] == 4'b1101)
+						NS <= StateScond;
 					
 					//if bcond
-					NS <= StateBcond;
+					else if (Instr[15:12] == 4'b1100)
+						NS <= SFinal;
 					
 					//if jcond
-					NS <= StateJcond;
+					else if (Instr[15:12] == 4'b0100 && Instr[7:4] == 4'b1100)
+						NS <= SFinal;
 					
 					//else NOP
-					NS <= SFinal;
+					else
+						NS <= SFinal;
 				 end
+				 
+			SFinal: NS <= S0;
+				 
+			default: NS <= S0;
 		endcase
 	end
 	
 	always @(PS) begin //Do stuff when PS changes
 		case(PS)
 			S0: begin
+			
+						PCEn = 0;
+						RAMEn = 0;
+						RegEn = 1;
+						RdestRegLoc = Instr[11:8];
+						RamAddrSelect = 0;
+						LoadInSelect = 2'b00;
+						PCState = 2'b00;
+						
 					//if R-type with imm
+					if (Instr[15:12] == 4'b0101 || Instr[15:12] == 4'b0110 || Instr[15:12] == 4'b0111 || Instr[15:12] == 4'b1110 || Instr[15:12] == 4'b1001 || Instr[15:12] == 4'b1010 || Instr[15:12] == 4'b1011 || Instr[15:12] == 4'b0001 || Instr[15:12] == 4'b0010 || Instr[15:12] == 4'b0011 || (Instr[15:12] == 4'b1000 && Instr[7:5] == 4'b000)) begin
+						
+						RsrcRegLoc = 4'bx;
+						RdestRegLoc = Instr[11:8];
+						Imm_s = 1;
+						Imm = Instr[7:0];
+						
+						
+						if(Instr[15:12] == 4'b0101 || Instr[15:12] == 4'b0111) begin 
+							ALUOpCode = ADD; 
+							Signed = 1; 
+						end
+						
+						else if(Instr[15:12] == 4'b0110) begin 
+							ALUOpCode = ADD; 
+							Signed = 0;
+						end
+						
+						else if(Instr[15:12] == 4'b1110) begin 
+							ALUOpCode = MUL; 
+							Signed = 1;
+						end
+						
+						else if(Instr[15:12] == 4'b1001 || Instr[15:12] == 4'b1010) begin 
+							ALUOpCode = SUB; 
+							Signed = 1;
+						end
+						
+						else if(Instr[15:12] == 4'b1011) begin 
+							ALUOpCode = CMP; 
+							Signed = 1;
+						end
+						
+						else if(Instr[15:12] == 4'b0001) begin 
+							ALUOpCode = AND; 
+							Signed = 1;
+						end
+						
+						else if(Instr[15:12] == 4'b0010) begin 
+							ALUOpCode = OR; 
+							Signed = 1;
+						end
+						
+						else begin 
+							ALUOpCode = XOR; 
+							Signed = 1;
+						end
+					end
 					
 					//if R-type without imm
-					
+					else if ((Instr[15:12] == 4'b0000 && (~(Instr[7:4] == 4'b1101) || ~(Instr[7:4] == 4'b0000))) || (Instr[15:12] == 4'b1000 && Instr[7:4] == 4'b0100)) begin
+						
+						Signed = 0;
+						RsrcRegLoc = Instr[3:0];
+						Imm_s = 0;
+						Imm = 8'bx;
+						
+						if (Instr[7:4] == 4'b0101 || Instr[7:4] == 4'b0110 || Instr[7:4] == 4'b0111)
+							ALUOpCode = ADD;
+							
+						else if (Instr[7:4] == 4'b1110)
+							ALUOpCode = MUL;
+							
+						else if (Instr[7:4] == 4'b1001 || Instr[7:4] == 4'b1010)
+							ALUOpCode = SUB;
+							
+						else if (Instr[7:4] == 4'b1011)
+							ALUOpCode = CMP;
+						
+						else if (Instr[7:4] == 4'b0001)
+							ALUOpCode = AND;
+						
+						else if (Instr[7:4] == 4'b0010)
+							ALUOpCode = OR;
+						
+						else if (Instr[7:4] == 4'b0011)
+							ALUOpCode = XOR;
+							
+						else
+							ALUOpCode = LSH;
+					end
 					//if Load
 					
 					//if Store
@@ -152,6 +250,45 @@ module CPU_FSM
 					//if jcond
 					
 					//else NOP
+					else begin
+						Signed = 0; 
+						RsrcRegLoc = 4'bx;
+						ALUOpCode = 4'bx;
+						Imm_s = 0;
+						Imm = 8'bx;
+
+					end
+				 end
+				 
+				 
+				 SFinal: begin
+					PCEn = 1;
+					RAMEn = 0;
+					RegEn = 0;
+					Signed = 0; 
+					RsrcRegLoc = 4'bx;
+					RdestRegLoc = 4'bx;
+					ALUOpCode = 4'bx;
+					Imm_s = 0;
+					Imm = 8'bx;
+					RamAddrSelect = 0;
+					LoadInSelect = 2'b00;
+					PCState = 2'b00;
+				 end
+				 
+				 default: begin
+					PCEn = 1;
+					RAMEn = 0;
+					RegEn = 0;
+					Signed = 0; 
+					RsrcRegLoc = 4'bx;
+					RdestRegLoc = 4'bx;
+					ALUOpCode = 4'bx;
+					Imm_s = 0;
+					Imm = 8'bx;
+					RamAddrSelect = 0;
+					LoadInSelect = 2'b00;
+					PCState = 2'b00;
 				 end
 		endcase
 	end
