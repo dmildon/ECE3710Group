@@ -3,9 +3,16 @@ module CPU_Wrapper (btn_clk, btn_rst, out1A, out2A, out3A, out4A);
 	input btn_clk, btn_rst;
 	wire [15:0] RdestOut;
 	output [6:0] out1A, out2A, out3A, out4A;
+	wire slowClk;
+	
+	ClkDivider myDiv(
+		.clk(btn_clk),
+		.rst(btn_rst),
+		.clk_div(slowClk)
+	);
 	
 	CPU myCPU(
-	.Clk(btn_clk), 
+	.Clk(slowClk), 
 	.Rst(btn_rst),
 	.RdestOut(RdestOut)
 	);
@@ -36,6 +43,41 @@ module CPU_Wrapper (btn_clk, btn_rst, out1A, out2A, out3A, out4A);
 
 
 endmodule 
+
+module ClkDivider (
+    input clk,
+    input rst,
+    output reg clk_div
+    );
+     
+	  localparam constantNumber = 10000000;
+	  
+	  reg [31:0] count;
+ 
+	always @ (posedge(clk), negedge(rst))
+		begin
+			if (rst == 1'b0)
+				count <= 32'b0;
+			else if (count == constantNumber - 1)
+				count <= 32'b0;
+			else
+				count <= count + 1;
+		end
+		
+	always @ (posedge(clk), negedge(rst))
+		begin
+			if (rst == 1'b0)
+				clk_div <= 1'b0;
+			else if (count == constantNumber - 1)
+				clk_div <= ~clk_div;
+			else
+				clk_div <= clk_div;
+		end
+	  
+ 
+endmodule
+
+
 
 module hexTo7Seg(
 		input [3:0]x,

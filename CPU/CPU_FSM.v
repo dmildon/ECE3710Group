@@ -371,7 +371,7 @@ module CPU_FSM
 				RamAddrSelect = 0;
 				LoadInSelect = 2'b00;
 				if (CondOut) begin PCState = 2'b01; end
-				else begin PCState = 2'b00; end 
+				else begin PCState = 2'b11; end 
 			end
 			
 			S12: begin
@@ -387,8 +387,9 @@ module CPU_FSM
 					RamAddrSelect = 0;
 					LoadInSelect = 2'b00;
 					if (CondOut) begin PCState = 2'b10; end
-					else begin PCState = 2'b00; end 
+					else begin PCState = 2'b11; end 
 				  end
+				  
 		endcase
 	end
 endmodule
@@ -427,7 +428,7 @@ module ConditionDecoder(cond, savedFlags, out);
 					 (cond == 4'b1010) ? ~(savedFlags[1] || savedFlags[3]) :
 					 (cond == 4'b1011) ? savedFlags[1] || savedFlags[3] :
 					 (cond == 4'b1100) ? ~(savedFlags[4] || savedFlags[3]) :
-					 (cond == 4'b1101) ? savedFlags[4] || savedFlags[3] :
+					 (cond == 4'b1101) ? (savedFlags[4] || savedFlags[3]) :
 					 (cond == 4'b1110) ? 1 : 0;
 endmodule
 

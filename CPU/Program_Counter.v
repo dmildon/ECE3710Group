@@ -16,14 +16,14 @@ module Program_Counter(clk, rst, pc_en, sel, imm, mem_addr, cnt);
 
 	// initial set cnt to 0, and as soon as pc_en = 1, cnt = 1 on rising edge of clk 
 	initial begin
-		cnt = 0;
+		cnt = 16'b0;
 	end 
 
 	
 	always@(posedge clk, negedge rst) begin 
 		
 		if(~rst) begin 
-			cnt = 0; 
+			cnt = 16'b0; 
 		end 
 		
 		else begin
@@ -32,11 +32,11 @@ module Program_Counter(clk, rst, pc_en, sel, imm, mem_addr, cnt);
 			end 
 			
 			else if((sel == Imm_s) && pc_en) begin 
-				cnt <= imm; 
+				cnt <= cnt + $signed(imm) -1;
 			end 
 			
 			else if((sel == MemAddr_s) && pc_en) begin 
-				cnt <= mem_addr; 
+				cnt <= mem_addr -1; 
 			end
 			
 			else begin

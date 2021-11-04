@@ -131,16 +131,16 @@ module CPU_MUX #(parameter Data_width = 16) (in00, in01, selector, out);
 endmodule
 
 //update later? all one mux?
-module CPU_2bit_MUX #(parameter Data_width = 16) (in00, in01, in02, selector, out);
+module CPU_2bit_MUX (in00, in01, in02, selector, out);
 	input [1:0] selector;
-	input [(Data_width - 1):0] in00, in01, in02;
+	input [15:0] in00, in01, in02;
 	
 	
-	output [(Data_width - 1):0] out;
+	output [15:0] out;
 	
-	assign out = (selector == 00) ? in00 :
-					 (selector == 01) ? in01 :
-					 (selector == 10) ? in02 : 16'bx;
+	assign out = (selector == 2'b00) ? in00 :
+					 (selector == 2'b01) ? in01 :
+					 (selector == 2'b10) ? in02 : 16'b0;
 	
 	
 endmodule

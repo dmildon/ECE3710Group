@@ -59,7 +59,7 @@ set_global_assignment -name EDA_TEST_BENCH_MODULE_NAME tb_CPU_FSM -section_id tb
 set_global_assignment -name EDA_TEST_BENCH_NAME tb_CPU -section_id eda_simulation
 set_global_assignment -name EDA_DESIGN_INSTANCE_NAME NA -section_id tb_CPU
 set_global_assignment -name EDA_TEST_BENCH_MODULE_NAME tb_CPU -section_id tb_CPU
-set_location_assignment PIN_AA15 -to btn_clk
+set_location_assignment PIN_AF14 -to btn_clk
 set_location_assignment PIN_Y16 -to btn_rst
 set_location_assignment PIN_AA25 -to out1A[6]
 set_location_assignment PIN_AA26 -to out1A[5]
