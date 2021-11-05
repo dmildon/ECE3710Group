@@ -11,7 +11,7 @@ module CPU
 	wire [15:0] AluSrcIn, Load;
 	wire [4:0] Flags;
 	wire [7:0] Imm;
-	wire [9:0] PCOut;
+	wire [15:0] PCOut;
 	wire [9:0] RamAddrA;
 	
 	CPU_MUX imm_Mux (
@@ -29,8 +29,8 @@ module CPU
 		.out(Load)
 	);
 	
-	CPU_MUX #(.Data_width(10)) Ram_Mux (
-		.in00(RsrcOut[9:0]),
+	CPU_MUX Ram_Mux (
+		.in00(RsrcOut),
 		.in01(PCOut),
 		.selector(RamAddrSelect),
 		.out(RamAddrA)
@@ -58,7 +58,7 @@ module CPU
 	RAM myRAM (
 		.data_a(RdestOut),
 		.data_b(16'bx),
-		.addr_a(RamAddrA),
+		.addr_a(RamAddrA[9:0]),
 		.addr_b(10'bx),
 		.we_a(RAMEn),
 		.we_b(1'bx),
@@ -78,6 +78,7 @@ module CPU
 		.Signed(Signed),
 		.RamAddrSelect(RamAddrSelect),
 		.LoadInSelect(LoadInSelect),
+		.PCState(PCState),
 		.ALUOpCode(ALUOpCode),
 		.RdestRegLoc(RdestRegLoc),
 		.RsrcRegLoc(RsrcRegLoc),
@@ -89,6 +90,9 @@ module CPU
 		.clk(Clk),
 		.rst(Rst),
 		.pc_en(PCEn),
+		.sel(PCState),
+		.imm(SignedImm),
+		.mem_addr(RsrcOut),
 		.cnt(PCOut)
 	);
 	
@@ -128,16 +132,16 @@ module CPU_MUX #(parameter Data_width = 16) (in00, in01, selector, out);
 endmodule
 
 //update later? all one mux?
-module CPU_2bit_MUX #(parameter Data_width = 16) (in00, in01, in02, selector, out);
+module CPU_2bit_MUX (in00, in01, in02, selector, out);
 	input [1:0] selector;
-	input [(Data_width - 1):0] in00, in01, in02;
+	input [15:0] in00, in01, in02;
 	
 	
-	output [(Data_width - 1):0] out;
+	output [15:0] out;
 	
-	assign out = (selector == 00) ? in00 :
-					 (selector == 01) ? in01 :
-					 (selector == 10) ? in02 : 16'bx;
+	assign out = (selector == 2'b00) ? in00 :
+					 (selector == 2'b01) ? in01 :
+					 (selector == 2'b10) ? in02 : 16'b0;
 	
 	
 endmodule
