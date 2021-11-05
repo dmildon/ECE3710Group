@@ -59,7 +59,7 @@ set_global_assignment -name EDA_TEST_BENCH_MODULE_NAME tb_CPU_FSM -section_id tb
 set_global_assignment -name EDA_TEST_BENCH_NAME tb_CPU -section_id eda_simulation
 set_global_assignment -name EDA_DESIGN_INSTANCE_NAME NA -section_id tb_CPU
 set_global_assignment -name EDA_TEST_BENCH_MODULE_NAME tb_CPU -section_id tb_CPU
-set_location_assignment PIN_AF14 -to btn_clk
+set_location_assignment PIN_W15 -to btn_clk
 set_location_assignment PIN_Y16 -to btn_rst
 set_location_assignment PIN_AA25 -to out1A[6]
 set_location_assignment PIN_AA26 -to out1A[5]
@@ -89,6 +89,12 @@ set_location_assignment PIN_AC28 -to out4A[3]
 set_location_assignment PIN_AD29 -to out4A[2]
 set_location_assignment PIN_AE29 -to out4A[1]
 set_location_assignment PIN_AB23 -to out4A[0]
+set_global_assignment -name EDA_TEST_BENCH_NAME tb_Program_Counter -section_id eda_simulation
+set_global_assignment -name EDA_DESIGN_INSTANCE_NAME NA -section_id tb_Program_Counter
+set_global_assignment -name EDA_TEST_BENCH_MODULE_NAME tb_Program_Counter -section_id tb_Program_Counter
+set_global_assignment -name EDA_TEST_BENCH_FILE tb_CPU_FSM.v -section_id tb_CPU_FSM
+set_global_assignment -name EDA_TEST_BENCH_FILE tb_CPU.v -section_id tb_CPU
+set_global_assignment -name EDA_TEST_BENCH_FILE tb_Program_Counter.v -section_id tb_Program_Counter
 set_global_assignment -name VERILOG_FILE tb_Program_Counter.v
 set_global_assignment -name VERILOG_FILE CPU.v
 set_global_assignment -name VERILOG_FILE ../RegFile/RegFile.v
@@ -96,18 +102,12 @@ set_global_assignment -name VERILOG_FILE ../RAM/RAM_block.v
 set_global_assignment -name VERILOG_FILE Program_Counter.v
 set_global_assignment -name VERILOG_FILE ../RegFile/RegFile_Alu.v
 set_global_assignment -name VERILOG_FILE ../ALU/ALU.v
-set_global_assignment -name VERILOG_FILE CPU_FSM.v
 set_global_assignment -name VERILOG_FILE tb_CPU_FSM.v
 set_global_assignment -name VERILOG_FILE tb_CPU.v
 set_global_assignment -name VERILOG_FILE ../RAM/RAM.v
 set_global_assignment -name VERILOG_FILE CPU_Wrapper.v
 set_global_assignment -name VERILOG_FILE sign_extender.v
-set_global_assignment -name EDA_TEST_BENCH_NAME tb_Program_Counter -section_id eda_simulation
-set_global_assignment -name EDA_DESIGN_INSTANCE_NAME NA -section_id tb_Program_Counter
-set_global_assignment -name EDA_TEST_BENCH_MODULE_NAME tb_Program_Counter -section_id tb_Program_Counter
-set_global_assignment -name EDA_TEST_BENCH_FILE tb_CPU_FSM.v -section_id tb_CPU_FSM
-set_global_assignment -name EDA_TEST_BENCH_FILE tb_CPU.v -section_id tb_CPU
-set_global_assignment -name EDA_TEST_BENCH_FILE tb_Program_Counter.v -section_id tb_Program_Counter
+set_global_assignment -name VERILOG_FILE CPU_FSM_FASTER.v
 set_global_assignment -name PARTITION_NETLIST_TYPE SOURCE -section_id Top
 set_global_assignment -name PARTITION_FITTER_PRESERVATION_LEVEL PLACEMENT_AND_ROUTING -section_id Top
 set_global_assignment -name PARTITION_COLOR 16764057 -section_id Top

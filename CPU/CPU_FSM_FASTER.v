@@ -146,20 +146,19 @@ module CPU_FSM_FASTER
 	always @(PS) begin //Do stuff when PS changes
 		case(PS)
 			S0: begin
-			
-						PCEn = 0;
-						RAMEn = 0;
-						RegEn = 1;
-						RdestRegLoc = Instr[11:8];
-						RamAddrSelect = 0;
-						LoadInSelect = 2'b00;
-						PCState = 2'b00;
-						
+					PCEn = 0;
+					RAMEn = 0;
+					RegEn = 1;
+					RdestRegLoc = Instr[11:8];
+					RamAddrSelect = 0;
+					LoadInSelect = 2'b00;
+					PCState = 2'b00;
+					
 					//if R-type with imm
 					if (Instr[15:12] == 4'b0101 || Instr[15:12] == 4'b0110 || Instr[15:12] == 4'b0111 || Instr[15:12] == 4'b1110 || Instr[15:12] == 4'b1001 || Instr[15:12] == 4'b1010 || Instr[15:12] == 4'b1011 || Instr[15:12] == 4'b0001 || Instr[15:12] == 4'b0010 || Instr[15:12] == 4'b0011 || (Instr[15:12] == 4'b1000 && Instr[7:5] == 4'b000)) begin
 						
 						RsrcRegLoc = 4'bx;
-						RdestRegLoc = Instr[11:8];
+						//RdestRegLoc = Instr[11:8];
 						Imm_s = 1;
 						Imm = Instr[7:0];
 						
@@ -207,7 +206,6 @@ module CPU_FSM_FASTER
 					
 					//if R-type without imm
 					else if ((Instr[15:12] == 4'b0000 && (~(Instr[7:4] == 4'b1101) || ~(Instr[7:4] == 4'b0000))) || (Instr[15:12] == 4'b1000 && Instr[7:4] == 4'b0100)) begin
-						
 						Signed = 0;
 						RsrcRegLoc = Instr[3:0];
 						Imm_s = 0;
@@ -363,7 +361,7 @@ module ConditionDecoder(cond, savedFlags, out);
 					 (cond == 4'b1011) ? savedFlags[1] || savedFlags[3] :
 					 (cond == 4'b1100) ? ~(savedFlags[4] || savedFlags[3]) :
 					 (cond == 4'b1101) ? savedFlags[4] || savedFlags[3] :
-					 (cond == 4'b1110) ? 1 : 0;
+					 (cond == 4'b1110) ? 1'b1 : 1'b0;
 endmodule
 
 

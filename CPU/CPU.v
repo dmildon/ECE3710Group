@@ -12,7 +12,7 @@ module CPU
 	wire [4:0] Flags;
 	wire [7:0] Imm;
 	wire [15:0] PCOut;
-	wire [9:0] RamAddrA;
+	wire [15:0] RamAddrA;
 	
 	CPU_MUX imm_Mux (
 		.in00(SignedImm),
@@ -61,7 +61,7 @@ module CPU
 		.addr_a(RamAddrA[9:0]),
 		.addr_b(10'bx),
 		.we_a(RAMEn),
-		.we_b(1'bx),
+		.we_b(1'b0),
 		.clk(Clk),
 		.q_a_out(RamOutA),
 		.q_b_out(RamOutB)
@@ -82,8 +82,7 @@ module CPU
 		.ALUOpCode(ALUOpCode),
 		.RdestRegLoc(RdestRegLoc),
 		.RsrcRegLoc(RsrcRegLoc),
-		.Imm(Imm),
-		.PCState(PCState)
+		.Imm(Imm)
 	);
 	
 	Program_Counter PC(

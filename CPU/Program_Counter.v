@@ -28,15 +28,15 @@ module Program_Counter(clk, rst, pc_en, sel, imm, mem_addr, cnt);
 		
 		else begin
 			if((sel == Default_s) && pc_en) begin 
-				cnt <= cnt + 1; 
+				cnt <= cnt + 1'b1; 
 			end 
 			
 			else if((sel == Imm_s) && pc_en) begin 
-				cnt <= cnt + $signed(imm) -1;
+				cnt <= cnt + $signed(imm) - 1'b1;
 			end 
 			
 			else if((sel == MemAddr_s) && pc_en) begin 
-				cnt <= mem_addr -1; 
+				cnt <= mem_addr - 1'b1; 
 			end
 			
 			else begin

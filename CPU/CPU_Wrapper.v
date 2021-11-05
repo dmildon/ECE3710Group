@@ -12,7 +12,7 @@ module CPU_Wrapper (btn_clk, btn_rst, out1A, out2A, out3A, out4A);
 	);
 	
 	CPU myCPU(
-	.Clk(slowClk), 
+	.Clk(btn_clk), 
 	.Rst(btn_rst),
 	.RdestOut(RdestOut)
 	);
