@@ -56,7 +56,7 @@ module CPU_FSM
 		.out(savedFlags)
 	);
 	
-	ConditionDecoder SomeNameWeNeedToChangeLaterBecauseDawsonIsTooLazyToThinkOfAGoodOne (
+	ConditionDecoder CondDec (
 		.cond((savedInstr[15:12] == 4'b0100 && savedInstr[7:4] == 4'b1101) ? savedInstr[3:0] : savedInstr[11:8]),
 		.savedFlags(savedFlags),
 		.out(CondOut)
@@ -94,6 +94,10 @@ module CPU_FSM
 						NS <= S12;
 					end
 					
+					else if(Instr[15:12] == 4'b0000 && Instr[7:4] == 4'b0100)begin
+						NS <= S13;
+					end
+					
 					else begin
 						NS <= S0;
 					end
@@ -119,6 +123,7 @@ module CPU_FSM
 			S10: NS <= S0;
 			S11: NS <= S0;
 			S12: NS <= S0;
+			S13: NS <= S0;
 
 			default: NS <= S1;
 			
@@ -389,6 +394,21 @@ module CPU_FSM
 					if (CondOut) begin PCState = 2'b10; end
 					else begin PCState = 2'b11; end 
 				  end
+				  
+		  S13: begin
+					PCEn = 1;
+					RAMEn = 0;
+					RegEn = 0;
+					Signed = 0; 
+					RsrcRegLoc = 4'bx;
+					RdestRegLoc = savedInstr[11:8];
+					ALUOpCode = 4'bx;
+					Imm_s = 0;
+					Imm = 8'bx;
+					RamAddrSelect = 0;
+					LoadInSelect = 2'b11;
+					PCState = 2'b00;
+				end
 				  
 		endcase
 	end

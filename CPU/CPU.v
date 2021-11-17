@@ -1,6 +1,6 @@
 module CPU 
 	(
-		input Clk, Rst,
+		input Clk, Rst, clk_kb, data_kb,
 		output [15:0] RdestOut
 	);
 	
@@ -10,7 +10,7 @@ module CPU
 	wire [15:0] SignedImm, RamOutA, RamOutB, RsrcOut, AluOutput;
 	wire [15:0] AluSrcIn, Load;
 	wire [4:0] Flags;
-	wire [7:0] Imm;
+	wire [7:0] Imm, KeyCode;
 	wire [15:0] PCOut;
 	wire [9:0] RamAddrA;
 	
@@ -25,6 +25,7 @@ module CPU
 		.in00(AluOutput),
 		.in01(RamOutA),
 		.in02(SignedImm),
+		.in03({8'b0,KeyCode}),
 		.selector(LoadInSelect),
 		.out(Load)
 	);
@@ -101,22 +102,11 @@ module CPU
 		.Out(SignedImm)
 	);
 	
-//	always @(*) begin
-//		if (~Imm_s)
-//			AluSrcIn <= RsrcOut;
-//		else 
-//			AluSrcIn <= SignedImm;
-//		
-//		if (LoadInSelect)
-//			Load <= RamOutA;
-//		else
-//			Load <= AluOutput;
-//		
-//		if (RamAddrSelect)
-//			RamAddrA <= RsrcOut[9:0];
-//		else
-//			RamAddrA <= PCOut;
-//	end
+	keyboard KEYS(
+		.clk_kb(clk_kb),
+		.data_kb(data_kb),
+		.out_reg(KeyCode)
+	);
 	
 endmodule
 
@@ -131,17 +121,21 @@ module CPU_MUX #(parameter Data_width = 16) (in00, in01, selector, out);
 endmodule
 
 //update later? all one mux?
-module CPU_2bit_MUX (in00, in01, in02, selector, out);
+module CPU_2bit_MUX (in00, in01, in02, in03, selector, out);
 	input [1:0] selector;
-	input [15:0] in00, in01, in02;
+	input [15:0] in00, in01, in02, in03;
 	
 	
 	output [15:0] out;
 	
 	assign out = (selector == 2'b00) ? in00 :
 					 (selector == 2'b01) ? in01 :
-					 (selector == 2'b10) ? in02 : 16'b0;
-	
-	
+					 (selector == 2'b10) ? in02 : in03;
 endmodule
+
+
+
+
+
+
 

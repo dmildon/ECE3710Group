@@ -50,7 +50,7 @@ module ClkDivider (
     output reg clk_div
     );
      
-	  localparam constantNumber = 10000000;
+	  localparam constantNumber = 50000000;
 	  
 	  reg [31:0] count;
  
