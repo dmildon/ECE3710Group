@@ -1,12 +1,12 @@
 module VGATest (
 	input clk,
-	output reg [7:0] red, 
-	output reg [7:0] green, 
-	output reg [7:0] blue,
-	output hsync, 
-	output vsync,
-	output reg blankN,
-	output reg vgaClk
+	input [15:0] ramIn1, ramIn2, 			//first 10 bits of ramIn1 are x coord [9:0]
+													//first 10 bits of ramIn2 are y coord [9:0]
+													//10th bit of ramIn2 is dead or alive [10]
+													//11th bit of ramIn2 is win or not [11]
+	output reg [7:0] red, green, blue,
+	output hsync, vsync,
+	output reg blankN, vgaClk
 );
 
 	localparam H_SYNC         		= 10'd96;  // 3.8us  -- 25.175M * 3.8u  = 95.665
@@ -30,41 +30,59 @@ module VGATest (
 	localparam platform2Y     		= 10'd312; //Y coord = 300 + 12 offset
 	localparam platform2Width 		= 10'd50;
 	
-	localparam platform3X     		= 10'd430; //X coord = 200 + 160 offset
-	localparam platform3Y     		= 10'd462; //Y coord = 300 + 12 offset
+	localparam platform3X     		= 10'd430; //X coord = 270 + 160 offset
+	localparam platform3Y     		= 10'd462; //Y coord = 450 + 12 offset
 	localparam platform3Width 		= 10'd125;
 	
-	localparam platform4X     		= 10'd600; //X coord = 200 + 160 offset
-	localparam platform4Y     		= 10'd332; //Y coord = 300 + 12 offset
+	localparam platform4X     		= 10'd600; //X coord = 440 + 160 offset
+	localparam platform4Y     		= 10'd332; //Y coord = 320 + 12 offset
 	localparam platform4Width 		= 10'd40;
 	
-	localparam platform5X     		= 10'd700; //X coord = 200 + 160 offset
-	localparam platform5Y     		= 10'd437; //Y coord = 300 + 12 offset
+	localparam platform5X     		= 10'd700; //X coord = 540 + 160 offset
+	localparam platform5Y     		= 10'd437; //Y coord = 425 + 12 offset
 	localparam platform5Width 		= 10'd30;
 	
 	localparam platformThick  		= 10'd5;
 	
-	localparam outOfBounds1X  		= 10'd0;
-	localparam outOfBounds1Y  		= 10'd412;
-	localparam outOfBounds1Width  = 10'd320;
+	localparam outOfBounds1X  		= 10'd160; //X coord = 0 + 160 offset
+	localparam outOfBounds1Y  		= 10'd412; //Y coord = 400 + 12 offset
+	localparam outOfBounds1Width  = 10'd160;
 	
-	localparam outOfBounds2X  		= 10'd320;
-	localparam outOfBounds2Y  		= 10'd312;
+	localparam outOfBounds2X  		= 10'd320; //X coord = 160 + 160 offset
+	localparam outOfBounds2Y  		= 10'd312; //Y coord = 300 + 12 offset
 	localparam outOfBounds2Width  = 10'd100;
 	
-	localparam outOfBounds3X  		= 10'd420;
-	localparam outOfBounds3Y  		= 10'd462;
+	localparam outOfBounds3X  		= 10'd420; //X coord = 260 + 160 offset
+	localparam outOfBounds3Y  		= 10'd462; //Y coord = 450 + 12 offset
 	localparam outOfBounds3Width  = 10'd150;
 	
-	localparam outOfBounds4X  		= 10'd570;
-	localparam outOfBounds4Y  		= 10'd332;
+	localparam outOfBounds4X  		= 10'd570; //X coord = 410 + 160 offset
+	localparam outOfBounds4Y  		= 10'd332; //Y coord = 320 + 12 offset
 	localparam outOfBounds4Width  = 10'd115;
 	
-	localparam outOfBounds5X  		= 10'd685;
-	localparam outOfBounds5Y  		= 10'd437;
+	localparam outOfBounds5X  		= 10'd685; //X coord = 525 + 160 offset
+	localparam outOfBounds5Y  		= 10'd437; //Y coord = 425 + 12 offset
 	localparam outOfBounds5Width  = 10'd115;
 	
 	reg [9:0] hcount, vcount;
+	
+	wire [15:0] data1, data2;
+	
+	
+	vgaRegister ramData1 (
+		.in(ramIn1),
+		.clk(vgaClk),
+		.en(hcount == H_TOTAL && vcount == V_TOTAL),
+		.out(data1)
+	);
+	
+	vgaRegister ramData2 (
+		.in(ramIn2),
+		.clk(vgaClk),
+		.en(hcount == H_TOTAL && vcount == V_TOTAL),
+		.out(data2)
+	);
+	
 	
 	initial begin
 		red = 8'b0;
@@ -103,7 +121,13 @@ module VGATest (
 	end
 	
 	always @(hcount, vcount) begin
-		if (
+		if ((hcount >= (data1[9:0] + 160)) && (hcount <= (data1[9:0] + 160 + 15)) && (vcount >= (data2[9:0] + 12)) && (vcount <= (data2[9:0] + 12 + 15))) begin
+			red = 8'd175;
+			green = 8'd15;
+			blue = 8'd120;
+		end
+		
+		else if (
 			((hcount >= platform1X) && (hcount <= (platform1X + platform1Width)) && (vcount >= platform1Y) && (vcount <= (platform1Y + platformThick))) || 
 			((hcount >= platform2X) && (hcount <= (platform2X + platform2Width)) && (vcount >= platform2Y) && (vcount <= (platform2Y + platformThick))) ||
 			((hcount >= platform3X) && (hcount <= (platform3X + platform3Width)) && (vcount >= platform3Y) && (vcount <= (platform3Y + platformThick))) ||
@@ -148,3 +172,18 @@ module VGATest (
 	end
 	
 endmodule
+
+
+module vgaRegister(in, clk, en, out);
+	input [15:0] in;
+	input clk, en;
+	
+	output reg [15:0] out;
+	
+	always @(negedge clk) begin
+		if (en)
+			out <= in;
+		else
+			out <= out;
+	end
+endmodule 
