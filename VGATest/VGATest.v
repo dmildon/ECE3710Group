@@ -2,8 +2,9 @@ module VGATest (
 	input clk,
 	input [15:0] ramIn1, ramIn2, 			//first 10 bits of ramIn1 are x coord [9:0]
 													//first 10 bits of ramIn2 are y coord [9:0]
-													//10th bit of ramIn2 is dead or alive [10]
-													//11th bit of ramIn2 is win or not [11]
+													//10th bit of ramIn2 is dead or alive [10] 0 is ship is not dead
+													//11th bit of ramIn2 is win or not [11] 0 is game is not won
+													//12th bit of ramIn2 is has game started? [12] 1 is game not yet started
 	output reg [7:0] red, green, blue,
 	output hsync, vsync,
 	output reg blankN, vgaClk
@@ -121,40 +122,57 @@ module VGATest (
 	end
 	
 	always @(hcount, vcount) begin
-		if ((hcount >= (data1[9:0] + 160)) && (hcount <= (data1[9:0] + 160 + 15)) && (vcount >= (data2[9:0] + 12)) && (vcount <= (data2[9:0] + 12 + 15))) begin
-			red = 8'd175;
-			green = 8'd15;
-			blue = 8'd120;
+		if (data2[12] == 1) begin // start screen
+			red = 8'd255;
+			green = 8'd255;
+			blue = 8'd255;
 		end
-		
-		else if (
-			((hcount >= platform1X) && (hcount <= (platform1X + platform1Width)) && (vcount >= platform1Y) && (vcount <= (platform1Y + platformThick))) || 
-			((hcount >= platform2X) && (hcount <= (platform2X + platform2Width)) && (vcount >= platform2Y) && (vcount <= (platform2Y + platformThick))) ||
-			((hcount >= platform3X) && (hcount <= (platform3X + platform3Width)) && (vcount >= platform3Y) && (vcount <= (platform3Y + platformThick))) ||
-			((hcount >= platform4X) && (hcount <= (platform4X + platform4Width)) && (vcount >= platform4Y) && (vcount <= (platform4Y + platformThick))) ||
-			((hcount >= platform5X) && (hcount <= (platform5X + platform5Width)) && (vcount >= platform5Y) && (vcount <= (platform5Y + platformThick)))
-				) begin
-			red = 8'd220;
-			green = 8'd240;
-			blue = 8'd20;
-		end
-		
-		else if (
-			((hcount >= outOfBounds1X) && (hcount <= (outOfBounds1X + outOfBounds1Width)) && (vcount >= outOfBounds1Y)) || 
-			((hcount >= outOfBounds2X) && (hcount <= (outOfBounds2X + outOfBounds2Width)) && (vcount >= outOfBounds2Y)) || 
-			((hcount >= outOfBounds3X) && (hcount <= (outOfBounds3X + outOfBounds3Width)) && (vcount >= outOfBounds3Y)) || 
-			((hcount >= outOfBounds4X) && (hcount <= (outOfBounds4X + outOfBounds4Width)) && (vcount >= outOfBounds4Y)) || 
-			((hcount >= outOfBounds5X) && (hcount <= (outOfBounds5X + outOfBounds5Width)) && (vcount >= outOfBounds5Y))
-			) begin
-			red = 8'd130;
+		else if (data2[10] == 1) begin // died
+			red = 8'd255;
 			green = 8'd0;
 			blue = 8'd0;
 		end
-		
-		else begin
-			red = 8'd12;
-			green = 8'd10;
-			blue = 8'd181;
+		else if (data2[11] == 1) begin //won
+			red = 8'd0;
+			green = 8'd255;
+			blue = 8'd0;
+		end
+		else begin //gameplay
+			if ((hcount >= (data1[9:0] + 160)) && (hcount <= (data1[9:0] + 160 + 15)) && (vcount >= (data2[9:0] + 12)) && (vcount <= (data2[9:0] + 12 + 15))) begin
+				red = 8'd175;
+				green = 8'd15;
+				blue = 8'd120;
+			end
+			
+			else if (
+				((hcount >= platform1X) && (hcount <= (platform1X + platform1Width)) && (vcount >= platform1Y) && (vcount <= (platform1Y + platformThick))) || 
+				((hcount >= platform2X) && (hcount <= (platform2X + platform2Width)) && (vcount >= platform2Y) && (vcount <= (platform2Y + platformThick))) ||
+				((hcount >= platform3X) && (hcount <= (platform3X + platform3Width)) && (vcount >= platform3Y) && (vcount <= (platform3Y + platformThick))) ||
+				((hcount >= platform4X) && (hcount <= (platform4X + platform4Width)) && (vcount >= platform4Y) && (vcount <= (platform4Y + platformThick))) ||
+				((hcount >= platform5X) && (hcount <= (platform5X + platform5Width)) && (vcount >= platform5Y) && (vcount <= (platform5Y + platformThick)))
+					) begin
+				red = 8'd220;
+				green = 8'd240;
+				blue = 8'd20;
+			end
+			
+			else if (
+				((hcount >= outOfBounds1X) && (hcount <= (outOfBounds1X + outOfBounds1Width)) && (vcount >= outOfBounds1Y)) || 
+				((hcount >= outOfBounds2X) && (hcount <= (outOfBounds2X + outOfBounds2Width)) && (vcount >= outOfBounds2Y)) || 
+				((hcount >= outOfBounds3X) && (hcount <= (outOfBounds3X + outOfBounds3Width)) && (vcount >= outOfBounds3Y)) || 
+				((hcount >= outOfBounds4X) && (hcount <= (outOfBounds4X + outOfBounds4Width)) && (vcount >= outOfBounds4Y)) || 
+				((hcount >= outOfBounds5X) && (hcount <= (outOfBounds5X + outOfBounds5Width)) && (vcount >= outOfBounds5Y))
+				) begin
+				red = 8'd130;
+				green = 8'd0;
+				blue = 8'd0;
+			end
+			
+			else begin
+				red = 8'd12;
+				green = 8'd10;
+				blue = 8'd181;
+			end
 		end
 	end
 	
@@ -172,7 +190,6 @@ module VGATest (
 	end
 	
 endmodule
-
 
 module vgaRegister(in, clk, en, out);
 	input [15:0] in;
