@@ -84,6 +84,12 @@ module VGATest (
 		.out(data2)
 	);
 	
+	clkDivider divider (
+		.refclk(clk),
+		.rst(0),
+		.outclk_0(vgaClk)
+	);
+	
 	
 	initial begin
 		red = 8'b0;
@@ -102,9 +108,9 @@ module VGATest (
 //	assign green = 8'b10011010;
 //	assign blue = 8'b01111001;
 	
-	always @(posedge clk) begin
-		vgaClk = ~vgaClk;
-	end
+//	always @(posedge clk) begin
+//		vgaClk = ~vgaClk;
+//	end
 	
 	always @(posedge vgaClk) begin
 		if (hcount < H_TOTAL) begin
