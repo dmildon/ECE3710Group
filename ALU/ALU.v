@@ -11,7 +11,7 @@ module ALU (Rsrc, Rdest, OpCode, Out, Flags);
 			Flags[4] = N
 		*/
 
-	parameter ADD 		= 4'b0000;
+	parameter NOP 		= 4'b0000;
 	parameter SUB 		= 4'b0001;
 	parameter CMP 		= 4'b0010;
 	parameter AND 		= 4'b0011;
@@ -22,6 +22,7 @@ module ALU (Rsrc, Rdest, OpCode, Out, Flags);
 	parameter RSH 		= 4'b1000;
 	parameter ARSH 	= 4'b1001;
 	parameter MUL     = 4'b1010;
+	parameter ADD		= 4'b1011;
 
 	wire [15:0] out_add, out_sub, out_and, out_or, out_xor, out_not, out_lsh, out_rsh, out_arsh, out_mul;
 	reg [15:0] Rsrc_add; 
@@ -109,7 +110,8 @@ module ALU (Rsrc, Rdest, OpCode, Out, Flags);
 				RSH:  begin Rsrc_add = 16'bx; Cin_wire = 1'bx; Out = out_rsh; Flags = 5'bx; end
 				ARSH: begin Rsrc_add = 16'bx; Cin_wire = 1'bx; Out = out_arsh; Flags = 5'bx; end
 				MUL:  begin Rsrc_add = Rsrc; Cin_wire = 1'bx; Out = out_mul; Flags = 5'bx; end
-				default: begin Rsrc_add = 16'bx; Cin_wire = 1'bx; Out = out_add; Flags = 5'bx; end
+				NOP:	begin Rsrc_add = 16'b0; Cin_wire = 1'bx; Out = Rdest;  Flags = 5'bx; end
+				default: begin Rsrc_add = 16'b0; Cin_wire = 1'bx; Out = Rdest; Flags = 5'bx; end
 			endcase 
 		end
 endmodule 
