@@ -1,9 +1,12 @@
-module CPU_Wrapper (btn_clk, btn_rst, out1A, out2A, out3A, out4A);
-	
-	input btn_clk, btn_rst;
-	wire [15:0] RdestOut;
-	output [6:0] out1A, out2A, out3A, out4A;
+module CPU_Wrapper (
+	input btn_clk, btn_rst,
+	output [6:0] out1A, out2A, out3A, out4A,
+	output [7:0] red, green, blue,
+	output hsync, vsync,
+	output blankN, vgaClk
+);
 	wire slowClk;
+	wire [15:0] RdestOut;
 	
 	ClkDivider myDiv(
 		.clk(btn_clk),
@@ -12,9 +15,16 @@ module CPU_Wrapper (btn_clk, btn_rst, out1A, out2A, out3A, out4A);
 	);
 	
 	CPU myCPU(
-	.Clk(slowClk), 
-	.Rst(btn_rst),
-	.RdestOut(RdestOut)
+		.Clk(slowClk), 
+		.Rst(btn_rst),
+		.RdestOut(RdestOut),
+		.red(red),
+		.green(green),
+		.blue(blue),
+		.hsync(hsync),
+		.vsync(vsync),
+		.blankN(blankN),
+		.vgaClk(vgaClk)
 	);
 	
 	hexTo7Seg seg1(
