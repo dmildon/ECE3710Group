@@ -1,6 +1,6 @@
 module CPU 
 	(
-		input Clk, Rst,
+		input Clk, Rst, key_data, key_clk,
 		output [15:0] RdestOut,
 		output [7:0] red, green, blue,
 		output hsync, vsync,
@@ -106,10 +106,11 @@ module CPU
 	);
 	
 	keyboard KEYS(
-		.clk_kb(clk_kb),
-		.data_kb(data_kb),
+		.clk_kb(key_clk),
+		.data_kb(key_data),
 		.out_reg(KeyCode)
 	);
+	
 	VGA myVGA (
 		.clk(Clk),
 		.in1(RdestOut),
