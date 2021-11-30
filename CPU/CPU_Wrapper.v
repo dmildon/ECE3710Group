@@ -1,5 +1,5 @@
 module CPU_Wrapper (
-	input btn_clk, btn_rst,
+	input btn_clk, btn_rst, key_data, key_clk
 	output [6:0] out1A, out2A, out3A, out4A,
 	output [7:0] red, green, blue,
 	output hsync, vsync,
@@ -18,6 +18,8 @@ module CPU_Wrapper (
 		.Clk(slowClk), 
 		.Rst(btn_rst),
 		.RdestOut(RdestOut),
+		.clk_kb(key_clk),
+		.data_kb(key_data),
 		.red(red),
 		.green(green),
 		.blue(blue),
