@@ -38,7 +38,7 @@
 
 set_global_assignment -name FAMILY "Cyclone V"
 set_global_assignment -name DEVICE 5CSEMA5F31C6
-set_global_assignment -name TOP_LEVEL_ENTITY CPU
+set_global_assignment -name TOP_LEVEL_ENTITY CPU_Wrapper
 set_global_assignment -name ORIGINAL_QUARTUS_VERSION 18.1.0
 set_global_assignment -name PROJECT_CREATION_TIME_DATE "15:50:12  OCTOBER 02, 2021"
 set_global_assignment -name LAST_QUARTUS_VERSION "18.1.0 Lite Edition"
@@ -105,15 +105,43 @@ set_global_assignment -name VERILOG_FILE sign_extender.v
 set_global_assignment -name EDA_TEST_BENCH_NAME tb_Program_Counter -section_id eda_simulation
 set_global_assignment -name EDA_DESIGN_INSTANCE_NAME NA -section_id tb_Program_Counter
 set_global_assignment -name EDA_TEST_BENCH_MODULE_NAME tb_Program_Counter -section_id tb_Program_Counter
-set_global_assignment -name VERILOG_FILE keyboard.v
 set_global_assignment -name EDA_TEST_BENCH_FILE tb_CPU_FSM.v -section_id tb_CPU_FSM
 set_global_assignment -name EDA_TEST_BENCH_FILE tb_CPU.v -section_id tb_CPU
 set_global_assignment -name EDA_TEST_BENCH_FILE tb_Program_Counter.v -section_id tb_Program_Counter
-set_location_assignment PIN_AD7 -to key_clk
-set_location_assignment PIN_AE7 -to key_data
 set_global_assignment -name PARTITION_NETLIST_TYPE SOURCE -section_id Top
 set_global_assignment -name PARTITION_FITTER_PRESERVATION_LEVEL PLACEMENT_AND_ROUTING -section_id Top
 set_global_assignment -name PARTITION_COLOR 16764057 -section_id Top
-set_instance_assignment -name IO_STANDARD "3.3-V LVCMOS" -to key_clk
-set_instance_assignment -name IO_STANDARD "3.3-V LVCMOS" -to key_data
+set_global_assignment -name QIP_FILE vgaClkDivider.qip
+set_global_assignment -name SIP_FILE vgaClkDivider.sip
+set_global_assignment -name VERILOG_FILE VGA.v
+set_global_assignment -name TIMING_ANALYZER_MULTICORNER_ANALYSIS ON
+set_global_assignment -name NUM_PARALLEL_PROCESSORS ALL
+set_location_assignment PIN_F10 -to blankN
+set_location_assignment PIN_J14 -to blue[7]
+set_location_assignment PIN_G15 -to blue[6]
+set_location_assignment PIN_F15 -to blue[5]
+set_location_assignment PIN_H14 -to blue[4]
+set_location_assignment PIN_F14 -to blue[3]
+set_location_assignment PIN_H13 -to blue[2]
+set_location_assignment PIN_G13 -to blue[1]
+set_location_assignment PIN_B13 -to blue[0]
+set_location_assignment PIN_E11 -to green[7]
+set_location_assignment PIN_F11 -to green[6]
+set_location_assignment PIN_G12 -to green[5]
+set_location_assignment PIN_G11 -to green[4]
+set_location_assignment PIN_G10 -to green[3]
+set_location_assignment PIN_H12 -to green[2]
+set_location_assignment PIN_J10 -to green[1]
+set_location_assignment PIN_J9 -to green[0]
+set_location_assignment PIN_B11 -to hsync
+set_location_assignment PIN_F13 -to red[7]
+set_location_assignment PIN_E12 -to red[6]
+set_location_assignment PIN_D12 -to red[5]
+set_location_assignment PIN_C12 -to red[4]
+set_location_assignment PIN_B12 -to red[3]
+set_location_assignment PIN_E13 -to red[2]
+set_location_assignment PIN_C13 -to red[1]
+set_location_assignment PIN_A13 -to red[0]
+set_location_assignment PIN_A11 -to vgaClk
+set_location_assignment PIN_D11 -to vsync
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top

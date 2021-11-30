@@ -1,7 +1,10 @@
 module CPU 
 	(
-		input Clk, Rst, clk_kb, data_kb,
-		output [15:0] RdestOut
+		input Clk, Rst,
+		output [15:0] RdestOut,
+		output [7:0] red, green, blue,
+		output hsync, vsync,
+		output blankN, vgaClk
 	);
 	
 	wire [3:0] RdestRegLoc, RsrcRegLoc, ALUOpCode;
@@ -107,6 +110,39 @@ module CPU
 		.data_kb(data_kb),
 		.out_reg(KeyCode)
 	);
+	VGA myVGA (
+		.clk(Clk),
+		.in1(RdestOut),
+		.in2(RsrcOut), 	//first 10 bits of in1 are x coord [9:0]
+								//first 10 bits of in2 are y coord [9:0]
+								//10th bit of in2 is dead or alive [10] 0 is ship is not dead
+								//11th bit of in2 is win or not [11] 0 is game is not won
+								//12th bit of in2 is has game started? [12] 1 is game not yet started
+		.red(red),
+		.green(green),
+		.blue(blue),
+		.hsync(hsync),
+		.vsync(vsync),
+		.blankN(blankN),
+		.vgaClk(vgaClk)
+	);
+	
+//	always @(*) begin
+//		if (~Imm_s)
+//			AluSrcIn <= RsrcOut;
+//		else 
+//			AluSrcIn <= SignedImm;
+//		
+//		if (LoadInSelect)
+//			Load <= RamOutA;
+//		else
+//			Load <= AluOutput;
+//		
+//		if (RamAddrSelect)
+//			RamAddrA <= RsrcOut[9:0];
+//		else
+//			RamAddrA <= PCOut;
+//	end
 	
 endmodule
 
