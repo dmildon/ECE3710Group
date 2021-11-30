@@ -17,6 +17,8 @@ module CPU
 	wire [15:0] PCOut;
 	wire [9:0] RamAddrA;
 	
+//	integer i;
+	
 	CPU_MUX imm_Mux (
 		.in00(SignedImm),
 		.in01(RsrcOut),
@@ -128,21 +130,12 @@ module CPU
 		.vgaClk(vgaClk)
 	);
 	
-//	always @(*) begin
-//		if (~Imm_s)
-//			AluSrcIn <= RsrcOut;
-//		else 
-//			AluSrcIn <= SignedImm;
-//		
-//		if (LoadInSelect)
-//			Load <= RamOutA;
-//		else
-//			Load <= AluOutput;
-//		
-//		if (RamAddrSelect)
-//			RamAddrA <= RsrcOut[9:0];
-//		else
-//			RamAddrA <= PCOut;
+//	initial begin
+//		i = 0;
+//	end
+	
+//	always @(posedge Clk) begin
+//		i = i + 1;
 //	end
 	
 endmodule

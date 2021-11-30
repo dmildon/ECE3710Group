@@ -37,12 +37,15 @@ module CPU_FSM
 					S11 = 4'b1011,
 					S12 = 4'b1100,
 					S13 = 4'b1101,
-					S14 = 4'b1110;
+					S14 = 4'b1110,
+					S15 = 4'b1111;
 	
 	reg [3:0] PS, NS;
 	wire [15:0] savedInstr;
 	wire [4:0] savedFlags;
 	wire CondOut;
+	
+	integer i;
 	
 	Register_FSM savedInstrModule(
 		.in(Instr),
@@ -64,15 +67,28 @@ module CPU_FSM
 		.out(CondOut)
 	);
 	
+	initial begin
+		i = 0;
+	end
+	
 	always @(negedge Clk) begin
 		PS <= NS;
 	end
 	
 	always @(posedge Clk) begin
+		if (i >= 840000)
+			i = 0;
+		else
+			i = i + 1;
+		
 		case(PS)
 			S0: NS <= S1;
 			S1: begin
-					if(Instr[15:12] == 4'b0000 && Instr[7:4] == 4'b0100)begin
+					if (Instr[15:12] == 4'b0000 && Instr[7:4] == 4'b1000)begin
+						NS <= S15;
+					end
+					
+					else if(Instr[15:12] == 4'b0000 && Instr[7:4] == 4'b0100)begin
 						NS <= S13;
 					end
 					
@@ -127,6 +143,13 @@ module CPU_FSM
 			S12: NS <= S0;
 			S13: NS <= S14;
 			S14: NS <= S0;
+			S15: begin 
+					if (i >= 840000)
+						NS <= S0;
+					
+					else
+						NS <= S15;
+				end
 
 			default: NS <= S1;
 			
@@ -449,6 +472,21 @@ module CPU_FSM
 					LoadInSelect = 2'b11;
 					PCState = 2'b00;
 				end
+			
+			S15: begin
+					PCEn = 0;
+					RAMEn = 0;
+					RegEn = 0;
+					Signed = 0;
+					RsrcRegLoc = savedInstr[3:0];
+					RdestRegLoc = savedInstr[11:8];
+					ALUOpCode = NOP;
+					Imm_s = 0;
+					Imm = 8'bx;
+					RamAddrSelect = 0;
+					LoadInSelect = 2'b00;
+					PCState = 2'b00;
+				  end
 				  
 		endcase
 	end

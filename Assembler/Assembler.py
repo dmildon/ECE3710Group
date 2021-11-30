@@ -229,7 +229,7 @@ class Assembler():
         print(self.labels)
 
         f = open(args.file, 'r')
-        out_name = str(args.file.rsplit('.', 1)[0] + '.bin')
+        out_name = str('ram.txt')
         wf = open(out_name, 'w')
         sf = open('stripped.mc', 'w')
 

@@ -15,7 +15,7 @@ module CPU_Wrapper (
 	);
 	
 	CPU myCPU(
-		.Clk(slowClk), 
+		.Clk(btn_clk), 
 		.Rst(btn_rst),
 		.RdestOut(RdestOut),
 		.key_clk(key_clk),

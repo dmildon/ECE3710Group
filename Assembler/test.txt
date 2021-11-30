@@ -1,3 +1,44 @@
-ADDI $5 %r2
-ADDI $2 %r1
-ADD %r1 %r2
+#initalize game values
+ADDI $5 %r15
+ADDI $0 %r14
+ADDI $100 %r13
+ADDI $100 %r12
+ADDI $1 %r11
+ADDI $2 %r10
+ADDI $7 %r8
+
+#start loop
+#keyboard instruction 0000100101000000
+ADDCI $0 %r0 #0111000000000000
+
+#check and update left velocity
+CMPI $28 %r9
+BNE $2
+SUB %r10 %r15
+
+#check and update right velocity
+CMPI $35 %r9
+BNE $2
+ADD %r10 %r15
+
+#check and update up velocity
+CMPI $29 %r9
+BNE $2
+SUB %r10 %r14
+
+#add gravity every frame
+ADD %r11 %r14
+
+#update x and y pos
+ADD %r15 %r13
+ADD %r14 %r12
+
+#wait til end of frame
+#wait instruction 0000110110001100
+ADDCI $1 %r0 #0111000000000001
+
+#check for collision
+
+#loop back to line 7
+JUC %r8
+
