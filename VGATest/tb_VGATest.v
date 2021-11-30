@@ -9,7 +9,7 @@ module tb_VGATest ();
 	wire blankN;
 	wire vgaClk;
 	
-	VGATest uut (
+	wrapper_VGATest uut (
 		.clk(clk),
 		.red(red), 
 		.green(green), 
@@ -22,8 +22,8 @@ module tb_VGATest ();
 	
 	initial begin
 		clk = 0;
-		#5;
+		#1;
 	end
-	always #5 clk = ~clk;
+	always #1 clk = ~clk;
 	
 endmodule

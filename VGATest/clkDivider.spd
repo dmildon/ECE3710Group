@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<simPackage>
+ <file path="clkDivider_sim/clkDivider.vo" type="VERILOG" />
+ <topLevel name="clkDivider" />
+ <deviceFamily name="cyclonev" />
+</simPackage>
