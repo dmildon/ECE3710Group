@@ -1,5 +1,5 @@
 `timescale 1ps/1ps
-module tb_CPU ();
+module tb_new_CPU ();
 	reg Clk, Rst, key_data, key_clk;
 	wire [15:0] RdestOut;
 	wire [7:0] red, green, blue;
