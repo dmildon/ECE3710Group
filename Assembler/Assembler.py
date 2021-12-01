@@ -317,7 +317,7 @@ class Assembler():
                                 Displacement = '{0:08b}'.format(dispInt)
                             else:
                                 Displacement = '{0:08b}'.format(((-1 * dispInt) ^ 255) + 1)
-                            data = '1110' + self.instrCode(instr.replace('B', '')) + Displacement
+                            data = '1100' + self.instrCode(instr.replace('B', '')) + Displacement
                             wf.write(data + '\n')
                         elif (Disp[0] == '.'):
                             dispInt = self.labels[Disp] - address
@@ -327,7 +327,7 @@ class Assembler():
                                 Displacement = '{0:08b}'.format(dispInt)
                             else:
                                 Displacement = '{0:08b}'.format(((-1 * dispInt) ^ 255) + 1)
-                            data = '1110' + instrCode(instr.replace('B', '')) + Displacement
+                            data = '1100' + instrCode(instr.replace('B', '')) + Displacement
                             wf.write(data + '\n')
                         else:
                             sys.exit('Syntax Error: Branch operations need a displacement or label')

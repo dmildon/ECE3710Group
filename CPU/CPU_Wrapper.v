@@ -17,7 +17,7 @@ module CPU_Wrapper (
 	CPU myCPU(
 		.Clk(btn_clk), 
 		.Rst(btn_rst),
-		.RdestOut(RdestOut),
+		.KeyCodeReg(RdestOut),
 		.key_clk(key_clk),
 		.key_data(key_data),
 		.red(red),

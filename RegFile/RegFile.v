@@ -1,9 +1,10 @@
-module RegFile (RdestRegLoc, RsrcRegLoc, Clk, En, Rst, Load, RdestOut, RsrcOut);
+module RegFile (RdestRegLoc, RsrcRegLoc, Clk, En, Rst, Load, RdestOut, RsrcOut, KeyCode);
 	input [3:0] RdestRegLoc, RsrcRegLoc;
 	input Clk, En, Rst;
 	input [15:0] Load;
 	
 	output [15:0] RdestOut, RsrcOut;
+	output [15:0] KeyCode;
 	
 	
 	parameter reg00 = 4'b0000;
@@ -87,6 +88,7 @@ module RegFile (RdestRegLoc, RsrcRegLoc, Clk, En, Rst, Load, RdestOut, RsrcOut);
 		.out(RsrcOut)
 	);
 	
+	assign KeyCode = Out[9];
 endmodule 
 
 

@@ -1,7 +1,7 @@
 module CPU 
 	(
 		input Clk, Rst, key_data, key_clk,
-		output [15:0] RdestOut,
+		output [7:0] KeyCodeReg,
 		output [7:0] red, green, blue,
 		output hsync, vsync,
 		output blankN, vgaClk
@@ -11,7 +11,7 @@ module CPU
 	wire RegEn, Imm_s, Signed, RAMEn, PCEn, RamAddrSelect; 
 	wire [1:0] LoadInSelect, PCState;
 	wire [15:0] SignedImm, RamOutA, RamOutB, RsrcOut, AluOutput;
-	wire [15:0] AluSrcIn, Load;
+	wire [15:0] RdestOut,AluSrcIn, Load;
 	wire [4:0] Flags;
 	wire [7:0] Imm, KeyCode;
 	wire [15:0] PCOut;
@@ -50,7 +50,8 @@ module CPU
 		.Rst(Rst), 
 		.Load(Load), 
 		.RdestOut(RdestOut), 
-		.RsrcOut(RsrcOut)
+		.RsrcOut(RsrcOut),
+		.KeyCode(KeyCodeReg)
 	);
 	
 	ALU myALU(
