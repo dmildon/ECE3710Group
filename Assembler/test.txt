@@ -4,7 +4,7 @@ ADDI $0 %r14 #Y velocity
 ADDI $10 %r13 #X position
 ADDI $100 %r12 #Y position
 ADDI $1 %r11 #gravity
-ADDI $2 %r10 #thrust power
+ADDI $3 %r10 #thrust power
 ADDI $11 %r8 #game loop location
 ADDI $122 %r1 #draw position
 ADDI $3 %r7 #SPEED LIMIT upper
@@ -42,8 +42,8 @@ JUC %r0
 
 #if frame count is not greater then 10 skip velocity additions
 SUB %r5 %r5
-ADDI $43 %r5
-CMPI $20 %r6
+ADDI $63 %r5 #jump to .collisoin +1
+CMPI $30 %r6
 JNE %r5
 SUB %r6 %r6 #reset frame counter
 
@@ -161,7 +161,7 @@ CMP %r0 %r13
 BLT $11
     #in third region check Y
     SUB %r0 %r0
-    ADDI $46 %r0
+    ADDI $43 %r0
     MULI $10 %r0
     ADDI $5 %r0
     CMP %r0 %r12
@@ -171,8 +171,6 @@ BLT $11
         SUB %r14 %r14
         SUB %r11 %r11 
         SUB %r10 %r10
-
-
 
 
 #update x and y pos

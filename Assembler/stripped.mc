@@ -3,7 +3,7 @@ ADDI $0 %r14
 ADDI $10 %r13 
 ADDI $100 %r12 
 ADDI $1 %r11 
-ADDI $2 %r10 
+ADDI $3 %r10 
 ADDI $11 %r8 
 ADDI $122 %r1 
 ADDI $3 %r7 
@@ -30,8 +30,8 @@ SUB %r14 %r14
 SUB %r15 %r15 
 JUC %r0 
 SUB %r5 %r5 
-ADDI $43 %r5 
-CMPI $20 %r6 
+ADDI $63 %r5 
+CMPI $30 %r6 
 JNE %r5 
 SUB %r6 %r6 
 CMPI $28 %r9 
@@ -110,7 +110,7 @@ SUBI $14 %r0
 CMP %r0 %r13 
 BLT $11 
 SUB %r0 %r0 
-ADDI $46 %r0 
+ADDI $43 %r0 
 MULI $10 %r0 
 ADDI $5 %r0 
 CMP %r0 %r12 
