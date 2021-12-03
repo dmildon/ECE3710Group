@@ -1,25 +1,49 @@
 #initalize game values
-ADDI $5 %r15
-ADDI $0 %r14
-ADDI $10 %r13
-ADDI $100 %r12
-ADDI $1 %r11
-ADDI $2 %r10
-ADDI $10 %r8 #game loop location
-ADDI $5 %r7 #SPEED LIMIT upper
-ADDI $-5 %r4 #LOWER lIMIT
+ADDI $1 %r15 #X velocity
+ADDI $0 %r14 #Y velocity
+ADDI $10 %r13 #X position
+ADDI $100 %r12 #Y position
+ADDI $1 %r11 #gravity
+ADDI $2 %r10 #thrust power
+ADDI $11 %r8 #game loop location
+ADDI $122 %r1 #draw position
+ADDI $3 %r7 #SPEED LIMIT upper
+ADDI $-3 %r4 #LOWER lIMIT
 ADDI $0 %r6 #FRAME COUNT
 
 #--------------start loop-------------------
 .gameLoop
 
 #keyboard instruction 0000100101000000
-ADDCI $0 %r0 #0111000000000000
+#ADDCI $0 %r0 #0111000000000000
+KEY %r0 %r9
+
+#if space restart game
+
+CMPI $41 %r9
+BNE $18
+SUB %r0 %r0
+SUB %r1 %r1
+SUB %r2 %r2
+SUB %r3 %r3
+SUB %r4 %r4
+SUB %r5 %r5
+SUB %r6 %r6
+SUB %r7 %r7
+SUB %r8 %r8
+SUB %r9 %r9
+SUB %r10 %r10
+SUB %r11 %r11
+SUB %r12 %r12
+SUB %r13 %r13
+SUB %r14 %r14
+SUB %r15 %r15
+JUC %r0
 
 #if frame count is not greater then 10 skip velocity additions
 SUB %r5 %r5
 ADDI $43 %r5
-CMPI $10 %r6
+CMPI $20 %r6
 JNE %r5
 SUB %r6 %r6 #reset frame counter
 
@@ -66,6 +90,89 @@ SUB %r14 %r14
 ADD %r4 %r14
 
 
+.collision
+#-----check for collision------
+#Check top
+CMPI $0 %r12
+BLT $2
+MULI $-1 %r14
+
+#Check left
+CMPI $0 %r13
+BLT $2
+MULI $-1 %r15
+
+#Check right
+SUB %r0 %r0
+ADDI $61 %r0
+MULI $10 %r0
+CMP %r0 %r13
+BGT $2
+MULI $-1 %r15
+
+
+
+#---------bottom checking ----------#
+#first region check x
+SUB %r0 %r0
+ADDI $16 %r0
+MULI $10 %r0
+SUBI $14 %r0
+CMP %r0 %r13
+BLT $11
+    #in first region check Y
+    SUB %r0 %r0
+    ADDI $38 %r0
+    MULI $10 %r0
+    ADDI $5 %r0
+    CMP %r0 %r12
+    JGT %r1
+        #stop the movement
+        SUB %r15 %r15
+        SUB %r14 %r14
+        SUB %r11 %r11 
+        SUB %r10 %r10   
+
+#second region check x
+SUB %r0 %r0
+ADDI $26 %r0
+MULI $10 %r0
+CMP %r0 %r13
+BLT $11
+    #in second region check Y
+    SUB %r0 %r0
+    ADDI $28 %r0
+    MULI $10 %r0
+    ADDI $5 %r0
+    CMP %r0 %r12
+    JGT %r1
+        #stop the movement
+        SUB %r15 %r15
+        SUB %r14 %r14
+        SUB %r11 %r11 
+        SUB %r10 %r10   
+
+#third region check x
+SUB %r0 %r0
+ADDI $41 %r0
+MULI $10 %r0
+SUBI $14 %r0
+CMP %r0 %r13
+BLT $11
+    #in third region check Y
+    SUB %r0 %r0
+    ADDI $46 %r0
+    MULI $10 %r0
+    ADDI $5 %r0
+    CMP %r0 %r12
+    JGT %r1
+        #stop the movement
+        SUB %r15 %r15
+        SUB %r14 %r14
+        SUB %r11 %r11 
+        SUB %r10 %r10
+
+
 
 
 #update x and y pos
@@ -73,12 +180,14 @@ ADD %r15 %r13
 ADD %r14 %r12
 
 
+
 .draw
 #wait til end of frame
 #wait instruction 0000110110001100
-ADDCI $1 %r0 #0111000000000001
+#ADDCI $1 %r0 #0111000000000001
+WAIT %r12 %r13
 
-#check for collision
+
 
 #Incrament and loop back to gameLoop
 ADDI $1 %r6

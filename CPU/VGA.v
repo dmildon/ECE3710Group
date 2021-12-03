@@ -145,9 +145,9 @@ module VGA (
 		end
 		else begin //gameplay
 			if ((hcount >= (data1[9:0] + 160)) && (hcount <= (data1[9:0] + 160 + 15)) && (vcount >= (data2[9:0] + 12)) && (vcount <= (data2[9:0] + 12 + 15))) begin
-				red = 8'd175;
-				green = 8'd15;
-				blue = 8'd120;
+				red = 8'd84;
+				green = 8'd101;
+				blue = 8'd255;
 			end
 			
 			else if (
@@ -157,9 +157,9 @@ module VGA (
 				((hcount >= platform4X) && (hcount <= (platform4X + platform4Width)) && (vcount >= platform4Y) && (vcount <= (platform4Y + platformThick))) ||
 				((hcount >= platform5X) && (hcount <= (platform5X + platform5Width)) && (vcount >= platform5Y) && (vcount <= (platform5Y + platformThick)))
 					) begin
-				red = 8'd220;
-				green = 8'd240;
-				blue = 8'd20;
+				red = 8'd7;
+				green = 8'd7;
+				blue = 8'd7;
 			end
 			
 			else if (
@@ -169,15 +169,15 @@ module VGA (
 				((hcount >= outOfBounds4X) && (hcount <= (outOfBounds4X + outOfBounds4Width)) && (vcount >= outOfBounds4Y)) || 
 				((hcount >= outOfBounds5X) && (hcount <= (outOfBounds5X + outOfBounds5Width)) && (vcount >= outOfBounds5Y))
 				) begin
-				red = 8'd130;
-				green = 8'd0;
-				blue = 8'd0;
+				red = 8'd75;
+				green = 8'd100;
+				blue = 8'd74;
 			end
 			
 			else begin
-				red = 8'd12;
-				green = 8'd10;
-				blue = 8'd181;
+				red = 8'd92;
+				green = 8'd200;
+				blue = 8'd255;
 			end
 		end
 	end
