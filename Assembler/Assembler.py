@@ -222,9 +222,9 @@ class Assembler():
                        
                     count = 0
                     # reduce to shift for 8-bit immediate
-                    while labelAddress > 127:
-                       labelAddress /= 2
-                       count += 1
+                    # while labelAddress > 127:
+                    #    labelAddress /= 2
+                    #    count += 1
 
                     label = parts.pop(0)
 

@@ -118,7 +118,7 @@ module CPU
 	VGA myVGA (
 		.clk(Clk),
 		.in1({5'b0,RdestOut[9:0]}),
-		.in2({5'b0,RsrcOut[9:0]}), 	//first 10 bits of in1 are x coord [9:0]
+		.in2(RsrcOut), 	//first 10 bits of in1 are x coord [9:0]
 								//first 10 bits of in2 are y coord [9:0]
 								//10th bit of in2 is dead or alive [10] 0 is ship is not dead
 								//11th bit of in2 is win or not [11] 0 is game is not won

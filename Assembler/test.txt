@@ -1,15 +1,17 @@
 #initalize game values
 MOVI $0 %r0
-MOVI $12 %r1 #draw position
+MOVI $13 %r1 #draw position
 MULI $10 %r1
-ADDI $7 %r1
+ADDI $3 %r1
 MOVI $0 %r2
-MOVI $0 %r3
+MOVI $13 %r3 #endGame
+MULI $10 %r3
+ADDI $8 %r3
 MOVI $-3 %r4 #LOWER lIMIT
 MOVI $0 %r5
 MOVI $0 %r6 #FRAME COUNT
 MOVI $3 %r7 #SPEED LIMIT upper
-MOVI $19 %r8 #game loop location
+MOVI $21 %r8 #game loop location
 MOVI $0 %r9 #KEYS
 MOVI $3 %r10 #thrust power
 MOVI $1 %r11 #gravity
@@ -31,7 +33,7 @@ MOVI $0 %r0
 JUC %r0
 
 #if frame count is not greater than frame speed skip velocity additions
-MOVI $50 %r5 #jump to .collisoin + 1
+MOVI $52 %r5 #jump to .collisoin + 1
 CMPI $25 %r6 #set frame speed
 JGE %r5
 MOVI $0 %r6 #reset frame counter
@@ -57,22 +59,22 @@ ADD %r11 %r14
 #create speed limits for upper x
 CMP %r15 %r7
 BLE $2 #if (%r15 <= %r7), then branch
-MOV %r7 %r15
+MOVI $3 %r15
 
 #create speed limits for upper y
 CMP %r14 %r7
 BLE $2
-MOV %r7 %r14
+MOVI $3 %r14
 
 #create speed limits for lower x
 CMP %r15 %r4
 BGE $2
-MOV %r4 %r15
+MOVI $-3 %r15
 
 #create speed limits for lower y
 CMP %r14 %r4
 BGE $2
-MOV %r4 %r14
+MOVI $-3 %r14
 
 
 .collision
@@ -81,7 +83,7 @@ MOV %r4 %r14
 CMPI $0 %r12
 BLE $3 #if (0 <= %r12), branch
 MULI $-1 %r14
-MOVI $0 %r12
+MOVI $1 %r12
 
 #Check left
 CMPI $0 %r13
@@ -93,9 +95,8 @@ MOVI $0 %r13
 MOVI $61 %r0
 MULI $10 %r0
 CMP %r0 %r13
-BGT $3
+BGT $2
 MULI $-1 %r15
-MOV %r0 %r13
 
 
 
@@ -105,7 +106,7 @@ MOVI $16 %r0
 MULI $10 %r0
 SUBI $14 %r0
 CMP %r0 %r13
-BLT $10 
+BLT $11
     #in first region check Y
     MOVI $38 %r0
     MULI $10 %r0
@@ -117,12 +118,13 @@ BLT $10
         MOVI $0 %r14
         MOVI $0 %r11
         MOVI $0 %r10
+        JUC %r3
 
 #second region check x
 MOVI $26 %r0
 MULI $10 %r0
 CMP %r0 %r13
-BLT $10 
+BLT $11
     #in second region check Y
     MOVI $28 %r0
     MULI $10 %r0
@@ -134,13 +136,14 @@ BLT $10
         MOVI $0 %r14
         MOVI $0 %r11
         MOVI $0 %r10
+        JUC %r3
 
 #third region check x
 MOVI $41 %r0
 MULI $10 %r0
 SUBI $14 %r0
 CMP %r0 %r13
-BLT $10
+BLT $11
     #in third region check Y
     MOVI $43 %r0
     MULI $10 %r0
@@ -152,13 +155,14 @@ BLT $10
         MOVI $0 %r14
         MOVI $0 %r11
         MOVI $0 %r10
+        JUC %r3
 
 #fourth region check x
 MOVI $52 %r0
 MULI $10 %r0
 ADDI $5  %r0
 CMP %r0 %r13
-BLT $10 
+BLT $11
     #in fourth region check Y
     MOVI $30 %r0
     MULI $10 %r0
@@ -170,6 +174,7 @@ BLT $10
         MOVI $0 %r14
         MOVI $0 %r11
         MOVI $0 %r10
+        JUC %r3
 
 # fifth region check Y
     MOVI $41 %r0
@@ -181,6 +186,7 @@ BLT $10
         MOVI $0 %r14
         MOVI $0 %r11
         MOVI $0 %r10
+        JUC %r3
 .draw
 #update x and y pos
 ADD %r15 %r13
@@ -192,3 +198,20 @@ WAIT %r12 %r13
 #Increment and loop back to gameLoop
 ADDI $1 %r6
 JUC %r8
+
+
+
+.endGame
+MOVI $102 %r12
+MULI $20 %r12
+ADDI $8 %r12
+WAIT %r12 %r13
+
+#read in keyboard input
+KEY %r0 %r9
+
+#if space restart game
+CMPI $41 %r9
+JNE %r3
+MOVI $0 %r0
+JUC %r0
