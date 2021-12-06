@@ -4,7 +4,8 @@ module CPU_FSM
 		input [15:0] Instr,
 		input [4:0] ALUFlags,
 		output reg Imm_s, RegEn, RAMEn, PCEn, Signed, RamAddrSelect, 
-		output reg [1:0] LoadInSelect, PCState,
+		output reg [1:0] PCState,
+		output reg [2:0] LoadInSelect,
 		output reg [3:0] ALUOpCode, RdestRegLoc, RsrcRegLoc,
 		output reg [7:0] Imm
 	);
@@ -84,19 +85,19 @@ module CPU_FSM
 		case(PS)
 			S0: NS <= S1;
 			S1: begin
-					if (Instr[15:12] == 4'b0000 && Instr[7:4] == 4'b1000)begin
+					if (Instr[15:12] == 4'b0000 && Instr[7:4] == 4'b1000) begin
 						NS <= S15;
 					end
 					
-					else if(Instr[15:12] == 4'b0000 && Instr[7:4] == 4'b0100)begin
+					else if(Instr[15:12] == 4'b0000 && Instr[7:4] == 4'b0100) begin
 						NS <= S13;
 					end
 					
-					else if (Instr[15:12] == 4'b0101 || Instr[15:12] == 4'b0110 || Instr[15:12] == 4'b0111 || Instr[15:12] == 4'b1110 || Instr[15:12] == 4'b1001 || Instr[15:12] == 4'b1010 || Instr[15:12] == 4'b1011 || Instr[15:12] == 4'b0001 || Instr[15:12] == 4'b0010 || Instr[15:12] == 4'b0011 || (Instr[15:12] == 4'b1000 && Instr[7:5] == 3'b000)) begin
+					else if (Instr[15:12] == 4'b1101 || Instr[15:12] == 4'b0101 || Instr[15:12] == 4'b0110 || Instr[15:12] == 4'b0111 || Instr[15:12] == 4'b1110 || Instr[15:12] == 4'b1001 || Instr[15:12] == 4'b1010 || Instr[15:12] == 4'b1011 || Instr[15:12] == 4'b0001 || Instr[15:12] == 4'b0010 || Instr[15:12] == 4'b0011 || (Instr[15:12] == 4'b1000 && Instr[7:5] == 3'b000)) begin
 						NS <= S2;
 					end
 					
-					else if ((Instr[15:12] == 4'b0000 && (~(Instr[7:4] == 4'b1101) || ~(Instr[7:4] == 4'b0000))) || (Instr[15:12] == 4'b1000 && Instr[7:4] == 4'b0100)) begin
+					else if ((Instr[15:12] == 4'b0000 && (~(Instr[7:4] == 4'b0000))) || (Instr[15:12] == 4'b1000 && Instr[7:4] == 4'b0100)) begin
 						NS <= S2;
 					end
 
@@ -169,7 +170,7 @@ module CPU_FSM
 					Imm_s = 0;
 					Imm = 8'bx;
 					RamAddrSelect = 0;
-					LoadInSelect = 2'b00;
+					LoadInSelect = 3'b000;
 					PCState = 2'b00;
 				 end
 			S1: begin
@@ -183,7 +184,7 @@ module CPU_FSM
 					Imm_s = 0;
 					Imm = 8'bx;
 					RamAddrSelect = 0;
-					LoadInSelect = 2'b00;
+					LoadInSelect = 3'b000;
 					PCState = 2'b00;
 				 end
 			S2: begin
@@ -197,7 +198,7 @@ module CPU_FSM
 					Imm_s = 0;
 					Imm = 8'bx;
 					RamAddrSelect = 0;
-					LoadInSelect = 2'b00;
+					LoadInSelect = 3'b000;
 					PCState = 2'b00;
 				 end
 			S3: begin
@@ -209,47 +210,60 @@ module CPU_FSM
 					Imm_s = 0;
 					Imm = 8'bx;
 					RamAddrSelect = 0;
-					LoadInSelect = 2'b00;
 					PCState = 2'b00;
 					
 					if (savedInstr[7:4] == 4'b0101 || savedInstr[7:4] == 4'b0110 || savedInstr[7:4] == 4'b0111)begin
 						ALUOpCode = ADD;
 						RegEn = 1;
+						LoadInSelect = 3'b000;
 					end
 						
 					else if (savedInstr[7:4] == 4'b1110)begin
 						ALUOpCode = MUL;
 						RegEn = 1;
+						LoadInSelect = 3'b000;
 					end
 						
 					else if (savedInstr[7:4] == 4'b1001 || savedInstr[7:4] == 4'b1010)begin
 						ALUOpCode = SUB;
 						RegEn = 1;
+						LoadInSelect = 3'b000;
 					end
 						
 					else if (savedInstr[7:4] == 4'b1011)begin
 						ALUOpCode = CMP;
 						RegEn = 0;
+						LoadInSelect = 3'b000;
 					end
 					
 					else if (savedInstr[7:4] == 4'b0001)begin
 						ALUOpCode = AND;
 						RegEn = 1;
+						LoadInSelect = 3'b000;
 					end
 					
 					else if (savedInstr[7:4] == 4'b0010)begin
 						ALUOpCode = OR;
 						RegEn = 1;
+						LoadInSelect = 3'b000;
 					end
 						
 					else if (savedInstr[7:4] == 4'b0011)begin
 						ALUOpCode = XOR;
 						RegEn = 1;
+						LoadInSelect = 3'b000;
+					end
+					
+					else if (savedInstr[7:4] == 4'b1101) begin
+						ALUOpCode = NOP;
+						RegEn = 1;
+						LoadInSelect = 3'b100;
 					end
 						
 					else begin
 						ALUOpCode = LSH;
 						RegEn = 1;
+						LoadInSelect = 3'b000;
 					end				
 				 end
 			S4: begin
@@ -260,55 +274,69 @@ module CPU_FSM
 					Imm_s = 1;
 					Imm = savedInstr[7:0];
 					RamAddrSelect = 0;
-					LoadInSelect = 2'b00;
 					PCState = 2'b00;
 					
 					if(savedInstr[15:12] == 4'b0101 || savedInstr[15:12] == 4'b0111) begin 
 						ALUOpCode = ADD; 
 						Signed = 1; 
 						RegEn = 1;
+						LoadInSelect = 3'b000;
 					end
 					
 					else if(savedInstr[15:12] == 4'b0110) begin 
 						ALUOpCode = ADD; 
 						Signed = 0;
 						RegEn = 1;
+						LoadInSelect = 3'b000;
 					end
 					
 					else if(savedInstr[15:12] == 4'b1110) begin 
 						ALUOpCode = MUL; 
 						Signed = 1;
 						RegEn = 1;
+						LoadInSelect = 3'b000;
 					end
 					
 					else if(savedInstr[15:12] == 4'b1001 || savedInstr[15:12] == 4'b1010) begin 
 						ALUOpCode = SUB; 
 						Signed = 1;
 						RegEn = 1;
+						LoadInSelect = 3'b000;
 					end
 					
 					else if(savedInstr[15:12] == 4'b1011) begin 
 						ALUOpCode = CMP; 
 						Signed = 1;
 						RegEn = 0;
+						LoadInSelect = 3'b000;
 					end
 					
 					else if(savedInstr[15:12] == 4'b0001) begin 
 						ALUOpCode = AND; 
 						Signed = 1;
 						RegEn = 1;
+						LoadInSelect = 3'b000;
 					end
 					
 					else if(savedInstr[15:12] == 4'b0010) begin 
 						ALUOpCode = OR; 
 						Signed = 1;
 						RegEn = 1;
+						LoadInSelect = 3'b000;
+					end
+					
+					else if(savedInstr[15:12] == 4'b1101) begin
+						ALUOpCode = NOP;
+						Signed = 1;
+						RegEn = 1;
+						LoadInSelect = 3'b010;
 					end
 					
 					else begin 
 						ALUOpCode = XOR; 
 						Signed = 1;
 						RegEn = 1;
+						LoadInSelect = 3'b000;
 					end
 					
 				 end
@@ -323,7 +351,7 @@ module CPU_FSM
 					Imm_s = 0;
 					Imm = 8'bx;
 					RamAddrSelect = 0;
-					LoadInSelect = 2'b00;
+					LoadInSelect = 3'b000;
 					PCState = 2'b00;
 				 end
 
@@ -338,7 +366,7 @@ module CPU_FSM
 					Imm_s = 0;
 					Imm = 8'bx;
 					RamAddrSelect = 1;
-					LoadInSelect = 2'b01;
+					LoadInSelect = 3'b001;
 					PCState = 2'b00;
 				end
 				
@@ -353,7 +381,7 @@ module CPU_FSM
 					Imm_s = 0;
 					Imm = 8'bx;
 					RamAddrSelect = 1;
-					LoadInSelect = 2'b01;
+					LoadInSelect = 3'b001;
 					PCState = 2'b00;
 				 end
 			
@@ -368,7 +396,7 @@ module CPU_FSM
 					Imm_s = 0;
 					Imm = 8'bx;
 					RamAddrSelect = 1;
-					LoadInSelect = 2'b00;
+					LoadInSelect = 3'b000;
 					PCState = 2'b00;
 				end
 			
@@ -383,7 +411,7 @@ module CPU_FSM
 					Imm_s = 0;
 					Imm = 8'bx;
 					RamAddrSelect = 0;
-					LoadInSelect = 2'b00;
+					LoadInSelect = 3'b000;
 					PCState = 2'b00;
 				 end
 				 
@@ -398,7 +426,7 @@ module CPU_FSM
 					Imm_s = 0;
 					Imm = {7'b0, CondOut};
 					RamAddrSelect = 0;
-					LoadInSelect = 2'b10;
+					LoadInSelect = 3'b010;
 					PCState = 2'b00;
 					
 					/*
@@ -422,7 +450,7 @@ module CPU_FSM
 				Imm_s = 0;
 				Imm = savedInstr[7:0]; 
 				RamAddrSelect = 0;
-				LoadInSelect = 2'b00;
+				LoadInSelect = 3'b000;
 				if (CondOut) begin PCState = 2'b01; end
 				else begin PCState = 2'b11; end 
 			end
@@ -438,7 +466,7 @@ module CPU_FSM
 					Imm_s = 0;
 					Imm = 8'bx; 
 					RamAddrSelect = 0;
-					LoadInSelect = 2'b00;
+					LoadInSelect = 3'b000;
 					if (CondOut) begin PCState = 2'b10; end
 					else begin PCState = 2'b11; end 
 				  end
@@ -454,7 +482,7 @@ module CPU_FSM
 					Imm_s = 0;
 					Imm = 8'bx;
 					RamAddrSelect = 0;
-					LoadInSelect = 2'b11;
+					LoadInSelect = 3'b011;
 					PCState = 2'b00;
 				end
 			
@@ -469,7 +497,7 @@ module CPU_FSM
 					Imm_s = 0;
 					Imm = 8'bx;
 					RamAddrSelect = 0;
-					LoadInSelect = 2'b11;
+					LoadInSelect = 3'b011;
 					PCState = 2'b00;
 				end
 			
@@ -484,7 +512,7 @@ module CPU_FSM
 					Imm_s = 0;
 					Imm = 8'bx;
 					RamAddrSelect = 0;
-					LoadInSelect = 2'b00;
+					LoadInSelect = 3'b000;
 					PCState = 2'b00;
 				  end
 				  

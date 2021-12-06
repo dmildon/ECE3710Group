@@ -26,11 +26,12 @@ module CPU
 		.out(AluSrcIn)
 	);
 	
-	CPU_2bit_MUX Alu_Mux (
+	CPU_3bit_MUX Alu_Mux (
 		.in00(AluOutput),
 		.in01(RamOutA),
 		.in02(SignedImm),
 		.in03({8'b0,KeyCode}),
+		.in04(RsrcOut),
 		.selector(LoadInSelect),
 		.out(Load)
 	);
@@ -152,16 +153,17 @@ module CPU_MUX #(parameter Data_width = 16) (in00, in01, selector, out);
 endmodule
 
 //update later? all one mux?
-module CPU_2bit_MUX (in00, in01, in02, in03, selector, out);
-	input [1:0] selector;
-	input [15:0] in00, in01, in02, in03;
+module CPU_3bit_MUX (in00, in01, in02, in03, in04, selector, out);
+	input [2:0] selector;
+	input [15:0] in00, in01, in02, in03, in04;
 	
 	
 	output [15:0] out;
 	
-	assign out = (selector == 2'b00) ? in00 :
-					 (selector == 2'b01) ? in01 :
-					 (selector == 2'b10) ? in02 : in03;
+	assign out = (selector == 2'b000) ? in00 :
+					 (selector == 2'b001) ? in01 :
+					 (selector == 2'b010) ? in02 :
+					 (selector == 2'b011) ? in03 : in04;
 endmodule
 
 

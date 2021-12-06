@@ -4,8 +4,8 @@ import argparse
 class Assembler():
     labels = {}
     jpoint_instrs = {}
-    RType = ['ADD', 'ADDU', 'ADDC', 'ADDCU', 'SUB', 'CMP', 'CMPU', 'AND', 'OR', 'XOR','KEY', 'WAIT']
-    Immediates = ['ADDI', 'ADDUI', 'ADDCI', 'ADDCUI', 'SUBI', 'CMPI', 'CMPUI', 'ANDI', 'ORI', 'XORI','MULI']
+    RType = ['ADD', 'ADDU', 'ADDC', 'ADDCU', 'SUB', 'CMP', 'CMPU', 'AND', 'OR', 'XOR','KEY', 'WAIT', 'MOV']
+    Immediates = ['ADDI', 'ADDUI', 'ADDCI', 'ADDCUI', 'SUBI', 'CMPI', 'CMPUI', 'ANDI', 'ORI', 'XORI','MULI', 'MOVI']
     Shift = ['LSH', 'RSH', 'ALSH', 'ARSH']
     ImmdShift = ['LSHI', 'RSHI', 'ALSHI', 'ARSHI']
     Branch = ['BEQ', 'BNE', 'BGE', 'BCS', 'BCC', 'BHI', 'BLS', 'BLO', 'BHS', 'BGT', 'BLE', 'BFS', 'BFC', 'BLT', 'BUC']
@@ -14,6 +14,12 @@ class Assembler():
 
     def MULI():
         return '1110'
+
+    def MOVI():
+        return '1101'
+    
+    def MOV():
+        return '1101'
 
     def KEY():
         return '0100'
@@ -145,6 +151,8 @@ class Assembler():
         'CMPI': CMP,
         'CMPUI': CMPUI,
         'MULI': MULI,
+        'MOVI': MOVI,
+        'MOV': MOV,
         'KEY': KEY,
         'WAIT': WAIT,
         'ANDI': AND,
