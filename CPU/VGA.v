@@ -104,14 +104,6 @@ module VGA (
 	assign hsync = ~((hcount >= H_FRONT_PORCH) & (hcount < H_FRONT_PORCH + H_SYNC));
 	assign vsync = ~((vcount >= V_DISPLAY_INT + V_BACK_PORCH) & (vcount < V_DISPLAY_INT + V_BACK_PORCH + V_SYNC));
 	
-//	assign red = 8'b00101101;
-//	assign green = 8'b10011010;
-//	assign blue = 8'b01111001;
-	
-//	always @(posedge clk) begin
-//		vgaClk = ~vgaClk;
-//	end
-	
 	always @(posedge vgaClk) begin
 		if (hcount < H_TOTAL) begin
 			hcount = hcount + 1;
@@ -128,26 +120,30 @@ module VGA (
 	end
 	
 	always @(hcount, vcount) begin
-		if (data2[12] == 1) begin // start screen
-			red = 8'd255;
-			green = 8'd255;
-			blue = 8'd255;
-		end
-		else if (data2[10] == 1) begin // died
-			red = 8'd255;
-			green = 8'd0;
-			blue = 8'd0;
-		end
-		else if (data2[11] == 1) begin //won
-			red = 8'd0;
-			green = 8'd255;
-			blue = 8'd0;
-		end
-		else begin //gameplay
 			if ((hcount >= (data1[9:0] + 160)) && (hcount <= (data1[9:0] + 160 + 15)) && (vcount >= (data2[9:0] + 12)) && (vcount <= (data2[9:0] + 12 + 15))) begin
-				red = 8'd84;
-				green = 8'd101;
-				blue = 8'd255;
+				if (data2[12] == 1) begin
+					red = 8'd84;
+					green = 8'd101;
+					blue = 8'd255;
+				end
+				
+				if (data2[11] == 1) begin //won
+					red = 8'd0;
+					green = 8'd255;
+					blue = 8'd0;
+				end
+				
+				else if (data2[10] == 1) begin // died
+					red = 8'd255;
+					green = 8'd0;
+					blue = 8'd0;
+				end
+				
+				else begin
+					red = 8'd84;
+					green = 8'd101;
+					blue = 8'd255;
+				end
 			end
 			
 			else if (
@@ -179,7 +175,7 @@ module VGA (
 				green = 8'd200;
 				blue = 8'd255;
 			end
-		end
+//		end
 	end
 	
 	always @(hcount,vcount) begin
