@@ -2,18 +2,16 @@
 MOVI $0 %r0
 MOVI $13 %r1 #draw position
 MULI $10 %r1
-ADDI $5 %r1
+ADDI $3 %r1
 MOVI $0 %r2
 MOVI $13 %r3 #endGame
 MULI $10 %r3
-ADDI $10 %r3
+ADDI $8 %r3
 MOVI $-3 %r4 #LOWER lIMIT
-MOVI $15 %r5 #drawEndGame
-MULI $10 %r5
-ADDI $1 %r5
+MOVI $0 %r5
 MOVI $0 %r6 #FRAME COUNT
 MOVI $3 %r7 #SPEED LIMIT upper
-MOVI $23 %r8 #game loop location
+MOVI $21 %r8 #game loop location
 MOVI $0 %r9 #KEYS
 MOVI $3 %r10 #thrust power
 MOVI $1 %r11 #gravity
@@ -35,7 +33,7 @@ MOVI $0 %r0
 JUC %r0
 
 #if frame count is not greater than frame speed skip velocity additions
-MOVI $54 %r5 #jump to .collisoin + 1
+MOVI $52 %r5 #jump to .collisoin + 1
 CMPI $25 %r6 #set frame speed
 JGE %r5
 MOVI $0 %r6 #reset frame counter
@@ -204,39 +202,132 @@ JUC %r8
 
 
 .endGame
+WAIT %r12 %r13
+WAIT %r12 %r13
+WAIT %r12 %r13
+WAIT %r12 %r13
+WAIT %r12 %r13
+WAIT %r12 %r13
+WAIT %r12 %r13
+WAIT %r12 %r13
+WAIT %r12 %r13
+WAIT %r12 %r13
+WAIT %r12 %r13
+WAIT %r12 %r13
+WAIT %r12 %r13
+WAIT %r12 %r13
+WAIT %r12 %r13
+WAIT %r12 %r13
+WAIT %r12 %r13
+WAIT %r12 %r13
+WAIT %r12 %r13
+WAIT %r12 %r13
+WAIT %r12 %r13
+WAIT %r12 %r13
+WAIT %r12 %r13
+WAIT %r12 %r13
+WAIT %r12 %r13
+WAIT %r12 %r13
+WAIT %r12 %r13
+WAIT %r12 %r13
+WAIT %r12 %r13
+WAIT %r12 %r13
+WAIT %r12 %r13
+WAIT %r12 %r13
+WAIT %r12 %r13
+WAIT %r12 %r13
+WAIT %r12 %r13
+WAIT %r12 %r13
+WAIT %r12 %r13
+WAIT %r12 %r13
+WAIT %r12 %r13
+WAIT %r12 %r13
+WAIT %r12 %r13
+WAIT %r12 %r13
+WAIT %r12 %r13
+WAIT %r12 %r13
+WAIT %r12 %r13
+WAIT %r12 %r13
+WAIT %r12 %r13
+WAIT %r12 %r13
+WAIT %r12 %r13
+WAIT %r12 %r13
+WAIT %r12 %r13
+WAIT %r12 %r13
+WAIT %r12 %r13
+WAIT %r12 %r13
+WAIT %r12 %r13
+WAIT %r12 %r13
+WAIT %r12 %r13
+WAIT %r12 %r13
+WAIT %r12 %r13
+WAIT %r12 %r13
+
+MOVI $24 %r5 #value of drawEndGame
+MULI $10 %r5
+ADDI $1 %r5
+
 CMPI $10 %r13
-BGE $7 #if (%r13 < 10), then branch
+BGE $4 #if (%r13 < 10), then branch
     CMPI $70 %r13
-    BLE $5 #if (%r13 > 70), then branch
+    BLE $2 #if (%r13 > 70), then branch
         #If we make it here, 10 < %r13 < 70, i.e. we win
-        MOVI $102 %r12
-        MULI $20 %r12
-        ADDI $8 %r12
-        BUC $4
+        JUC %r5
 
 
-#MOVI $20 %r2
-#MULI $10 %r2
-#CMP %r2 %r13
-#BGE $num 
-#    ADDI $35 %r2
-#    CMP %r2 %r13
-#    BLE $num
-#        MOVI $102 %r12
-#        MULI $20 %r12
-#        ADDI $8 %r12
-#        JUC %r5
+MOVI $20 %r2
+MULI $10 %r2
+CMP %r2 %r13
+BGE $5
+    ADDI $35 %r2
+    CMP %r2 %r13
+    BLE $2
+        JUC %r5
+
+
+MOVI $27 %r2
+MULI $10 %r2
+CMP %r2 %r13
+BGE $5
+    ADDI $110 %r2
+    CMP %r2 %r13
+    BLE $2
+        JUC %r5
+
+
+MOVI $44 %r2
+MULI $10 %r2
+CMP %r2 %r13
+BGE $5
+    ADDI $25 %r2
+    CMP %r2 %r13
+    BLE $2
+        JUC %r5
+
+
+MOVI $54 %r2
+MULI $10 %r2
+CMP %r2 %r13
+BGE $5
+    ADDI $15 %r2
+    CMP %r2 %r13
+    BLE $2
+        JUC %r5
 
 
 
-
-
+#Red
 MOVI $102 %r12
 MULI $10 %r12
 ADDI $4 %r12
-
+#BUC $4
 
 .drawEndGame
+#Green
+#MOVI $102 %r12
+#MULI $20 %r12
+#ADDI $8 %r12
+
 WAIT %r12 %r13
 
 #read in keyboard input
@@ -244,6 +335,6 @@ KEY %r0 %r9
 
 #if space restart game
 CMPI $41 %r9
-JNE %r5
+BNE $-3
 MOVI $0 %r0
 JUC %r0

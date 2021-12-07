@@ -1,18 +1,16 @@
 MOVI $0 %r0 
 MOVI $13 %r1 
 MULI $10 %r1 
-ADDI $5 %r1 
+ADDI $3 %r1 
 MOVI $0 %r2 
 MOVI $13 %r3 
 MULI $10 %r3 
-ADDI $10 %r3 
+ADDI $8 %r3 
 MOVI $-3 %r4 
-MOVI $15 %r5 
-MULI $10 %r5 
-ADDI $1 %r5 
+MOVI $0 %r5 
 MOVI $0 %r6 
 MOVI $3 %r7 
-MOVI $23 %r8 
+MOVI $21 %r8 
 MOVI $0 %r9 
 MOVI $3 %r10 
 MOVI $1 %r11 
@@ -25,7 +23,7 @@ CMPI $41 %r9
 BNE $3 
 MOVI $0 %r0 
 JUC %r0 
-MOVI $54 %r5 
+MOVI $52 %r5 
 CMPI $25 %r6 
 JGE %r5 
 MOVI $0 %r6 
@@ -137,20 +135,112 @@ ADD %r14 %r12
 WAIT %r12 %r13 
 ADDI $1 %r6 
 JUC %r8 
+WAIT %r12 %r13 
+WAIT %r12 %r13 
+WAIT %r12 %r13 
+WAIT %r12 %r13 
+WAIT %r12 %r13 
+WAIT %r12 %r13 
+WAIT %r12 %r13 
+WAIT %r12 %r13 
+WAIT %r12 %r13 
+WAIT %r12 %r13 
+WAIT %r12 %r13 
+WAIT %r12 %r13 
+WAIT %r12 %r13 
+WAIT %r12 %r13 
+WAIT %r12 %r13 
+WAIT %r12 %r13 
+WAIT %r12 %r13 
+WAIT %r12 %r13 
+WAIT %r12 %r13 
+WAIT %r12 %r13 
+WAIT %r12 %r13 
+WAIT %r12 %r13 
+WAIT %r12 %r13 
+WAIT %r12 %r13 
+WAIT %r12 %r13 
+WAIT %r12 %r13 
+WAIT %r12 %r13 
+WAIT %r12 %r13 
+WAIT %r12 %r13 
+WAIT %r12 %r13 
+WAIT %r12 %r13 
+WAIT %r12 %r13 
+WAIT %r12 %r13 
+WAIT %r12 %r13 
+WAIT %r12 %r13 
+WAIT %r12 %r13 
+WAIT %r12 %r13 
+WAIT %r12 %r13 
+WAIT %r12 %r13 
+WAIT %r12 %r13 
+WAIT %r12 %r13 
+WAIT %r12 %r13 
+WAIT %r12 %r13 
+WAIT %r12 %r13 
+WAIT %r12 %r13 
+WAIT %r12 %r13 
+WAIT %r12 %r13 
+WAIT %r12 %r13 
+WAIT %r12 %r13 
+WAIT %r12 %r13 
+WAIT %r12 %r13 
+WAIT %r12 %r13 
+WAIT %r12 %r13 
+WAIT %r12 %r13 
+WAIT %r12 %r13 
+WAIT %r12 %r13 
+WAIT %r12 %r13 
+WAIT %r12 %r13 
+WAIT %r12 %r13 
+WAIT %r12 %r13 
+MOVI $24 %r5 
+MULI $10 %r5 
+ADDI $1 %r5 
 CMPI $10 %r13 
-BGE $7 
+BGE $4 
 CMPI $70 %r13 
-BLE $5 
-MOVI $102 %r12 
-MULI $20 %r12 
-ADDI $8 %r12 
-BUC $4 
+BLE $2 
+JUC %r5 
+MOVI $20 %r2 
+MULI $10 %r2 
+CMP %r2 %r13 
+BGE $5 
+ADDI $35 %r2 
+CMP %r2 %r13 
+BLE $2 
+JUC %r5 
+MOVI $27 %r2 
+MULI $10 %r2 
+CMP %r2 %r13 
+BGE $5 
+ADDI $110 %r2 
+CMP %r2 %r13 
+BLE $2 
+JUC %r5 
+MOVI $44 %r2 
+MULI $10 %r2 
+CMP %r2 %r13 
+BGE $5 
+ADDI $25 %r2 
+CMP %r2 %r13 
+BLE $2 
+JUC %r5 
+MOVI $54 %r2 
+MULI $10 %r2 
+CMP %r2 %r13 
+BGE $5 
+ADDI $15 %r2 
+CMP %r2 %r13 
+BLE $2 
+JUC %r5 
 MOVI $102 %r12 
 MULI $10 %r12 
 ADDI $4 %r12 
 WAIT %r12 %r13 
 KEY %r0 %r9 
 CMPI $41 %r9 
-JNE %r5 
+BNE $-3 
 MOVI $0 %r0 
 JUC %r0 
